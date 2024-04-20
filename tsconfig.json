@@ -18,8 +18,12 @@
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
     "paths": {
-      "@config/*": ["src/config/*"],
-      "@common/*": ["src/common/*"]
+      "@interfaces/*": ["src/common/interfaces/*"],
+      "@graphql/*": ["src/common/graphql/*"],
+      "@enums/*": ["src/common/enums/*"],
+      "@utils/*": ["src/common/utils/*"],
+      "@common/*": ["src/common/*"],
+      "@core/*": ["src/core/*"]
     }
   }
 }
