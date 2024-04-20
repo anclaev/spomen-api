@@ -13,7 +13,7 @@ export class ConfigService extends RootService {
     return this.get<T>(key) as T
   }
 
-  isProduction(): boolean {
+  get isProduction(): boolean {
     return this.gett<string>('NODE_ENV') === 'production'
   }
 
