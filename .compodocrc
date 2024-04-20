@@ -1,0 +1,9 @@
+tsconfig: ./tsconfig.doc.json
+output: ./docs
+name: Spomen API
+language: ru-RU
+assetsFolder: ./assets
+theme: gitbook
+hideGenerator: true
+customFavicon: ./assets/favicon.ico
+customLogo: ./assets/logo.svg

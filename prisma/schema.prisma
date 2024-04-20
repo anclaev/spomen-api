@@ -2,6 +2,11 @@ generator client {
     provider = "prisma-client-js"
 }
 
+generator nestgraphql {
+    provider = "prisma-nestjs-graphql"
+    output   = "../src/common/graphql"
+}
+
 datasource db {
     provider = "mongodb"
     url      = env("DATABASE_URL")
