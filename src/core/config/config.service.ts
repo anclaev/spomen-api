@@ -1,7 +1,7 @@
 import { ConfigService as RootService } from '@nestjs/config'
 import { Injectable } from '@nestjs/common'
 
-import { ENV } from '@common/enums/env'
+import { ENV } from '@enums/env'
 
 @Injectable()
 export class ConfigService extends RootService {
@@ -21,5 +21,3 @@ export class ConfigService extends RootService {
     return this.gett<number>('PORT')
   }
 }
-
-export default ConfigService

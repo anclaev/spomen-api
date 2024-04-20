@@ -1,9 +1,10 @@
 import { ConfigModule as RootModule } from '@nestjs/config'
-import { Logger, Module } from '@nestjs/common'
+import { Global, Logger, Module } from '@nestjs/common'
 
 import { ConfigService } from './config.service'
 import validationSchema from './config.schema'
 
+@Global()
 @Module({
   imports: [
     RootModule.forRoot({

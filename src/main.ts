@@ -3,7 +3,8 @@ import { WinstonModule } from 'nest-winston'
 import { NestFactory } from '@nestjs/core'
 
 import { winstonOptions } from '@common/utils/winston'
-import { ConfigService } from '@config/config.service'
+
+import { ConfigService } from '@core/config'
 
 import { AppModule } from './app.module'
 
