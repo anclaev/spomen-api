@@ -1,11 +1,10 @@
 import { Injectable } from '@nestjs/common'
 
-import { CreateAccountInput } from './dto/create-account.input'
-import { UpdateAccountInput } from './dto/update-account.input'
+import { AccountCreateInput } from '@graphql/account/account-create.input'
 
 @Injectable()
 export class AccountService {
-  create(createAccountInput: CreateAccountInput) {
+  create(AccountCreateInput: AccountCreateInput) {
     return 'This action adds a new account'
   }
 
@@ -13,15 +12,15 @@ export class AccountService {
     return `This action returns all account`
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} account`
-  }
+  // findOne(id: number) {
+  //   return `This action returns a #${id} account`
+  // }
 
-  update(id: number, updateAccountInput: UpdateAccountInput) {
-    return `This action updates a #${id} account`
-  }
+  // update(id: number, updateAccountInput: UpdateAccountInput) {
+  //   return `This action updates a #${id} account`
+  // }
 
-  remove(id: number) {
-    return `This action removes a #${id} account`
-  }
+  // remove(id: number) {
+  //   return `This action removes a #${id} account`
+  // }
 }
