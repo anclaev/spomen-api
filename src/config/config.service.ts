@@ -9,11 +9,17 @@ export class ConfigService extends RootService {
     super()
   }
 
-  get environment(): string {
-    return this.get<string>(ENV.NODE_ENV)!
-  }
-
   gett<T>(key: keyof typeof ENV): T {
     return this.get<T>(key) as T
   }
+
+  get environment(): string {
+    return this.gett<string>('NODE_ENV')
+  }
+
+  get port(): number {
+    return this.gett<number>('PORT')
+  }
 }
+
+export default ConfigService

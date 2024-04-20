@@ -1,6 +1,7 @@
 import { ConfigModule as RootModule } from '@nestjs/config'
-import { Module } from '@nestjs/common'
+import { Logger, Module } from '@nestjs/common'
 
+import { ConfigService } from './config.service'
 import validationSchema from './config.schema'
 
 @Module({
@@ -16,5 +17,7 @@ import validationSchema from './config.schema'
       validationSchema,
     }),
   ],
+  providers: [Logger, ConfigService],
+  exports: [Logger, ConfigService],
 })
 export class ConfigModule {}
