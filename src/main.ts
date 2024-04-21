@@ -1,6 +1,7 @@
+import { PrismaClientExceptionFilter } from 'nestjs-prisma'
+import { HttpAdapterHost, NestFactory } from '@nestjs/core'
 import { Logger, ValidationPipe } from '@nestjs/common'
 import { WinstonModule } from 'nest-winston'
-import { NestFactory } from '@nestjs/core'
 
 import { winstonOptions } from '@common/utils/winston'
 
@@ -13,6 +14,7 @@ const bootstrap = async () => {
     logger: WinstonModule.createLogger(winstonOptions),
   })
 
+  const { httpAdapter } = app.get(HttpAdapterHost)
   const config = app.get(ConfigService)
   const logger = app.get(Logger)
 
@@ -20,6 +22,8 @@ const bootstrap = async () => {
     credentials: true,
     origin: config.gett<string>('ORIGIN'),
   })
+
+  app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter))
 
   app.useGlobalPipes(
     new ValidationPipe({

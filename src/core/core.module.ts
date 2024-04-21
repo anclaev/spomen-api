@@ -1,8 +1,8 @@
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo'
+import { PrismaModule, PrismaService } from 'nestjs-prisma'
 import { Global, Logger, Module } from '@nestjs/common'
 import { GraphQLModule } from '@nestjs/graphql'
 import { ConfigModule } from '@nestjs/config'
-import { PrismaModule } from 'nestjs-prisma'
 
 import { ConfigService } from './config/config.service'
 import validationSchema from './config/config.schema'
@@ -42,7 +42,7 @@ import validationSchema from './config/config.schema'
       inject: [ConfigService],
     }),
   ],
-  providers: [Logger, ConfigService],
-  exports: [Logger, ConfigService],
+  providers: [Logger, ConfigService, PrismaService],
+  exports: [Logger, ConfigService, PrismaService],
 })
 export class CoreModule {}
