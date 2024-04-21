@@ -3,17 +3,22 @@ import {
   ClassSerializerInterceptor,
   ConflictException,
   Controller,
+  Get,
   HttpCode,
   Post,
-  Req,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common'
 
-import { RequestWithUser } from '@interfaces/req-with-user'
-import { UseTransform } from '@decorators/transform'
+import { Account } from '@prisma/client'
 
-import { AccountResponse } from '@/account/interfaces/account.response'
+import { User } from '@interfaces/user'
+
+import { UseTransform } from '@decorators/transform'
+import { UseAuth } from '@decorators/auth'
+import { UseUser } from '@decorators/user'
+
+import { AccountResponse } from '@/account/account.response'
 
 import { AuthService } from './auth.service'
 
@@ -26,6 +31,12 @@ import { SignUpDto } from './dto/sign-up.dto'
 @Controller('auth')
 export class AuthController {
   constructor(private readonly auth: AuthService) {}
+
+  @Get()
+  @UseAuth()
+  user(@UseUser() user: Account) {
+    return user
+  }
 
   @Post('sign-up')
   @HttpCode(200)
@@ -43,14 +54,14 @@ export class AuthController {
   @Post('sign-in')
   @HttpCode(200)
   @UseGuards(LocalLoginGuard)
-  signIn(@Req() req: RequestWithUser) {
-    return req.user
+  signIn(@UseUser() user: User) {
+    return user
   }
 
   @Post('sign-in-email')
   @HttpCode(200)
   @UseGuards(LocalEmailGuard)
-  signInByEmail(@Req() req: RequestWithUser) {
-    return req.user
+  signInByEmail(@UseUser() user: User) {
+    return user
   }
 }

@@ -12,10 +12,9 @@ export class AccountResponse {
   surname?: string
   sex?: Sex
   birthday?: Date
+  createdAt: Date
+  updatedAt: Date
 
   @Exclude()
   password: string
-
-  createdAt: Date
-  updatedAt: Date
 }

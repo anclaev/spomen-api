@@ -1,28 +1,31 @@
-import { Resolver, Mutation, Args, Query } from '@nestjs/graphql'
+import { Resolver, Args, Query, ID } from '@nestjs/graphql'
 
-import { AccountCreateInput } from '@graphql/account/account-create.input'
+import { UseGQLAuth } from '@decorators/auth'
+
 import { Account } from '@graphql/account/account.model'
 
 import { AccountService } from './account.service'
+
 @Resolver(() => Account)
 export class AccountResolver {
-  constructor(private readonly accountService: AccountService) {}
+  constructor(private readonly account: AccountService) {}
 
-  @Mutation(() => Account)
-  createAccount(
-    @Args('accountCreateInput') AccountCreateInput: AccountCreateInput,
-  ) {
-    return this.accountService.create(AccountCreateInput)
+  @UseGQLAuth()
+  @Query(() => Account, { name: 'account' })
+  findOne(@Args('id', { type: () => ID }) id: string) {
+    return this.account.findOne(id)
   }
 
-  @Query(() => [Account], { name: 'account' })
-  findAll() {
-    return this.accountService.findAll()
-  }
+  // @Mutation(() => Account)
+  // createAccount(
+  //   @Args('accountCreateInput') AccountCreateInput: AccountCreateInput,
+  // ) {
+  //   return this.account.create(AccountCreateInput)
+  // }
 
-  // @Query(() => Account, { name: 'account' })
-  // findOne(@Args('id', { type: () => Int }) id: number) {
-  //   return this.accountService.findOne(id)
+  // @Query(() => [Account], { name: 'account' })
+  // findAll() {
+  //   return this.account.findAll()
   // }
 
   // @Mutation(() => Account)

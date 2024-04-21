@@ -1,19 +1,21 @@
 import { Injectable } from '@nestjs/common'
 
-import { AccountCreateInput } from '@graphql/account/account-create.input'
+import { AccountRepository } from './account.repository'
 
 @Injectable()
 export class AccountService {
-  create(AccountCreateInput: AccountCreateInput) {
-    return 'This action adds a new account'
+  constructor(private readonly account: AccountRepository) {}
+
+  async findOne(id: string) {
+    return await this.account.findOne({ where: { id } })
   }
 
-  findAll() {
-    return `This action returns all account`
-  }
+  // create(AccountCreateInput: AccountCreateInput) {
+  //   return 'This action adds a new account'
+  // }
 
-  // findOne(id: number) {
-  //   return `This action returns a #${id} account`
+  // findAll() {
+  //   return `This action returns all account`
   // }
 
   // update(id: number, updateAccountInput: UpdateAccountInput) {

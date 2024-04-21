@@ -1,6 +1,9 @@
 import { BadRequestException, Injectable } from '@nestjs/common'
+import { JwtService } from '@nestjs/jwt'
 import { Account } from '@prisma/client'
 import * as argon2 from 'argon2'
+
+import { TokenPayload } from '@interfaces/token-payload'
 
 import { AccountRepository } from '@/account/account.repository'
 
@@ -8,7 +11,10 @@ import { SignUpDto } from './dto/sign-up.dto'
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly account: AccountRepository) {}
+  constructor(
+    private readonly account: AccountRepository,
+    private readonly jwt: JwtService,
+  ) {}
 
   async signUp(dto: SignUpDto): Promise<Account | null> {
     const password = await argon2.hash(dto.password)
@@ -19,16 +25,12 @@ export class AuthService {
   async getAuthenticatedUserByLogin(
     login: string,
     password: string,
-  ): Promise<Account> {
+  ): Promise<Account & { access_token: string }> {
     const account = await this.account.findOne({
       where: { login: login.trim() },
     })
 
-    if (!account) {
-      throw new BadRequestException('Wrong credentials')
-    }
-
-    return await this.verifyPassword(account, password)
+    return await this.verifyAccount(account, password)
   }
 
   async getAuthenticatedUserByEmail(
@@ -39,17 +41,21 @@ export class AuthService {
       where: { email: email.trim() },
     })
 
+    return await this.verifyAccount(account, password)
+  }
+
+  async generateToken(payload: TokenPayload): Promise<string> {
+    return await this.jwt.signAsync(payload)
+  }
+
+  private async verifyAccount(
+    account: Account | null,
+    password: string,
+  ): Promise<Account & { access_token: string }> {
     if (!account) {
       throw new BadRequestException('Wrong credentials')
     }
 
-    return await this.verifyPassword(account, password)
-  }
-
-  private async verifyPassword(
-    account: Account,
-    password: string,
-  ): Promise<Account> {
     const verifed = await argon2.verify(account.password, password)
 
     if (!verifed) {
@@ -58,6 +64,15 @@ export class AuthService {
 
     account.password = undefined!
 
-    return account
+    const access_token = await this.generateToken({
+      user_id: account.id,
+      login: account.login,
+      email: account.email,
+      vk_id: account.id,
+      vk_pic: account.vk_pic,
+      vk_access_token: null,
+    })
+
+    return { ...account, access_token }
   }
 }
