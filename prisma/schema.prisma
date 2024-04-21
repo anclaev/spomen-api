@@ -19,9 +19,9 @@ enum Sex {
 
 model Account {
     id       String  @id @default(auto()) @map("_id") @db.ObjectId
-    login    String
+    login    String  @unique
     password String
-    email    String?
+    email    String? @unique
 
     vk_id  String? @unique
     vk_pic String?

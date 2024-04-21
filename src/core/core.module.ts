@@ -1,8 +1,9 @@
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo'
-import { Global, Logger, Module } from '@nestjs/common'
+import { Global, Inject, Logger, Module } from '@nestjs/common'
+import { PrismaModule, PrismaService } from 'nestjs-prisma'
 import { GraphQLModule } from '@nestjs/graphql'
 import { ConfigModule } from '@nestjs/config'
-import { PrismaModule } from 'nestjs-prisma'
+import { JwtModule } from '@nestjs/jwt'
 
 import { ConfigService } from './config/config.service'
 import validationSchema from './config/config.schema'
@@ -41,8 +42,20 @@ import validationSchema from './config/config.schema'
       }),
       inject: [ConfigService],
     }),
+    JwtModule.registerAsync({
+      global: true,
+      useFactory: (config: ConfigService) => ({
+        global: true,
+        secret: config.gett('ACCESS_TOKEN_SECRET'),
+        signOptions: {
+          issuer: 'Spomen API',
+          expiresIn: String(config.gett('ACCESS_TOKEN_EXPIRATION')),
+        },
+      }),
+      inject: [ConfigService],
+    }),
   ],
-  providers: [Logger, ConfigService],
-  exports: [Logger, ConfigService],
+  providers: [Logger, ConfigService, PrismaService],
+  exports: [Logger, ConfigService, PrismaService],
 })
 export class CoreModule {}
