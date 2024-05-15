@@ -6,20 +6,24 @@ import {
   Get,
   HttpCode,
   Post,
+  Res,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common'
 
 import { Account } from '@prisma/client'
+import { Response } from 'express'
 
-import { User } from '@interfaces/user'
+import { AuthenticatedUser, User } from '@interfaces/user'
 
 import { UseTransform } from '@decorators/transform'
 import { UseAuth } from '@decorators/auth'
 import { UseUser } from '@decorators/user'
+import { Cookies } from '@utils/cookies'
 
 import { AccountResponse } from '@/account/account.response'
 
+import { ConfigService } from '@core/config'
 import { AuthService } from './auth.service'
 
 import { LocalLoginGuard } from './guards/local-login.guard'
@@ -30,7 +34,10 @@ import { SignUpDto } from './dto/sign-up.dto'
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly auth: AuthService) {}
+  constructor(
+    private readonly auth: AuthService,
+    private readonly config: ConfigService,
+  ) {}
 
   @Get()
   @UseAuth()
@@ -54,8 +61,25 @@ export class AuthController {
   @Post('sign-in')
   @HttpCode(200)
   @UseGuards(LocalLoginGuard)
-  signIn(@UseUser() user: User) {
-    return user
+  signIn(@UseUser() user: AuthenticatedUser, @Res() res: Response) {
+    const cookies = [
+      new Cookies({
+        key: 'Authentication',
+        value: user.access_token,
+        domain: this.config.gett<string>('DOMAIN'),
+        path: '/',
+        maxAge: this.config.gett<string>('ACCESS_TOKEN_EXPIRATION'),
+        httpOnly: true,
+        secure: this.config.isProduction,
+      }),
+    ]
+
+    res.setHeader(
+      'Set-Cookie',
+      cookies.map((item) => item.toString()),
+    )
+
+    return res.send(user)
   }
 
   @Post('sign-in-email')

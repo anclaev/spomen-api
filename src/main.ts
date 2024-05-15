@@ -2,6 +2,7 @@ import { PrismaClientExceptionFilter } from 'nestjs-prisma'
 import { HttpAdapterHost, NestFactory } from '@nestjs/core'
 import { Logger, ValidationPipe } from '@nestjs/common'
 import { WinstonModule } from 'nest-winston'
+import * as cookieParser from 'cookie-parser'
 
 import { winstonOptions } from '@common/utils/winston'
 
@@ -30,6 +31,8 @@ const bootstrap = async () => {
       transform: true,
     }),
   )
+
+  app.use(cookieParser(config.gett<string>('COOKIE_SECRET')))
 
   await app.listen(config.port).finally(() => {
     logger.log(
