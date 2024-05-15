@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import { Account } from '@prisma/client'
+
 import * as argon2 from 'argon2'
 
 import { TokenPayload } from '@interfaces/token-payload'
