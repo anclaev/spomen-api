@@ -1,5 +1,5 @@
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo'
-import { Global, Inject, Logger, Module } from '@nestjs/common'
+import { Global, Logger, Module } from '@nestjs/common'
 import { PrismaModule, PrismaService } from 'nestjs-prisma'
 import { GraphQLModule } from '@nestjs/graphql'
 import { ConfigModule } from '@nestjs/config'
