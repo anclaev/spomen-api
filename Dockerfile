@@ -7,11 +7,10 @@ WORKDIR /api
 COPY package.json yarn.lock ./
 
 RUN yarn install
-RUN yarn add -D prisma
+RUN yarn add -D prisma prisma-nestjs-graphql
 
 COPY . . 
 
-RUN yarn prisma generate
 RUN yarn build
 
 # Stage 2: Запуск приложения
