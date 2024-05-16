@@ -43,7 +43,7 @@ jobs:
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           script: |
             cd ${{ secrets.SSH_PATH }}
-            sudo cat "${{ secrets.ENV_PRODUCTION }}" > .env
+            sudo echo "${{ secrets.ENV_PRODUCTION }}" > .env
 
       # - name: 'Создание переменных окружения'
       #   run: |
