@@ -29,13 +29,14 @@ jobs:
   #       uses: docker/build-push-action@v3
   #       with:
   #         push: true
-  #         tags: anclaev/spomen-api:latest
+  #         tags: ${{ secrets.DOCKER_HUB_TAG }}:latest
 
   deploy:
     name: Deploy app
     runs-on: ubuntu-latest
     steps:
-      - uses: appleboy/ssh-action@v1.0.3
+      - name: Create environment variables
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SSH_IP }}
           username: ${{ secrets.SSH_USER }}
@@ -45,7 +46,13 @@ jobs:
             cd ${{ secrets.SSH_PATH }}
             sudo echo "${{ secrets.ENV_PRODUCTION }}" > .env
 
-      # - name: 'Создание переменных окружения'
-      #   run: |
-      #     touch .env
-      #     echo "${{ secrets.ENV_PRODUCTION }}" >> .env
+      - name: Pull image
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_IP }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
+          script: |
+            cd ${{ secrets.SSH_PATH }}
+            docker pull ${{ secrets.DOCKER_HUB_TAG }}:latest
