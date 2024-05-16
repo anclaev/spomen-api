@@ -32,7 +32,6 @@ COPY --from=builder /api/package*.json ./
 COPY --from=builder /api/yarn.lock ./
 COPY --from=builder /api/prisma ./
 COPY --from=builder /api/dist ./dist
-COPY --from=builder /api/entrypoint.sh ./
 
 RUN yarn install --production
 
