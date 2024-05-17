@@ -1,36 +1,42 @@
-ARG node_version=20.13.1
+FROM node:18-alpine AS base
 
-# Stage 1: Сборка проекта
-FROM node:${node_version}-alpine AS builder
-WORKDIR /api
+# Stage 1: Установка зависимостей
+FROM base AS deps
+RUN apk add --no-cache libc6-compat
+WORKDIR /app
 
-COPY package.json yarn.lock ./
+COPY package.json yarn.lock*  ./
 
 RUN yarn install --frozen-lockfile --production
-RUN yarn add -D prisma
+RUN RUN yarn add -D prisma
 
-COPY . . 
+
+# Stage 2: Сборка проекта
+FROM base AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
 
 RUN yarn prisma generate
 RUN yarn build
 
-# Stage 2: Запуск приложения
-FROM node:${node_version}-alpine
-WORKDIR /home/user/spomen/api
-
-LABEL maintainer="anclaev<iahugo@yandex.ru>"
-LABEL description="Spomen API"
+# State 3: Запуск приложения
+FROM base AS runner
+WORKDIR /app
 
 ENV NODE_ENV production
 
-COPY --from=builder /api/dist ./
-COPY --from=builder /api/package.json ./package.json
-COPY --from=builder /api/yarn.lock ./yarn.lock
-COPY --from=builder /api/prisma ./prisma
-COPY --from=builder /api/node_modules ./node_modules
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nestjs
 
-USER node
+COPY --from=builder --chown=nestjs:nodejs /api/dist ./
+COPY --from=builder --chown=nestjs:nodejs /api/package.json ./package.json
+COPY --from=builder --chown=nestjs:nodejs /api/yarn.lock ./yarn.lock
+COPY --from=builder --chown=nestjs:nodejs /api/prisma ./prisma
+COPY --from=builder --chown=nestjs:nodejs /api/node_modules ./node_modules
+
+USER nestjs
 
 EXPOSE ${PORT}
 
-CMD ["node", "main.js"]
+CMD HOSTNAME="0.0.0.0" node main.js
