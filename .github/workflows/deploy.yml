@@ -54,6 +54,5 @@ jobs:
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           script: |
             cd ${{ secrets.SSH_PATH }} 
-            cd ..
             ./scripts/init.sh
             docker system prune -f
