@@ -5,12 +5,12 @@ on:
     branches: ['main']
 
 jobs:
-  build:
+  tests:
     runs-on: ${{matrix.os}}
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest]
-        node-version: [12.x, 14.x]
+        node-version: [18.x, 20.x]
     steps:
       - uses: actions/checkout@v2
       - name: Cache yarn dependencies
@@ -24,9 +24,25 @@ jobs:
             ${{ runner.os }}-build-${{ env.cache-name }}-
             ${{ runner.os }}-build-
             ${{ runner.os }}-
-      - name: Test
+      - name: Unit tests
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - run: yarn install
-      - run: yarn test
+      - run: |
+          yarn install
+          yarn test:cov
+      - name: Coveralls Parallel
+        uses: coverallsapp/github-action@v2
+        with:
+          flag-name: run-${{ join(matrix.*, '-') }}
+          parallel: true
+  coverage:
+    needs: tests
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Aggregate coverage
+        uses: coverallsapp/github-action@v2
+        with:
+          parallel-finished: true
+          carryforward: 'run-1,run-2,run-3,run-4'
