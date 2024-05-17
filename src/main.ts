@@ -1,8 +1,9 @@
-import { PrismaClientExceptionFilter } from 'nestjs-prisma'
+import { PrismaClientExceptionFilter, PrismaService } from 'nestjs-prisma'
 import { HttpAdapterHost, NestFactory } from '@nestjs/core'
+import { PrismaHealthIndicator } from '@nestjs/terminus'
 import { Logger, ValidationPipe } from '@nestjs/common'
-import { WinstonModule } from 'nest-winston'
 import * as cookieParser from 'cookie-parser'
+import { WinstonModule } from 'nest-winston'
 
 import { winstonOptions } from '@common/utils/winston'
 
@@ -15,7 +16,9 @@ const bootstrap = async () => {
     logger: WinstonModule.createLogger(winstonOptions),
   })
 
+  const prismaHealthIndicator = app.get(PrismaHealthIndicator)
   const { httpAdapter } = app.get(HttpAdapterHost)
+  const prisma = app.get(PrismaService)
   const config = app.get(ConfigService)
   const logger = app.get(Logger)
 
@@ -34,7 +37,17 @@ const bootstrap = async () => {
 
   app.use(cookieParser(config.gett<string>('COOKIE_SECRET')))
 
-  await app.listen(config.port).finally(() => {
+  try {
+    await prismaHealthIndicator.pingCheck('Prisma', prisma)
+    logger.log(
+      `Connection to database \x1b[36m${'successful'}\x1b[0m!`,
+      'PrismaClient',
+    )
+  } catch (e) {
+    logger.error('No connection to database!', null, 'PrismaClient')
+  }
+
+  await await app.listen(config.port).finally(() => {
     logger.log(
       `Environment: \x1b[36m${config.environment.toUpperCase()}\x1b[0m | Port: \x1b[36m${config.port}\x1b[0m`,
       'NestApplication',

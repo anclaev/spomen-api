@@ -1,6 +1,7 @@
+import { PrismaHealthIndicator, TerminusModule } from '@nestjs/terminus'
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo'
-import { Global, Logger, Module } from '@nestjs/common'
 import { PrismaModule, PrismaService } from 'nestjs-prisma'
+import { Global, Logger, Module } from '@nestjs/common'
 import { GraphQLModule } from '@nestjs/graphql'
 import { ConfigModule } from '@nestjs/config'
 import { JwtModule } from '@nestjs/jwt'
@@ -54,8 +55,9 @@ import validationSchema from './config/config.schema'
       }),
       inject: [ConfigService],
     }),
+    TerminusModule,
   ],
-  providers: [Logger, ConfigService, PrismaService],
+  providers: [Logger, ConfigService, PrismaService, PrismaHealthIndicator],
   exports: [Logger, ConfigService, PrismaService],
 })
 export class CoreModule {}

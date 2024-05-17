@@ -3,7 +3,6 @@ import { PassportStrategy } from '@nestjs/passport'
 import { ExtractJwt, Strategy } from 'passport-jwt'
 
 import { TokenPayload } from '@interfaces/token-payload'
-import { Request } from '@interfaces/request'
 import { ConfigService } from '@core/config'
 
 import { AccountRepository } from '@/account/account.repository'
@@ -15,11 +14,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     private readonly account: AccountRepository,
   ) {
     super({
-      jwtFromRequest: ExtractJwt.fromExtractors([
-        (request: Request) => {
-          return request?.cookies?.Authentication ?? null
-        },
-      ]),
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
       secretOrKey: config.gett('ACCESS_TOKEN_SECRET'),
     })
