@@ -1,5 +1,5 @@
 {
-  "name": "spomen-api",
+  "name": "@spomen/api",
   "version": "0.0.1",
   "description": "API for Spomen",
   "author": "anclaev <iahugo@yandex.ru>",
