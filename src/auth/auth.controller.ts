@@ -88,4 +88,23 @@ export class AuthController {
   signInByEmail(@UseUser() user: User) {
     return user
   }
+
+  @Post('logout')
+  @HttpCode(200)
+  @UseAuth()
+  logout(@Res() res: Response) {
+    const cookie = new Cookies({
+      key: 'Authentication',
+      value: '',
+      domain: this.config.gett<string>('DOMAIN'),
+      path: '/',
+      maxAge: '0',
+      httpOnly: true,
+      secure: this.config.isProduction,
+    })
+
+    res.setHeader('Set-Cookie', cookie.toString())
+
+    return res.send(200)
+  }
 }
