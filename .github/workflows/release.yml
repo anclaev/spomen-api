@@ -131,7 +131,7 @@ jobs:
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           script: |
             cd ${{ secrets.SSH_PATH }}
-            docker pull anclaev/spomen-api::${{ github.ref_name }}
+            docker pull anclaev/spomen-api:${{ github.ref_name }}
 
       - name: Run app
         uses: appleboy/ssh-action@v1.0.3
