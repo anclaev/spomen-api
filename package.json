@@ -131,6 +131,6 @@
     "*.ts": [
       "prettier --write"
     ],
-    "*.md": "prettier --list-different"
+    "*.md": "prettier --write"
   }
 }
