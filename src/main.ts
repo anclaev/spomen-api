@@ -23,7 +23,7 @@ const bootstrap = async () => {
   const logger = app.get(Logger)
 
   app.enableCors({
-    credentials: true,
+credentials: true,
     origin: config.gett<string>('ORIGIN'),
   })
 
