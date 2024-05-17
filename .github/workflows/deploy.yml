@@ -31,29 +31,31 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_HUB_TAG }}:latest
 
-  # deploy:
-  #   name: Deploy app
-  #   runs-on: ubuntu-latest
-  #   needs: build
-  #   steps:
-  #     - name: Create environment variables
-  #       uses: appleboy/ssh-action@v1.0.3
-  #       with:
-  #         host: ${{ secrets.SSH_IP }}
-  #         username: ${{ secrets.SSH_USER }}
-  #         key: ${{ secrets.SSH_PRIVATE_KEY }}
-  #         passphrase: ${{ secrets.SSH_PASSPHRASE }}
-  #         script: |
-  #           cd ${{ secrets.SSH_PATH }}
-  #           sudo echo "${{ secrets.ENV_PRODUCTION }}" > .env
+  deploy:
+    name: Deploy app
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Pull image
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_IP }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
+          script: |
+            cd ${{ secrets.SSH_PATH }}
+            docker pull ${{ secrets.DOCKER_HUB_TAG }}:latest
 
-  #     - name: Pull image
-  #       uses: appleboy/ssh-action@v1.0.3
-  #       with:
-  #         host: ${{ secrets.SSH_IP }}
-  #         username: ${{ secrets.SSH_USER }}
-  #         key: ${{ secrets.SSH_PRIVATE_KEY }}
-  #         passphrase: ${{ secrets.SSH_PASSPHRASE }}
-  #         script: |
-  #           cd ${{ secrets.SSH_PATH }}
-  #           docker pull ${{ secrets.DOCKER_HUB_TAG }}:latest
+      - name: Run app
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_IP }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          passphrase: ${{ secrets.SSH_PASSPHRASE }}
+          script: |
+            cd ${{ secrets.SSH_PATH }} 
+            cd ..
+            ./scripts/init.sh
+            docker system prune -f
