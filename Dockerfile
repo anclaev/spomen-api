@@ -29,11 +29,11 @@ ENV NODE_ENV production
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nestjs
 
-COPY --from=builder --chown=nestjs:nodejs /api/dist ./
-COPY --from=builder --chown=nestjs:nodejs /api/package.json ./package.json
-COPY --from=builder --chown=nestjs:nodejs /api/yarn.lock ./yarn.lock
-COPY --from=builder --chown=nestjs:nodejs /api/prisma ./prisma
-COPY --from=builder --chown=nestjs:nodejs /api/node_modules ./node_modules
+COPY --from=builder --chown=nestjs:nodejs /app/dist ./
+COPY --from=builder --chown=nestjs:nodejs /app/package.json ./package.json
+COPY --from=builder --chown=nestjs:nodejs /app/yarn.lock ./yarn.lock
+COPY --from=builder --chown=nestjs:nodejs /app/prisma ./prisma
+COPY --from=builder --chown=nestjs:nodejs /app/node_modules ./node_modules
 
 USER nestjs
 
