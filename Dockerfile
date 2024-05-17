@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package.json yarn.lock*  ./
 
 RUN yarn install --frozen-lockfile --production
-RUN RUN yarn add -D prisma
+RUN yarn add -D prisma
 
 
 # Stage 2: Сборка проекта
