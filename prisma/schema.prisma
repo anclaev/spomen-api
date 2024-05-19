@@ -2,30 +2,205 @@ generator client {
     provider = "prisma-client-js"
 }
 
+generator graphql {
+    provider = "prisma-nestjs-graphql"
+    output   = "../src/common/graphql"
+}
+
 datasource db {
     provider = "mongodb"
     url      = env("DATABASE_URL")
 }
 
+// ? Пол пользователя
+// * Male - мужской
+// * Female - женский
 enum Sex {
     Male
     Female
 }
 
+// TODO: Переименовать перечисление на права доступа к загрузке
+// Доступ к загрузке
+// * Public - публичный (по-умолчанию) 
+// * Owner - только для владельца
+// * Lovers - на уровне пары
+enum Access {
+    Public
+    Lovers
+    Owner
+}
+
+// Роль аккаунта
+// * Public - публичная (по-умолчанию)
+// * Lover - партнёр в паре
+// * Admin - адмиинстратор
+enum Role {
+    Public
+    Lover
+    Admin
+}
+
+// TODO: Изменить связь с Offer на one-to-one
+// Аккаунты
+// * login - логин пользователя (уникальный)
+// * password - пароль доступа
+// * email - почта пользователя (уникальная)
+// * roles - роли пользователя
+// * vkId - идентификатор аккаунта VK
+// * vkPic - аватар аккуаунта VK
+// * sex - пол пользователя
+// * name - имя пользователя
+// * surname - фамилия пользователя
+// * birthday - дата рождения пользователя
+// ? love - пара аккаунта 
+// ? uploads - загрузки пользователя  
+// ? reviews - отзывы пользователя на события
+// ? offers - полученные приглашения
+// ? offerOwner - созданные приглашения 
+// ? eventsOwner - созданные события
 model Account {
     id       String  @id @default(auto()) @map("_id") @db.ObjectId
     login    String  @unique
     password String
     email    String? @unique
+    roles    Role[]
 
-    vk_id  String? @unique
-    vk_pic String?
+    vkId  String? @unique
+    vkPic String?
 
+    sex      Sex?
     name     String?
     surname  String?
-    sex      Sex?
     birthday DateTime? @db.Date
+
+    love   Love?   @relation(fields: [loveId], references: [id])
+    loveId String? @db.ObjectId
+
+    uploads Upload[]
+    reviews LoveEventReview[]
+    offers  Offer[]           @relation("offer_target")
+
+    offerOwner  Offer[]     @relation("offer_owner")
+    eventsOwner LoveEvent[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 }
+
+// Загрузки (файлы)
+// * url - URL загрузки в S3-/локальном хранилище
+// * access - права доступа к загрузкам
+// ? owner - владелец файла
+model Upload {
+    id  String @id @default(auto()) @map("_id") @db.ObjectId
+    url String
+
+    access Access[]
+
+    owner   Account @relation(fields: [ownerId], references: [id])
+    ownerId String  @db.ObjectId
+
+    eventPic LoveEvent[] @relation("love_event_pic")
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+// TODO: Изменить связь с Offer на one-to-one
+// Пары
+// * alias - короткое имя пары на транслите
+// * name - название пары
+// * private - флаг приватности пары
+// ? members - участники пары 
+// ? events - события пары 
+// ? offers - приглашения в пару
+model Love {
+    id      String  @id @default(auto()) @map("_id") @db.ObjectId
+    alias   String  @unique
+    name    String
+    private Boolean
+
+    members Account[]
+    events  LoveEvent[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    Offer     Offer[]
+}
+
+// TODO: Добавить массив с загрузками для события (many-to-many)
+// События пары
+// * description - описание события
+// * date - дата события
+// * pic - постер события
+// ? love - родительская пара
+// ? owner - создатель события
+// ? reviews - отзывы о событии
+model LoveEvent {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+
+    name        String
+    description String
+    date        DateTime? @db.Date
+
+    pic   Upload @relation(name: "love_event_pic", fields: [picId], references: [id])
+    picId String @db.ObjectId
+
+    love   Love   @relation(fields: [loveId], references: [id])
+    loveId String @db.ObjectId
+
+    owner   Account @relation(fields: [ownerId], references: [id])
+    ownerId String  @db.ObjectId
+
+    reviews LoveEventReview[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+// TODO: Добавить массив с загрузками для мнения (many-to-many)
+// TODO: Добавить флаг прочтения отзыва другим партнёром
+// Мнение партнера о событии пары
+// * access - права доступа к мнению
+// ? author - владелец мнения (партнёр)
+// ? event - событие пары 
+model LoveEventReview {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+
+    access Access[]
+
+    author   Account @relation(fields: [authorId], references: [id])
+    authorId String  @db.ObjectId
+
+    event   LoveEvent @relation(fields: [eventId], references: [id])
+    eventId String    @db.ObjectId
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+// Приглашения в пару
+// * code - код приглашения
+// ? love - предлагаемая пара
+// ? owner - создатель приглашения
+// ? target - получатель приглашения
+model Offer {
+    id   String @id @default(auto()) @map("_id") @db.ObjectId
+    code String
+
+    love   Love   @relation(fields: [loveId], references: [id])
+    loveId String @db.ObjectId
+
+    owner   Account @relation(name: "offer_owner", fields: [ownerId], references: [id])
+    ownerId String  @db.ObjectId
+
+    target   Account @relation(name: "offer_target", fields: [targetId], references: [id])
+    targetId String  @db.ObjectId
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+// TODO: Добавить модели чата, сообщения
+// TODO: Добавить модели истории изменения сущностей

@@ -1,0 +1,39 @@
+import { Field } from '@nestjs/graphql'
+import { InputType } from '@nestjs/graphql'
+import { LoveCreateNestedOneWithoutEventsInput } from '../love/love-create-nested-one-without-events.input'
+import { AccountCreateNestedOneWithoutEventsOwnerInput } from '../account/account-create-nested-one-without-events-owner.input'
+import { LoveEventReviewCreateNestedManyWithoutEventInput } from '../love-event-review/love-event-review-create-nested-many-without-event.input'
+
+@InputType()
+export class LoveEventCreateWithoutPicInput {
+  @Field(() => String, { nullable: true })
+  id?: string
+
+  @Field(() => String, { nullable: false })
+  name!: string
+
+  @Field(() => String, { nullable: false })
+  description!: string
+
+  @Field(() => Date, { nullable: true })
+  date?: Date | string
+
+  @Field(() => Date, { nullable: true })
+  createdAt?: Date | string
+
+  @Field(() => Date, { nullable: true })
+  updatedAt?: Date | string
+
+  @Field(() => LoveCreateNestedOneWithoutEventsInput, { nullable: false })
+  love!: LoveCreateNestedOneWithoutEventsInput
+
+  @Field(() => AccountCreateNestedOneWithoutEventsOwnerInput, {
+    nullable: false,
+  })
+  owner!: AccountCreateNestedOneWithoutEventsOwnerInput
+
+  @Field(() => LoveEventReviewCreateNestedManyWithoutEventInput, {
+    nullable: true,
+  })
+  reviews?: LoveEventReviewCreateNestedManyWithoutEventInput
+}

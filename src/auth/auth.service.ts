@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common'
+import { Account, Role } from '@prisma/client'
 import { JwtService } from '@nestjs/jwt'
-import { Account } from '@prisma/client'
 
 import * as argon2 from 'argon2'
 
@@ -20,7 +20,15 @@ export class AuthService {
   async signUp(dto: SignUpDto): Promise<Account | null> {
     const password = await argon2.hash(dto.password)
 
-    return await this.account.create({ data: { ...dto, password } })
+    return await this.account.create({
+      data: {
+        ...dto,
+        password,
+        roles: {
+          set: [Role.Public],
+        },
+      },
+    })
   }
 
   async getAuthenticatedUserByLogin(
@@ -70,7 +78,7 @@ export class AuthService {
       login: account.login,
       email: account.email,
       vk_id: account.id,
-      vk_pic: account.vk_pic,
+      vk_pic: account.vkPic,
       vk_access_token: null,
     })
 
