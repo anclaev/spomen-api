@@ -2,6 +2,7 @@
 /dist
 /docs
 /node_modules
+**/graphql-generated
 
 .env.*
 

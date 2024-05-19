@@ -1,7 +1,7 @@
 import { Field } from '@nestjs/graphql'
 import { InputType } from '@nestjs/graphql'
 import { UploadCreateaccessInput } from './upload-createaccess.input'
-import { LoveEventUncheckedCreateNestedManyWithoutPicInput } from '../love-event/love-event-unchecked-create-nested-many-without-pic.input'
+import { EventUncheckedCreateNestedManyWithoutPicInput } from '../event/event-unchecked-create-nested-many-without-pic.input'
 
 @InputType()
 export class UploadUncheckedCreateWithoutOwnerInput {
@@ -20,8 +20,8 @@ export class UploadUncheckedCreateWithoutOwnerInput {
   @Field(() => Date, { nullable: true })
   updatedAt?: Date | string
 
-  @Field(() => LoveEventUncheckedCreateNestedManyWithoutPicInput, {
+  @Field(() => EventUncheckedCreateNestedManyWithoutPicInput, {
     nullable: true,
   })
-  eventPic?: LoveEventUncheckedCreateNestedManyWithoutPicInput
+  eventPic?: EventUncheckedCreateNestedManyWithoutPicInput
 }

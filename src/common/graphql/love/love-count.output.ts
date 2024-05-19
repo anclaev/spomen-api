@@ -9,4 +9,7 @@ export class LoveCount {
 
   @Field(() => Int, { nullable: false })
   events?: number
+
+  @Field(() => Int, { nullable: false })
+  Offer?: number
 }

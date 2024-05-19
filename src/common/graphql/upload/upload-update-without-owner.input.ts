@@ -3,7 +3,7 @@ import { InputType } from '@nestjs/graphql'
 import { StringFieldUpdateOperationsInput } from '../prisma/string-field-update-operations.input'
 import { UploadUpdateaccessInput } from './upload-updateaccess.input'
 import { DateTimeFieldUpdateOperationsInput } from '../prisma/date-time-field-update-operations.input'
-import { LoveEventUpdateManyWithoutPicNestedInput } from '../love-event/love-event-update-many-without-pic-nested.input'
+import { EventUpdateManyWithoutPicNestedInput } from '../event/event-update-many-without-pic-nested.input'
 
 @InputType()
 export class UploadUpdateWithoutOwnerInput {
@@ -19,6 +19,6 @@ export class UploadUpdateWithoutOwnerInput {
   @Field(() => DateTimeFieldUpdateOperationsInput, { nullable: true })
   updatedAt?: DateTimeFieldUpdateOperationsInput
 
-  @Field(() => LoveEventUpdateManyWithoutPicNestedInput, { nullable: true })
-  eventPic?: LoveEventUpdateManyWithoutPicNestedInput
+  @Field(() => EventUpdateManyWithoutPicNestedInput, { nullable: true })
+  eventPic?: EventUpdateManyWithoutPicNestedInput
 }

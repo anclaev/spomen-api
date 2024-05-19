@@ -1,0 +1,39 @@
+import { Field } from '@nestjs/graphql'
+import { InputType } from '@nestjs/graphql'
+import { StringFieldUpdateOperationsInput } from '../prisma/string-field-update-operations.input'
+import { NullableDateTimeFieldUpdateOperationsInput } from '../prisma/nullable-date-time-field-update-operations.input'
+import { DateTimeFieldUpdateOperationsInput } from '../prisma/date-time-field-update-operations.input'
+import { UploadUpdateOneRequiredWithoutEventPicNestedInput } from '../upload/upload-update-one-required-without-event-pic-nested.input'
+import { LoveUpdateOneRequiredWithoutEventsNestedInput } from '../love/love-update-one-required-without-events-nested.input'
+import { ReviewUpdateManyWithoutEventNestedInput } from '../review/review-update-many-without-event-nested.input'
+
+@InputType()
+export class EventUpdateWithoutOwnerInput {
+  @Field(() => StringFieldUpdateOperationsInput, { nullable: true })
+  name?: StringFieldUpdateOperationsInput
+
+  @Field(() => StringFieldUpdateOperationsInput, { nullable: true })
+  description?: StringFieldUpdateOperationsInput
+
+  @Field(() => NullableDateTimeFieldUpdateOperationsInput, { nullable: true })
+  date?: NullableDateTimeFieldUpdateOperationsInput
+
+  @Field(() => DateTimeFieldUpdateOperationsInput, { nullable: true })
+  createdAt?: DateTimeFieldUpdateOperationsInput
+
+  @Field(() => DateTimeFieldUpdateOperationsInput, { nullable: true })
+  updatedAt?: DateTimeFieldUpdateOperationsInput
+
+  @Field(() => UploadUpdateOneRequiredWithoutEventPicNestedInput, {
+    nullable: true,
+  })
+  pic?: UploadUpdateOneRequiredWithoutEventPicNestedInput
+
+  @Field(() => LoveUpdateOneRequiredWithoutEventsNestedInput, {
+    nullable: true,
+  })
+  love?: LoveUpdateOneRequiredWithoutEventsNestedInput
+
+  @Field(() => ReviewUpdateManyWithoutEventNestedInput, { nullable: true })
+  reviews?: ReviewUpdateManyWithoutEventNestedInput
+}

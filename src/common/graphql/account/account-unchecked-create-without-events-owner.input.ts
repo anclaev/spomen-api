@@ -3,7 +3,9 @@ import { InputType } from '@nestjs/graphql'
 import { AccountCreaterolesInput } from './account-createroles.input'
 import { Sex } from '../prisma/sex.enum'
 import { UploadUncheckedCreateNestedManyWithoutOwnerInput } from '../upload/upload-unchecked-create-nested-many-without-owner.input'
-import { LoveEventReviewUncheckedCreateNestedManyWithoutAuthorInput } from '../love-event-review/love-event-review-unchecked-create-nested-many-without-author.input'
+import { ReviewUncheckedCreateNestedManyWithoutAuthorInput } from '../review/review-unchecked-create-nested-many-without-author.input'
+import { OfferUncheckedCreateNestedManyWithoutTargetInput } from '../offer/offer-unchecked-create-nested-many-without-target.input'
+import { OfferUncheckedCreateNestedManyWithoutOwnerInput } from '../offer/offer-unchecked-create-nested-many-without-owner.input'
 
 @InputType()
 export class AccountUncheckedCreateWithoutEventsOwnerInput {
@@ -54,8 +56,18 @@ export class AccountUncheckedCreateWithoutEventsOwnerInput {
   })
   uploads?: UploadUncheckedCreateNestedManyWithoutOwnerInput
 
-  @Field(() => LoveEventReviewUncheckedCreateNestedManyWithoutAuthorInput, {
+  @Field(() => ReviewUncheckedCreateNestedManyWithoutAuthorInput, {
     nullable: true,
   })
-  reviews?: LoveEventReviewUncheckedCreateNestedManyWithoutAuthorInput
+  reviews?: ReviewUncheckedCreateNestedManyWithoutAuthorInput
+
+  @Field(() => OfferUncheckedCreateNestedManyWithoutTargetInput, {
+    nullable: true,
+  })
+  offers?: OfferUncheckedCreateNestedManyWithoutTargetInput
+
+  @Field(() => OfferUncheckedCreateNestedManyWithoutOwnerInput, {
+    nullable: true,
+  })
+  offerOwner?: OfferUncheckedCreateNestedManyWithoutOwnerInput
 }

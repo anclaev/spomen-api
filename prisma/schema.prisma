@@ -4,7 +4,7 @@ generator client {
 
 generator graphql {
     provider = "prisma-nestjs-graphql"
-    output   = "../src/common/graphql"
+    output   = "../src/common/graphql-generated"
 }
 
 datasource db {
@@ -78,11 +78,11 @@ model Account {
     loveId String? @db.ObjectId
 
     uploads Upload[]
-    reviews LoveEventReview[]
-    offers  Offer[]           @relation("offer_target")
+    reviews Review[]
+    offers  Offer[]  @relation("offer_target")
 
-    offerOwner  Offer[]     @relation("offer_owner")
-    eventsOwner LoveEvent[]
+    offerOwner  Offer[] @relation("offer_owner")
+    eventsOwner Event[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -101,7 +101,7 @@ model Upload {
     owner   Account @relation(fields: [ownerId], references: [id])
     ownerId String  @db.ObjectId
 
-    eventPic LoveEvent[] @relation("love_event_pic")
+    eventPic Event[] @relation("love_event_pic")
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -122,7 +122,7 @@ model Love {
     private Boolean
 
     members Account[]
-    events  LoveEvent[]
+    events  Event[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -137,7 +137,7 @@ model Love {
 // ? love - родительская пара
 // ? owner - создатель события
 // ? reviews - отзывы о событии
-model LoveEvent {
+model Event {
     id String @id @default(auto()) @map("_id") @db.ObjectId
 
     name        String
@@ -153,7 +153,7 @@ model LoveEvent {
     owner   Account @relation(fields: [ownerId], references: [id])
     ownerId String  @db.ObjectId
 
-    reviews LoveEventReview[]
+    reviews Review[]
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
@@ -165,7 +165,7 @@ model LoveEvent {
 // * access - права доступа к мнению
 // ? author - владелец мнения (партнёр)
 // ? event - событие пары 
-model LoveEventReview {
+model Review {
     id String @id @default(auto()) @map("_id") @db.ObjectId
 
     access Access[]
@@ -173,8 +173,8 @@ model LoveEventReview {
     author   Account @relation(fields: [authorId], references: [id])
     authorId String  @db.ObjectId
 
-    event   LoveEvent @relation(fields: [eventId], references: [id])
-    eventId String    @db.ObjectId
+    event   Event  @relation(fields: [eventId], references: [id])
+    eventId String @db.ObjectId
 
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt

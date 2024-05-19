@@ -7,8 +7,10 @@ import { NullableEnumSexFieldUpdateOperationsInput } from '../prisma/nullable-en
 import { NullableDateTimeFieldUpdateOperationsInput } from '../prisma/nullable-date-time-field-update-operations.input'
 import { DateTimeFieldUpdateOperationsInput } from '../prisma/date-time-field-update-operations.input'
 import { UploadUpdateManyWithoutOwnerNestedInput } from '../upload/upload-update-many-without-owner-nested.input'
-import { LoveEventReviewUpdateManyWithoutAuthorNestedInput } from '../love-event-review/love-event-review-update-many-without-author-nested.input'
-import { LoveEventUpdateManyWithoutOwnerNestedInput } from '../love-event/love-event-update-many-without-owner-nested.input'
+import { ReviewUpdateManyWithoutAuthorNestedInput } from '../review/review-update-many-without-author-nested.input'
+import { OfferUpdateManyWithoutTargetNestedInput } from '../offer/offer-update-many-without-target-nested.input'
+import { OfferUpdateManyWithoutOwnerNestedInput } from '../offer/offer-update-many-without-owner-nested.input'
+import { EventUpdateManyWithoutOwnerNestedInput } from '../event/event-update-many-without-owner-nested.input'
 
 @InputType()
 export class AccountUpdateWithoutLoveInput {
@@ -51,11 +53,15 @@ export class AccountUpdateWithoutLoveInput {
   @Field(() => UploadUpdateManyWithoutOwnerNestedInput, { nullable: true })
   uploads?: UploadUpdateManyWithoutOwnerNestedInput
 
-  @Field(() => LoveEventReviewUpdateManyWithoutAuthorNestedInput, {
-    nullable: true,
-  })
-  reviews?: LoveEventReviewUpdateManyWithoutAuthorNestedInput
+  @Field(() => ReviewUpdateManyWithoutAuthorNestedInput, { nullable: true })
+  reviews?: ReviewUpdateManyWithoutAuthorNestedInput
 
-  @Field(() => LoveEventUpdateManyWithoutOwnerNestedInput, { nullable: true })
-  eventsOwner?: LoveEventUpdateManyWithoutOwnerNestedInput
+  @Field(() => OfferUpdateManyWithoutTargetNestedInput, { nullable: true })
+  offers?: OfferUpdateManyWithoutTargetNestedInput
+
+  @Field(() => OfferUpdateManyWithoutOwnerNestedInput, { nullable: true })
+  offerOwner?: OfferUpdateManyWithoutOwnerNestedInput
+
+  @Field(() => EventUpdateManyWithoutOwnerNestedInput, { nullable: true })
+  eventsOwner?: EventUpdateManyWithoutOwnerNestedInput
 }

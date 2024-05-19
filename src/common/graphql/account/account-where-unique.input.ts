@@ -9,8 +9,9 @@ import { DateTimeNullableFilter } from '../prisma/date-time-nullable-filter.inpu
 import { DateTimeFilter } from '../prisma/date-time-filter.input'
 import { LoveNullableRelationFilter } from '../love/love-nullable-relation-filter.input'
 import { UploadListRelationFilter } from '../upload/upload-list-relation-filter.input'
-import { LoveEventReviewListRelationFilter } from '../love-event-review/love-event-review-list-relation-filter.input'
-import { LoveEventListRelationFilter } from '../love-event/love-event-list-relation-filter.input'
+import { ReviewListRelationFilter } from '../review/review-list-relation-filter.input'
+import { OfferListRelationFilter } from '../offer/offer-list-relation-filter.input'
+import { EventListRelationFilter } from '../event/event-list-relation-filter.input'
 
 @InputType()
 export class AccountWhereUniqueInput {
@@ -71,9 +72,15 @@ export class AccountWhereUniqueInput {
   @Field(() => UploadListRelationFilter, { nullable: true })
   uploads?: UploadListRelationFilter
 
-  @Field(() => LoveEventReviewListRelationFilter, { nullable: true })
-  reviews?: LoveEventReviewListRelationFilter
+  @Field(() => ReviewListRelationFilter, { nullable: true })
+  reviews?: ReviewListRelationFilter
 
-  @Field(() => LoveEventListRelationFilter, { nullable: true })
-  eventsOwner?: LoveEventListRelationFilter
+  @Field(() => OfferListRelationFilter, { nullable: true })
+  offers?: OfferListRelationFilter
+
+  @Field(() => OfferListRelationFilter, { nullable: true })
+  offerOwner?: OfferListRelationFilter
+
+  @Field(() => EventListRelationFilter, { nullable: true })
+  eventsOwner?: EventListRelationFilter
 }

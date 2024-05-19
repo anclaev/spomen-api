@@ -3,7 +3,7 @@ import { ObjectType } from '@nestjs/graphql'
 import { ID } from '@nestjs/graphql'
 import { Access } from '../prisma/access.enum'
 import { Account } from '../account/account.model'
-import { LoveEvent } from '../love-event/love-event.model'
+import { Event } from '../event/event.model'
 import { UploadCount } from './upload-count.output'
 
 @ObjectType()
@@ -29,8 +29,8 @@ export class Upload {
   @Field(() => Account, { nullable: false })
   owner?: Account
 
-  @Field(() => [LoveEvent], { nullable: true })
-  eventPic?: Array<LoveEvent>
+  @Field(() => [Event], { nullable: true })
+  eventPic?: Array<Event>
 
   @Field(() => UploadCount, { nullable: false })
   _count?: UploadCount

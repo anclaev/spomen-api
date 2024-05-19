@@ -26,5 +26,5 @@
       "@core/*": ["src/core/*"]
     }
   },
-  "exclude": ["src/common/graphql"]
+  "exclude": ["src/common/graphql", "src/common/graphql-generated"]
 }

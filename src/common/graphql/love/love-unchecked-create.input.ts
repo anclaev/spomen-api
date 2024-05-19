@@ -1,7 +1,8 @@
 import { Field } from '@nestjs/graphql'
 import { InputType } from '@nestjs/graphql'
 import { AccountUncheckedCreateNestedManyWithoutLoveInput } from '../account/account-unchecked-create-nested-many-without-love.input'
-import { LoveEventUncheckedCreateNestedManyWithoutLoveInput } from '../love-event/love-event-unchecked-create-nested-many-without-love.input'
+import { EventUncheckedCreateNestedManyWithoutLoveInput } from '../event/event-unchecked-create-nested-many-without-love.input'
+import { OfferUncheckedCreateNestedManyWithoutLoveInput } from '../offer/offer-unchecked-create-nested-many-without-love.input'
 
 @InputType()
 export class LoveUncheckedCreateInput {
@@ -28,8 +29,13 @@ export class LoveUncheckedCreateInput {
   })
   members?: AccountUncheckedCreateNestedManyWithoutLoveInput
 
-  @Field(() => LoveEventUncheckedCreateNestedManyWithoutLoveInput, {
+  @Field(() => EventUncheckedCreateNestedManyWithoutLoveInput, {
     nullable: true,
   })
-  events?: LoveEventUncheckedCreateNestedManyWithoutLoveInput
+  events?: EventUncheckedCreateNestedManyWithoutLoveInput
+
+  @Field(() => OfferUncheckedCreateNestedManyWithoutLoveInput, {
+    nullable: true,
+  })
+  Offer?: OfferUncheckedCreateNestedManyWithoutLoveInput
 }

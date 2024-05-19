@@ -11,5 +11,11 @@ export class AccountCount {
   reviews?: number
 
   @Field(() => Int, { nullable: false })
+  offers?: number
+
+  @Field(() => Int, { nullable: false })
+  offerOwner?: number
+
+  @Field(() => Int, { nullable: false })
   eventsOwner?: number
 }

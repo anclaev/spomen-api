@@ -4,7 +4,8 @@ import { StringFieldUpdateOperationsInput } from '../prisma/string-field-update-
 import { BoolFieldUpdateOperationsInput } from '../prisma/bool-field-update-operations.input'
 import { DateTimeFieldUpdateOperationsInput } from '../prisma/date-time-field-update-operations.input'
 import { AccountUncheckedUpdateManyWithoutLoveNestedInput } from '../account/account-unchecked-update-many-without-love-nested.input'
-import { LoveEventUncheckedUpdateManyWithoutLoveNestedInput } from '../love-event/love-event-unchecked-update-many-without-love-nested.input'
+import { EventUncheckedUpdateManyWithoutLoveNestedInput } from '../event/event-unchecked-update-many-without-love-nested.input'
+import { OfferUncheckedUpdateManyWithoutLoveNestedInput } from '../offer/offer-unchecked-update-many-without-love-nested.input'
 
 @InputType()
 export class LoveUncheckedUpdateInput {
@@ -28,8 +29,13 @@ export class LoveUncheckedUpdateInput {
   })
   members?: AccountUncheckedUpdateManyWithoutLoveNestedInput
 
-  @Field(() => LoveEventUncheckedUpdateManyWithoutLoveNestedInput, {
+  @Field(() => EventUncheckedUpdateManyWithoutLoveNestedInput, {
     nullable: true,
   })
-  events?: LoveEventUncheckedUpdateManyWithoutLoveNestedInput
+  events?: EventUncheckedUpdateManyWithoutLoveNestedInput
+
+  @Field(() => OfferUncheckedUpdateManyWithoutLoveNestedInput, {
+    nullable: true,
+  })
+  Offer?: OfferUncheckedUpdateManyWithoutLoveNestedInput
 }

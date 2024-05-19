@@ -3,7 +3,8 @@ import { InputType } from '@nestjs/graphql'
 import { StringFieldUpdateOperationsInput } from '../prisma/string-field-update-operations.input'
 import { BoolFieldUpdateOperationsInput } from '../prisma/bool-field-update-operations.input'
 import { DateTimeFieldUpdateOperationsInput } from '../prisma/date-time-field-update-operations.input'
-import { LoveEventUpdateManyWithoutLoveNestedInput } from '../love-event/love-event-update-many-without-love-nested.input'
+import { EventUpdateManyWithoutLoveNestedInput } from '../event/event-update-many-without-love-nested.input'
+import { OfferUpdateManyWithoutLoveNestedInput } from '../offer/offer-update-many-without-love-nested.input'
 
 @InputType()
 export class LoveUpdateWithoutMembersInput {
@@ -22,6 +23,9 @@ export class LoveUpdateWithoutMembersInput {
   @Field(() => DateTimeFieldUpdateOperationsInput, { nullable: true })
   updatedAt?: DateTimeFieldUpdateOperationsInput
 
-  @Field(() => LoveEventUpdateManyWithoutLoveNestedInput, { nullable: true })
-  events?: LoveEventUpdateManyWithoutLoveNestedInput
+  @Field(() => EventUpdateManyWithoutLoveNestedInput, { nullable: true })
+  events?: EventUpdateManyWithoutLoveNestedInput
+
+  @Field(() => OfferUpdateManyWithoutLoveNestedInput, { nullable: true })
+  Offer?: OfferUpdateManyWithoutLoveNestedInput
 }

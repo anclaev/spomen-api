@@ -4,7 +4,7 @@ import { StringFieldUpdateOperationsInput } from '../prisma/string-field-update-
 import { UploadUpdateaccessInput } from './upload-updateaccess.input'
 import { DateTimeFieldUpdateOperationsInput } from '../prisma/date-time-field-update-operations.input'
 import { AccountUpdateOneRequiredWithoutUploadsNestedInput } from '../account/account-update-one-required-without-uploads-nested.input'
-import { LoveEventUpdateManyWithoutPicNestedInput } from '../love-event/love-event-update-many-without-pic-nested.input'
+import { EventUpdateManyWithoutPicNestedInput } from '../event/event-update-many-without-pic-nested.input'
 
 @InputType()
 export class UploadUpdateInput {
@@ -25,6 +25,6 @@ export class UploadUpdateInput {
   })
   owner?: AccountUpdateOneRequiredWithoutUploadsNestedInput
 
-  @Field(() => LoveEventUpdateManyWithoutPicNestedInput, { nullable: true })
-  eventPic?: LoveEventUpdateManyWithoutPicNestedInput
+  @Field(() => EventUpdateManyWithoutPicNestedInput, { nullable: true })
+  eventPic?: EventUpdateManyWithoutPicNestedInput
 }

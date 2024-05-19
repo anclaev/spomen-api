@@ -3,8 +3,9 @@ import { InputType } from '@nestjs/graphql'
 import { SortOrder } from '../prisma/sort-order.enum'
 import { LoveOrderByWithRelationInput } from '../love/love-order-by-with-relation.input'
 import { UploadOrderByRelationAggregateInput } from '../upload/upload-order-by-relation-aggregate.input'
-import { LoveEventReviewOrderByRelationAggregateInput } from '../love-event-review/love-event-review-order-by-relation-aggregate.input'
-import { LoveEventOrderByRelationAggregateInput } from '../love-event/love-event-order-by-relation-aggregate.input'
+import { ReviewOrderByRelationAggregateInput } from '../review/review-order-by-relation-aggregate.input'
+import { OfferOrderByRelationAggregateInput } from '../offer/offer-order-by-relation-aggregate.input'
+import { EventOrderByRelationAggregateInput } from '../event/event-order-by-relation-aggregate.input'
 
 @InputType()
 export class AccountOrderByWithRelationInput {
@@ -56,9 +57,15 @@ export class AccountOrderByWithRelationInput {
   @Field(() => UploadOrderByRelationAggregateInput, { nullable: true })
   uploads?: UploadOrderByRelationAggregateInput
 
-  @Field(() => LoveEventReviewOrderByRelationAggregateInput, { nullable: true })
-  reviews?: LoveEventReviewOrderByRelationAggregateInput
+  @Field(() => ReviewOrderByRelationAggregateInput, { nullable: true })
+  reviews?: ReviewOrderByRelationAggregateInput
 
-  @Field(() => LoveEventOrderByRelationAggregateInput, { nullable: true })
-  eventsOwner?: LoveEventOrderByRelationAggregateInput
+  @Field(() => OfferOrderByRelationAggregateInput, { nullable: true })
+  offers?: OfferOrderByRelationAggregateInput
+
+  @Field(() => OfferOrderByRelationAggregateInput, { nullable: true })
+  offerOwner?: OfferOrderByRelationAggregateInput
+
+  @Field(() => EventOrderByRelationAggregateInput, { nullable: true })
+  eventsOwner?: EventOrderByRelationAggregateInput
 }

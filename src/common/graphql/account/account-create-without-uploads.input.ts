@@ -3,8 +3,10 @@ import { InputType } from '@nestjs/graphql'
 import { AccountCreaterolesInput } from './account-createroles.input'
 import { Sex } from '../prisma/sex.enum'
 import { LoveCreateNestedOneWithoutMembersInput } from '../love/love-create-nested-one-without-members.input'
-import { LoveEventReviewCreateNestedManyWithoutAuthorInput } from '../love-event-review/love-event-review-create-nested-many-without-author.input'
-import { LoveEventCreateNestedManyWithoutOwnerInput } from '../love-event/love-event-create-nested-many-without-owner.input'
+import { ReviewCreateNestedManyWithoutAuthorInput } from '../review/review-create-nested-many-without-author.input'
+import { OfferCreateNestedManyWithoutTargetInput } from '../offer/offer-create-nested-many-without-target.input'
+import { OfferCreateNestedManyWithoutOwnerInput } from '../offer/offer-create-nested-many-without-owner.input'
+import { EventCreateNestedManyWithoutOwnerInput } from '../event/event-create-nested-many-without-owner.input'
 
 @InputType()
 export class AccountCreateWithoutUploadsInput {
@@ -50,11 +52,15 @@ export class AccountCreateWithoutUploadsInput {
   @Field(() => LoveCreateNestedOneWithoutMembersInput, { nullable: true })
   love?: LoveCreateNestedOneWithoutMembersInput
 
-  @Field(() => LoveEventReviewCreateNestedManyWithoutAuthorInput, {
-    nullable: true,
-  })
-  reviews?: LoveEventReviewCreateNestedManyWithoutAuthorInput
+  @Field(() => ReviewCreateNestedManyWithoutAuthorInput, { nullable: true })
+  reviews?: ReviewCreateNestedManyWithoutAuthorInput
 
-  @Field(() => LoveEventCreateNestedManyWithoutOwnerInput, { nullable: true })
-  eventsOwner?: LoveEventCreateNestedManyWithoutOwnerInput
+  @Field(() => OfferCreateNestedManyWithoutTargetInput, { nullable: true })
+  offers?: OfferCreateNestedManyWithoutTargetInput
+
+  @Field(() => OfferCreateNestedManyWithoutOwnerInput, { nullable: true })
+  offerOwner?: OfferCreateNestedManyWithoutOwnerInput
+
+  @Field(() => EventCreateNestedManyWithoutOwnerInput, { nullable: true })
+  eventsOwner?: EventCreateNestedManyWithoutOwnerInput
 }

@@ -7,7 +7,9 @@ import { NullableEnumSexFieldUpdateOperationsInput } from '../prisma/nullable-en
 import { NullableDateTimeFieldUpdateOperationsInput } from '../prisma/nullable-date-time-field-update-operations.input'
 import { DateTimeFieldUpdateOperationsInput } from '../prisma/date-time-field-update-operations.input'
 import { UploadUncheckedUpdateManyWithoutOwnerNestedInput } from '../upload/upload-unchecked-update-many-without-owner-nested.input'
-import { LoveEventUncheckedUpdateManyWithoutOwnerNestedInput } from '../love-event/love-event-unchecked-update-many-without-owner-nested.input'
+import { OfferUncheckedUpdateManyWithoutTargetNestedInput } from '../offer/offer-unchecked-update-many-without-target-nested.input'
+import { OfferUncheckedUpdateManyWithoutOwnerNestedInput } from '../offer/offer-unchecked-update-many-without-owner-nested.input'
+import { EventUncheckedUpdateManyWithoutOwnerNestedInput } from '../event/event-unchecked-update-many-without-owner-nested.input'
 
 @InputType()
 export class AccountUncheckedUpdateWithoutReviewsInput {
@@ -55,8 +57,18 @@ export class AccountUncheckedUpdateWithoutReviewsInput {
   })
   uploads?: UploadUncheckedUpdateManyWithoutOwnerNestedInput
 
-  @Field(() => LoveEventUncheckedUpdateManyWithoutOwnerNestedInput, {
+  @Field(() => OfferUncheckedUpdateManyWithoutTargetNestedInput, {
     nullable: true,
   })
-  eventsOwner?: LoveEventUncheckedUpdateManyWithoutOwnerNestedInput
+  offers?: OfferUncheckedUpdateManyWithoutTargetNestedInput
+
+  @Field(() => OfferUncheckedUpdateManyWithoutOwnerNestedInput, {
+    nullable: true,
+  })
+  offerOwner?: OfferUncheckedUpdateManyWithoutOwnerNestedInput
+
+  @Field(() => EventUncheckedUpdateManyWithoutOwnerNestedInput, {
+    nullable: true,
+  })
+  eventsOwner?: EventUncheckedUpdateManyWithoutOwnerNestedInput
 }

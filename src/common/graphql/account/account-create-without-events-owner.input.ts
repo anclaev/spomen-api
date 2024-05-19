@@ -4,7 +4,9 @@ import { AccountCreaterolesInput } from './account-createroles.input'
 import { Sex } from '../prisma/sex.enum'
 import { LoveCreateNestedOneWithoutMembersInput } from '../love/love-create-nested-one-without-members.input'
 import { UploadCreateNestedManyWithoutOwnerInput } from '../upload/upload-create-nested-many-without-owner.input'
-import { LoveEventReviewCreateNestedManyWithoutAuthorInput } from '../love-event-review/love-event-review-create-nested-many-without-author.input'
+import { ReviewCreateNestedManyWithoutAuthorInput } from '../review/review-create-nested-many-without-author.input'
+import { OfferCreateNestedManyWithoutTargetInput } from '../offer/offer-create-nested-many-without-target.input'
+import { OfferCreateNestedManyWithoutOwnerInput } from '../offer/offer-create-nested-many-without-owner.input'
 
 @InputType()
 export class AccountCreateWithoutEventsOwnerInput {
@@ -53,8 +55,12 @@ export class AccountCreateWithoutEventsOwnerInput {
   @Field(() => UploadCreateNestedManyWithoutOwnerInput, { nullable: true })
   uploads?: UploadCreateNestedManyWithoutOwnerInput
 
-  @Field(() => LoveEventReviewCreateNestedManyWithoutAuthorInput, {
-    nullable: true,
-  })
-  reviews?: LoveEventReviewCreateNestedManyWithoutAuthorInput
+  @Field(() => ReviewCreateNestedManyWithoutAuthorInput, { nullable: true })
+  reviews?: ReviewCreateNestedManyWithoutAuthorInput
+
+  @Field(() => OfferCreateNestedManyWithoutTargetInput, { nullable: true })
+  offers?: OfferCreateNestedManyWithoutTargetInput
+
+  @Field(() => OfferCreateNestedManyWithoutOwnerInput, { nullable: true })
+  offerOwner?: OfferCreateNestedManyWithoutOwnerInput
 }

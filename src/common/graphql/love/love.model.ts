@@ -2,7 +2,8 @@ import { Field } from '@nestjs/graphql'
 import { ObjectType } from '@nestjs/graphql'
 import { ID } from '@nestjs/graphql'
 import { Account } from '../account/account.model'
-import { LoveEvent } from '../love-event/love-event.model'
+import { Event } from '../event/event.model'
+import { Offer } from '../offer/offer.model'
 import { LoveCount } from './love-count.output'
 
 @ObjectType()
@@ -28,8 +29,11 @@ export class Love {
   @Field(() => [Account], { nullable: true })
   members?: Array<Account>
 
-  @Field(() => [LoveEvent], { nullable: true })
-  events?: Array<LoveEvent>
+  @Field(() => [Event], { nullable: true })
+  events?: Array<Event>
+
+  @Field(() => [Offer], { nullable: true })
+  Offer?: Array<Offer>
 
   @Field(() => LoveCount, { nullable: false })
   _count?: LoveCount

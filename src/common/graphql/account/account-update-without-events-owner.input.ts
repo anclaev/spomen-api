@@ -8,7 +8,9 @@ import { NullableDateTimeFieldUpdateOperationsInput } from '../prisma/nullable-d
 import { DateTimeFieldUpdateOperationsInput } from '../prisma/date-time-field-update-operations.input'
 import { LoveUpdateOneWithoutMembersNestedInput } from '../love/love-update-one-without-members-nested.input'
 import { UploadUpdateManyWithoutOwnerNestedInput } from '../upload/upload-update-many-without-owner-nested.input'
-import { LoveEventReviewUpdateManyWithoutAuthorNestedInput } from '../love-event-review/love-event-review-update-many-without-author-nested.input'
+import { ReviewUpdateManyWithoutAuthorNestedInput } from '../review/review-update-many-without-author-nested.input'
+import { OfferUpdateManyWithoutTargetNestedInput } from '../offer/offer-update-many-without-target-nested.input'
+import { OfferUpdateManyWithoutOwnerNestedInput } from '../offer/offer-update-many-without-owner-nested.input'
 
 @InputType()
 export class AccountUpdateWithoutEventsOwnerInput {
@@ -54,8 +56,12 @@ export class AccountUpdateWithoutEventsOwnerInput {
   @Field(() => UploadUpdateManyWithoutOwnerNestedInput, { nullable: true })
   uploads?: UploadUpdateManyWithoutOwnerNestedInput
 
-  @Field(() => LoveEventReviewUpdateManyWithoutAuthorNestedInput, {
-    nullable: true,
-  })
-  reviews?: LoveEventReviewUpdateManyWithoutAuthorNestedInput
+  @Field(() => ReviewUpdateManyWithoutAuthorNestedInput, { nullable: true })
+  reviews?: ReviewUpdateManyWithoutAuthorNestedInput
+
+  @Field(() => OfferUpdateManyWithoutTargetNestedInput, { nullable: true })
+  offers?: OfferUpdateManyWithoutTargetNestedInput
+
+  @Field(() => OfferUpdateManyWithoutOwnerNestedInput, { nullable: true })
+  offerOwner?: OfferUpdateManyWithoutOwnerNestedInput
 }

@@ -5,8 +5,9 @@ import { Role } from '../prisma/role.enum'
 import { Sex } from '../prisma/sex.enum'
 import { Love } from '../love/love.model'
 import { Upload } from '../upload/upload.model'
-import { LoveEventReview } from '../love-event-review/love-event-review.model'
-import { LoveEvent } from '../love-event/love-event.model'
+import { Review } from '../review/review.model'
+import { Offer } from '../offer/offer.model'
+import { Event } from '../event/event.model'
 import { AccountCount } from './account-count.output'
 
 @ObjectType()
@@ -59,11 +60,17 @@ export class Account {
   @Field(() => [Upload], { nullable: true })
   uploads?: Array<Upload>
 
-  @Field(() => [LoveEventReview], { nullable: true })
-  reviews?: Array<LoveEventReview>
+  @Field(() => [Review], { nullable: true })
+  reviews?: Array<Review>
 
-  @Field(() => [LoveEvent], { nullable: true })
-  eventsOwner?: Array<LoveEvent>
+  @Field(() => [Offer], { nullable: true })
+  offers?: Array<Offer>
+
+  @Field(() => [Offer], { nullable: true })
+  offerOwner?: Array<Offer>
+
+  @Field(() => [Event], { nullable: true })
+  eventsOwner?: Array<Event>
 
   @Field(() => AccountCount, { nullable: false })
   _count?: AccountCount

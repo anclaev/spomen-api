@@ -5,7 +5,7 @@ import { StringFilter } from '../prisma/string-filter.input'
 import { EnumAccessNullableListFilter } from '../prisma/enum-access-nullable-list-filter.input'
 import { DateTimeFilter } from '../prisma/date-time-filter.input'
 import { AccountRelationFilter } from '../account/account-relation-filter.input'
-import { LoveEventListRelationFilter } from '../love-event/love-event-list-relation-filter.input'
+import { EventListRelationFilter } from '../event/event-list-relation-filter.input'
 
 @InputType()
 export class UploadWhereUniqueInput {
@@ -39,6 +39,6 @@ export class UploadWhereUniqueInput {
   @Field(() => AccountRelationFilter, { nullable: true })
   owner?: AccountRelationFilter
 
-  @Field(() => LoveEventListRelationFilter, { nullable: true })
-  eventPic?: LoveEventListRelationFilter
+  @Field(() => EventListRelationFilter, { nullable: true })
+  eventPic?: EventListRelationFilter
 }

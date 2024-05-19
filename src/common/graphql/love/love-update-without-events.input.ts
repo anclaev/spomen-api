@@ -4,6 +4,7 @@ import { StringFieldUpdateOperationsInput } from '../prisma/string-field-update-
 import { BoolFieldUpdateOperationsInput } from '../prisma/bool-field-update-operations.input'
 import { DateTimeFieldUpdateOperationsInput } from '../prisma/date-time-field-update-operations.input'
 import { AccountUpdateManyWithoutLoveNestedInput } from '../account/account-update-many-without-love-nested.input'
+import { OfferUpdateManyWithoutLoveNestedInput } from '../offer/offer-update-many-without-love-nested.input'
 
 @InputType()
 export class LoveUpdateWithoutEventsInput {
@@ -24,4 +25,7 @@ export class LoveUpdateWithoutEventsInput {
 
   @Field(() => AccountUpdateManyWithoutLoveNestedInput, { nullable: true })
   members?: AccountUpdateManyWithoutLoveNestedInput
+
+  @Field(() => OfferUpdateManyWithoutLoveNestedInput, { nullable: true })
+  Offer?: OfferUpdateManyWithoutLoveNestedInput
 }
