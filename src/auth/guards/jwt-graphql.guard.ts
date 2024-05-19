@@ -8,6 +8,11 @@ import { Request } from 'express'
  */
 @Injectable()
 export class JwtGraphQLGuard extends AuthGuard('jwt') {
+  /**
+   * Получение запроса из контекста GraphQL
+   * @param {ExecutionContext} context Контекст GraphQL
+   * @returns {Request} Объект запроса Express
+   */
   getRequest(context: ExecutionContext): Request {
     const ctx = GqlExecutionContext.create(context)
     return ctx.getContext().req

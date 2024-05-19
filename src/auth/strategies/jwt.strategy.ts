@@ -1,9 +1,10 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { PassportStrategy } from '@nestjs/passport'
 import { ExtractJwt, Strategy } from 'passport-jwt'
-import { Account } from '@prisma/client'
 
 import { TokenPayload } from '@interfaces/token-payload'
+import { User } from '@interfaces/user'
+
 import { ConfigService } from '@core/config'
 
 import { AccountRepository } from '@/account/account.repository'
@@ -35,7 +36,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
    * @param {TokenPayload} payload Авторизационные данные
    * @returns {AuthenticatedUser} Авторизованный пользователь
    */
-  async validate(payload: TokenPayload): Promise<Omit<Account, 'password'>> {
+  async validate(payload: TokenPayload): Promise<User> {
     const account = await this.account.findOne({
       where: { id: payload.user_id },
     })

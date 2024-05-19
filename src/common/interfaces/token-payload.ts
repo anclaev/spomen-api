@@ -1,3 +1,6 @@
+/**
+ * Авторизационные данные пользователя
+ */
 export type TokenPayload = {
   user_id: string
   login: string

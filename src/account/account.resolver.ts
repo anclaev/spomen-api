@@ -1,19 +1,33 @@
 import { Resolver, Args, Query, ID } from '@nestjs/graphql'
 
-import { UseGQLAuth } from '@decorators/auth'
-
 import { Account } from '@graphql/account/account.model'
+
+import { UseGQLAuth } from '@decorators/auth'
 
 import { AccountService } from './account.service'
 
+/**
+ * Ресольвер аккаунта
+ */
 @Resolver(() => Account)
 export class AccountResolver {
+  /**
+   * Конструктор ресольвера аккаунта
+   * @param {AccountService} account Сервис аккаунта
+   */
   constructor(private readonly account: AccountService) {}
 
+  /**
+   * Запрос на получение аккаунта по ID
+   * @param {String} id ID аккаунта
+   * @returns {Account | null} Аккаунт в системе
+   */
   @UseGQLAuth()
   @Query(() => Account, { name: 'account' })
-  findOne(@Args('id', { type: () => ID }) id: string) {
-    return this.account.findOne(id)
+  async findOne(
+    @Args('id', { type: () => ID }) id: string,
+  ): Promise<Account | null> {
+    return await this.account.findOne(id)
   }
 
   // @Mutation(() => Account)

@@ -1,3 +1,6 @@
+/**
+ * Опции cookies
+ */
 type CookiesOptions = {
   key: string
   value: string
@@ -8,15 +11,51 @@ type CookiesOptions = {
   httpOnly?: boolean
 }
 
+/**
+ * Cookies
+ */
 export class Cookies {
+  /**
+   * Ключ кук
+   */
   key: string
+
+  /**
+   * Значение кук
+   */
   value: string
+
+  /**
+   * Путь доступа кук
+   */
   path: string
+
+  /**
+   * Поддерживаемый домен кук
+   */
   domain: string
+
+  /**
+   * Флаг HTTP(S) кук
+   * @default true
+   */
   secure?: boolean
+
+  /**
+   * Срок действия кук
+   */
   maxAge?: string
+
+  /**
+   * Флаг поддерживаемого протокола
+   * @default true
+   */
   httpOnly?: boolean
 
+  /**
+   * Конструктор кук
+   * @param {CookiesOptions} options Опции кук
+   */
   constructor(options: CookiesOptions) {
     this.key = options.key
     this.value = options.value
@@ -27,7 +66,11 @@ export class Cookies {
     this.httpOnly = options.httpOnly ?? true
   }
 
-  toString() {
+  /**
+   * Форматирование куки в строку
+   * @returns {String} Строка куки
+   */
+  toString(): string {
     return `${this.key}=${this.value}; ${this.httpOnly ? 'HttpOnly;' : ''} ${
       this.secure ? 'Secure;' : ''
     } Path=${this.path}; Max-Age=${this.maxAge}; Domain=${this.domain}`
