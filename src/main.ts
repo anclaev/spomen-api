@@ -11,6 +11,9 @@ import { ConfigService } from '@core/config'
 
 import { AppModule } from './app.module'
 
+/**
+ * Точка входа в приложение
+ */
 const bootstrap = async () => {
   const app = await NestFactory.create(AppModule, {
     logger: WinstonModule.createLogger(winstonOptions),

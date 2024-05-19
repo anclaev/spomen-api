@@ -27,21 +27,38 @@ import { LocalEmailGuard } from './guards/local-email.guard'
 
 import { SignUpDto } from './dto/sign-up.dto'
 
+/**
+ * HTTP-контроллер авторизации
+ */
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('auth')
 export class AuthController {
+  /**
+   * Конструктор контроллера авторизации
+   * @param {AuthService} auth Сервис авторизации
+   */
   constructor(private readonly auth: AuthService) {}
 
+  /**
+   * Получение текущего авторизованного пользователя
+   * @param {AuthenticatedUser} user
+   * @returns {AuthenticatedUser} Аккаунт пользователя
+   */
   @Get()
   @UseAuth()
-  user(@UseUser() user: Account) {
+  user(@UseUser() user: AuthenticatedUser): AuthenticatedUser {
     return user
   }
 
+  /**
+   * Регистрация аккаунта
+   * @param {SignUpDto} dto Регистрационные данные
+   * @returns {Account} Созданный аккаунт
+   */
   @Post('sign-up')
   @HttpCode(200)
   @UseTransform(AccountResponse)
-  async signUp(@Body() dto: SignUpDto) {
+  async signUp(@Body() dto: SignUpDto): Promise<Account> {
     const createdAccount = await this.auth.signUp(dto)
 
     if (!createdAccount) {
@@ -51,17 +68,27 @@ export class AuthController {
     return createdAccount
   }
 
+  /**
+   * Вход в систему по логину
+   * @param {AuthenticatedUser} user Авторизованный пользователь
+   * @returns {AuthenticatedUser} Авторизованный пользователь
+   */
   @Post('sign-in')
   @HttpCode(200)
   @UseGuards(LocalLoginGuard)
-  signIn(@UseUser() user: AuthenticatedUser) {
+  signIn(@UseUser() user: AuthenticatedUser): AuthenticatedUser {
     return user
   }
 
+  /**
+   * Вход в систему по почте
+   * @param {AuthenticatedUser} user Авторизованный пользователь
+   * @returns {AuthenticatedUser} Авторизованный пользователь
+   */
   @Post('sign-in-email')
   @HttpCode(200)
   @UseGuards(LocalEmailGuard)
-  signInByEmail(@UseUser() user: User) {
+  signInByEmail(@UseUser() user: AuthenticatedUser): AuthenticatedUser {
     return user
   }
 }

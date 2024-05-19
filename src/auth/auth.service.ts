@@ -5,18 +5,32 @@ import { JwtService } from '@nestjs/jwt'
 import * as argon2 from 'argon2'
 
 import { TokenPayload } from '@interfaces/token-payload'
+import { AuthenticatedUser } from '@interfaces/user'
 
 import { AccountRepository } from '@/account/account.repository'
 
 import { SignUpDto } from './dto/sign-up.dto'
 
+/**
+ * Сервис авторизации
+ */
 @Injectable()
 export class AuthService {
+  /**
+   * Конструктор сервиса авторизации
+   * @param {AccountRepository} account Репозиторий аккаунта
+   * @param {JwtService} jwt Сервис работы с JWT-токенами
+   */
   constructor(
     private readonly account: AccountRepository,
     private readonly jwt: JwtService,
   ) {}
 
+  /**
+   * Регистрация в приложении
+   * @param {SignUpDto} dto Данные для авторизации
+   * @returns {Account | null} Созданный аккаунт
+   */
   async signUp(dto: SignUpDto): Promise<Account | null> {
     const password = await argon2.hash(dto.password)
 
@@ -31,10 +45,16 @@ export class AuthService {
     })
   }
 
+  /**
+   * Авторизация пользователя по логину
+   * @param {String} login Логин аккаунта
+   * @param {String} password Пароль от аккаунта
+   * @returns {AuthenticatedUser} Аккаунт пользователя с токеном доступа
+   */
   async getAuthenticatedUserByLogin(
     login: string,
     password: string,
-  ): Promise<Account & { access_token: string }> {
+  ): Promise<AuthenticatedUser> {
     const account = await this.account.findOne({
       where: { login: login.trim() },
     })
@@ -42,10 +62,16 @@ export class AuthService {
     return await this.verifyAccount(account, password)
   }
 
+  /**
+   * Авторизация пользователя по почте
+   * @param {String} email Почта аккаунта
+   * @param {String} password Пароль от аккаунта
+   * @returns {AuthenticatedUser} Аккаунт пользователя с токеном доступа
+   */
   async getAuthenticatedUserByEmail(
     email: string,
     password: string,
-  ): Promise<Account> {
+  ): Promise<AuthenticatedUser> {
     const account = await this.account.findOne({
       where: { email: email.trim() },
     })
@@ -53,14 +79,25 @@ export class AuthService {
     return await this.verifyAccount(account, password)
   }
 
+  /**
+   * Создание токена доступа
+   * @param {TokenPayload} payload Авторизационные данные
+   * @returns {String} Подписанный JWT-токен
+   */
   async generateToken(payload: TokenPayload): Promise<string> {
     return await this.jwt.signAsync(payload)
   }
 
+  /**
+   * Авторизация аккаунта по паролю
+   * @param {Account} account Аккаунт пользователя
+   * @param {String} password Пароль от аккаунта
+   * @returns {AuthenticatedUser} Аккаунт пользователя с токеном доступа
+   */
   private async verifyAccount(
     account: Account | null,
     password: string,
-  ): Promise<Account & { access_token: string }> {
+  ): Promise<AuthenticatedUser> {
     if (!account) {
       throw new BadRequestException('Wrong credentials')
     }

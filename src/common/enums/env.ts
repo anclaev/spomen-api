@@ -1,3 +1,6 @@
+/**
+ * Переменные окружения
+ */
 export enum ENV {
   COOKIE_SECRET = 'COOKIE_SECRET',
   NODE_ENV = 'NODE_ENV',
