@@ -1,13 +1,13 @@
 /**
  * Опции cookies
  */
-type CookiesOptions = {
+export type CookiesOptions = {
   key: string
   value: string
   path: string
   domain: string
-  secure?: boolean
   maxAge?: string
+  secure?: boolean
   httpOnly?: boolean
 }
 
@@ -73,6 +73,6 @@ export class Cookies {
   toString(): string {
     return `${this.key}=${this.value}; ${this.httpOnly ? 'HttpOnly;' : ''} ${
       this.secure ? 'Secure;' : ''
-    } Path=${this.path}; Max-Age=${this.maxAge}; Domain=${this.domain}`
+    } Path=${this.path}; ${this.maxAge ? 'Max-Age=' + this.maxAge + ';' : ''} Domain=${this.domain}`
   }
 }

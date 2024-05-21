@@ -12,7 +12,6 @@ import {
 } from '@common/graphql/index'
 
 import { AccountRepository } from '../account.repository'
-import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library'
 
 describe('AccountRepository', () => {
   let repo: AccountRepository

@@ -14,7 +14,6 @@ import { Account } from '@prisma/client'
 
 import { AuthenticatedUser, User } from '@interfaces/user'
 
-import { UseTransform } from '@decorators/transform'
 import { UseAuth } from '@decorators/auth'
 import { UseUser } from '@decorators/user'
 
