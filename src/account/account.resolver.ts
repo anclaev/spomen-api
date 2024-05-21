@@ -1,6 +1,5 @@
 import { Resolver, Args, Query, ID } from '@nestjs/graphql'
-
-import { Account } from '@graphql/account/account.model'
+import { Account } from '@graphql/index'
 
 import { UseGQLAuth } from '@decorators/auth'
 

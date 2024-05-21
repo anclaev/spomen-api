@@ -18,8 +18,6 @@ import { UseTransform } from '@decorators/transform'
 import { UseAuth } from '@decorators/auth'
 import { UseUser } from '@decorators/user'
 
-import { AccountResponse } from '@/account/account.response'
-
 import { AuthService } from './auth.service'
 
 import { LocalLoginGuard } from './guards/local-login.guard'
@@ -57,7 +55,6 @@ export class AuthController {
    */
   @Post('sign-up')
   @HttpCode(200)
-  @UseTransform(AccountResponse)
   async signUp(@Body() dto: SignUpDto): Promise<Account> {
     const createdAccount = await this.auth.signUp(dto)
 

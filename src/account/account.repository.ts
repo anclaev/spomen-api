@@ -3,10 +3,12 @@ import { Injectable } from '@nestjs/common'
 
 import { Account } from '@prisma/client'
 
-import { FindUniqueAccountArgs } from '@graphql/account/find-unique-account.args'
-import { CreateOneAccountArgs } from '@graphql/account/create-one-account.args'
-import { UpdateOneAccountArgs } from '@graphql/account/update-one-account.args'
-import { FindManyAccountArgs } from '@graphql/account/find-many-account.args'
+import {
+  CreateOneAccountArgs,
+  FindManyAccountArgs,
+  FindUniqueAccountArgs,
+  UpdateOneAccountArgs,
+} from '@graphql/index'
 
 /**
  * Репозиторий аккаунта

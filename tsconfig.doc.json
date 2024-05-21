@@ -19,12 +19,11 @@
     "noFallthroughCasesInSwitch": true,
     "paths": {
       "@interfaces/*": ["src/common/interfaces/*"],
-      "@graphql/*": ["src/common/graphql/*"],
       "@enums/*": ["src/common/enums/*"],
       "@utils/*": ["src/common/utils/*"],
       "@common/*": ["src/common/*"],
       "@core/*": ["src/core/*"]
     }
   },
-  "exclude": ["src/common/graphql", "src/common/graphql-generated"]
+  "exclude": ["graphql"]
 }

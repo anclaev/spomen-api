@@ -3,204 +3,194 @@ generator client {
 }
 
 generator graphql {
-    provider = "prisma-nestjs-graphql"
-    output   = "../src/common/graphql-generated"
+    provider                              = "prisma-nestjs-graphql"
+    output                                = "../graphql"
+    fields_Validator_from                 = "class-validator"
+    fields_Validator_input                = true
+    requireSingleFieldsInWhereUniqueInput = true
+    emitSingle                            = true
+    emitCompiled                          = true
+    purgeOutput                           = true
+    noTypeId                              = true
 }
 
 datasource db {
-    provider = "mongodb"
+    provider = "postgresql"
     url      = env("DATABASE_URL")
 }
 
-// ? Пол пользователя
-// * Male - мужской
-// * Female - женский
-enum Sex {
+enum Gender {
     Male
     Female
 }
 
-// TODO: Переименовать перечисление на права доступа к загрузке
-// Доступ к загрузке
-// * Public - публичный (по-умолчанию) 
-// * Owner - только для владельца
-// * Lovers - на уровне пары
-enum Access {
+enum Permission {
     Public
     Lovers
     Owner
 }
 
-// Роль аккаунта
-// * Public - публичная (по-умолчанию)
-// * Lover - партнёр в паре
-// * Admin - адмиинстратор
 enum Role {
     Public
     Lover
     Admin
 }
 
-// TODO: Изменить связь с Offer на one-to-one
-// Аккаунты
-// * login - логин пользователя (уникальный)
-// * password - пароль доступа
-// * email - почта пользователя (уникальная)
-// * roles - роли пользователя
-// * vkId - идентификатор аккаунта VK
-// * vkPic - аватар аккуаунта VK
-// * sex - пол пользователя
-// * name - имя пользователя
-// * surname - фамилия пользователя
-// * birthday - дата рождения пользователя
-// ? love - пара аккаунта 
-// ? uploads - загрузки пользователя  
-// ? reviews - отзывы пользователя на события
-// ? offers - полученные приглашения
-// ? offerOwner - созданные приглашения 
-// ? eventsOwner - созданные события
 model Account {
-    id       String  @id @default(auto()) @map("_id") @db.ObjectId
+    id       String  @id @default(uuid())
     login    String  @unique
-    password String
     email    String? @unique
+    password String
     roles    Role[]
 
-    vkId  String? @unique
-    vkPic String?
+    avatar   Upload? @relation(name: "accountAvatar", fields: [avatarId], references: [id])
+    avatarId String?
 
-    sex      Sex?
+    vkId     String? @unique
+    vkAvatar String?
+
     name     String?
     surname  String?
+    gender   Gender?
     birthday DateTime? @db.Date
 
-    love   Love?   @relation(fields: [loveId], references: [id])
-    loveId String? @db.ObjectId
+    uploads Upload[] @relation("uploadOwner")
+    chats   Chat[]   @relation("chatMembers")
 
-    uploads Upload[]
-    reviews Review[]
-    offers  Offer[]  @relation("offer_target")
+    offer Offer? @relation("offerTarget")
 
-    offerOwner  Offer[] @relation("offer_owner")
-    eventsOwner Event[]
+    love   Love?   @relation(name: "accountLove", fields: [loveId], references: [id])
+    loveId String?
 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    ownedMessages Message[]
+    ownedReviews  Review[]
+    ownedLoves    Love[]    @relation("loveOwner")
+    ownedOffers   Offer[]   @relation("offerOwner")
+    ownedChats    Chat[]    @relation("chatOwner")
+
+    createdAt DateTime @default(now()) @db.Date
+    updatedAt DateTime @updatedAt @db.Date
 }
 
-// Загрузки (файлы)
-// * url - URL загрузки в S3-/локальном хранилище
-// * access - права доступа к загрузкам
-// ? owner - владелец файла
-model Upload {
-    id  String @id @default(auto()) @map("_id") @db.ObjectId
-    url String
-
-    access Access[]
-
-    owner   Account @relation(fields: [ownerId], references: [id])
-    ownerId String  @db.ObjectId
-
-    eventPic Event[] @relation("love_event_pic")
-
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-}
-
-// TODO: Изменить связь с Offer на one-to-one
-// Пары
-// * alias - короткое имя пары на транслите
-// * name - название пары
-// * private - флаг приватности пары
-// ? members - участники пары 
-// ? events - события пары 
-// ? offers - приглашения в пару
 model Love {
-    id      String  @id @default(auto()) @map("_id") @db.ObjectId
-    alias   String  @unique
-    name    String
-    private Boolean
+    id    String @id @default(uuid())
+    alias String @unique
+    name  String
 
-    members Account[]
-    events  Event[]
+    isPrivate Boolean @default(false)
 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    partners Account[] @relation("accountLove")
+
+    owner   Account @relation(name: "loveOwner", fields: [ownerId], references: [id])
+    ownerId String
+
+    createdAt DateTime @default(now()) @db.Date
+    updatedAt DateTime @updatedAt @db.Date
     Offer     Offer[]
 }
 
-// TODO: Добавить массив с загрузками для события (many-to-many)
-// События пары
-// * description - описание события
-// * date - дата события
-// * pic - постер события
-// ? love - родительская пара
-// ? owner - создатель события
-// ? reviews - отзывы о событии
 model Event {
-    id String @id @default(auto()) @map("_id") @db.ObjectId
-
+    id          String    @id @default(uuid())
     name        String
     description String
     date        DateTime? @db.Date
 
-    pic   Upload @relation(name: "love_event_pic", fields: [picId], references: [id])
-    picId String @db.ObjectId
-
-    love   Love   @relation(fields: [loveId], references: [id])
-    loveId String @db.ObjectId
-
-    owner   Account @relation(fields: [ownerId], references: [id])
-    ownerId String  @db.ObjectId
+    pic   Upload @relation(name: "picUpload", fields: [picId], references: [id])
+    picId String
 
     reviews Review[]
+    uploads Upload[] @relation("eventUploads")
 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    createdAt DateTime @default(now()) @db.Date
+    updatedAt DateTime @updatedAt @db.Date
 }
 
-// TODO: Добавить массив с загрузками для мнения (many-to-many)
-// TODO: Добавить флаг прочтения отзыва другим партнёром
-// Мнение партнера о событии пары
-// * access - права доступа к мнению
-// ? author - владелец мнения (партнёр)
-// ? event - событие пары 
 model Review {
-    id String @id @default(auto()) @map("_id") @db.ObjectId
-
-    access Access[]
+    id          String       @id @default(uuid())
+    text        String
+    permissions Permission[]
 
     author   Account @relation(fields: [authorId], references: [id])
-    authorId String  @db.ObjectId
+    authorId String
 
     event   Event  @relation(fields: [eventId], references: [id])
-    eventId String @db.ObjectId
+    eventId String @unique
 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    createdAt DateTime @default(now()) @db.Date
+    updatedAt DateTime @updatedAt @db.Date
 }
 
-// Приглашения в пару
-// * code - код приглашения
-// ? love - предлагаемая пара
-// ? owner - создатель приглашения
-// ? target - получатель приглашения
 model Offer {
-    id   String @id @default(auto()) @map("_id") @db.ObjectId
+    id   String @id @default(uuid())
     code String
 
     love   Love   @relation(fields: [loveId], references: [id])
-    loveId String @db.ObjectId
+    loveId String
 
-    owner   Account @relation(name: "offer_owner", fields: [ownerId], references: [id])
-    ownerId String  @db.ObjectId
+    owner   Account @relation(name: "offerOwner", fields: [ownerId], references: [id])
+    ownerId String
 
-    target   Account @relation(name: "offer_target", fields: [targetId], references: [id])
-    targetId String  @db.ObjectId
+    target   Account @relation(name: "offerTarget", fields: [targetId], references: [id])
+    targetId String  @unique
 
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+    isUsed Boolean @default(false)
+
+    createdAt DateTime @default(now()) @db.Date
+    updatedAt DateTime @updatedAt @db.Date
 }
 
-// TODO: Добавить модели чата, сообщения
-// TODO: Добавить модели истории изменения сущностей
+model Chat {
+    id String @id @default(uuid())
+
+    title String?
+
+    owner   Account @relation(name: "chatOwner", fields: [ownerId], references: [id])
+    ownerId String
+
+    pic   Upload @relation(fields: [picId], references: [id])
+    picId String
+
+    messages Message[]
+    members  Account[] @relation("chatMembers")
+
+    createdAt DateTime @default(now()) @db.Date
+    updatedAt DateTime @updatedAt @db.Date
+}
+
+model Message {
+    id   String @id @default(uuid())
+    text String
+
+    author   Account @relation(fields: [authorId], references: [id])
+    authorId String
+
+    chat   Chat   @relation(fields: [chatId], references: [id])
+    chatId String
+
+    uploads Upload[]
+
+    createdAt DateTime @default(now()) @db.Date
+    updatedAt DateTime @updatedAt @db.Date
+}
+
+model Upload {
+    id   String @id @default(uuid())
+    name String
+    ext  String
+    url  String
+
+    permissions Permission[]
+
+    owner   Account @relation(name: "uploadOwner", fields: [ownerId], references: [id])
+    ownerId String
+
+    event   Event?  @relation(name: "eventUploads", fields: [eventId], references: [id])
+    eventId String?
+
+    events   Event[]   @relation("picUpload")
+    accounts Account[] @relation("accountAvatar")
+    chats    Chat[]
+    messages Message[]
+
+    createdAt DateTime @default(now()) @db.Date
+}

@@ -115,7 +115,7 @@ export class AuthService {
       login: account.login,
       email: account.email,
       vk_id: account.id,
-      vk_pic: account.vkPic,
+      vk_avatar: account.vkAvatar,
       vk_access_token: null,
     })
 

@@ -4,3 +4,4 @@ dist
 REAMDE.md
 scripts
 .husky
+*.tsbuildinfo
