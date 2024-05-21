@@ -3,8 +3,9 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { PrismaService } from 'nestjs-prisma'
 import { PrismaClient } from '@prisma/client'
 
+import { mockAccount } from '@mocks/account.mock'
+
 import {
-  Account,
   CreateOneAccountArgs,
   FindManyAccountArgs,
   FindUniqueAccountArgs,
@@ -17,7 +18,7 @@ describe('AccountRepository', () => {
   let repo: AccountRepository
   let prisma: DeepMockProxy<PrismaClient>
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [AccountRepository, PrismaService],
     })
@@ -40,27 +41,9 @@ describe('AccountRepository', () => {
         password: 'test',
       },
     }
-    const testRes: Account = {
-      id: '1',
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      email: null,
-      roles: [],
-      avatarId: null,
-      vkId: null,
-      vkAvatar: null,
-      name: null,
-      surname: null,
-      gender: null,
-      birthday: null,
-      loveId: null,
-      login: 'test',
-      password: 'test',
-    }
+    prisma.account.create.mockResolvedValueOnce(mockAccount)
 
-    prisma.account.create.mockResolvedValueOnce(testRes)
-
-    return repo.create(testReq).then((data) => expect(data).toBe(testRes))
+    return repo.create(testReq).then((data) => expect(data).toBe(mockAccount))
   })
 
   it('Должен возвращать null, если аккаунт не уникален', () => {
@@ -70,25 +53,8 @@ describe('AccountRepository', () => {
         password: 'test',
       },
     }
-    const testRes: Account = {
-      id: '1',
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      email: null,
-      roles: [],
-      avatarId: null,
-      vkId: null,
-      vkAvatar: null,
-      name: null,
-      surname: null,
-      gender: null,
-      birthday: null,
-      loveId: null,
-      login: 'test',
-      password: 'test',
-    }
 
-    prisma.account.findUnique.mockResolvedValueOnce(testRes)
+    prisma.account.findUnique.mockResolvedValueOnce(mockAccount)
 
     return repo.create(testReq).then((data) => expect(data).toBe(null))
   })
@@ -105,45 +71,27 @@ describe('AccountRepository', () => {
       },
     }
 
-    const testRes: Account = {
-      id: '1',
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      email: null,
-      roles: [],
-      avatarId: null,
-      vkId: null,
-      vkAvatar: null,
-      name: null,
-      surname: null,
-      gender: null,
-      birthday: null,
-      loveId: null,
-      login: 'test2',
-      password: 'test',
-    }
+    prisma.account.update.mockResolvedValueOnce(mockAccount)
 
-    prisma.account.update.mockResolvedValueOnce(testRes)
-
-    return repo.update(testReq).then((data) => expect(data).toBe(testRes))
+    return repo.update(testReq).then((data) => expect(data).toBe(mockAccount))
   })
 
-  // it('Должен возвращать null, если аккаунт не найден', () => {
-  //   const testReq: UpdateOneAccountArgs = {
-  //     where: {
-  //       id: '1',
-  //     },
-  //     data: {
-  //       login: {
-  //         set: 'test2',
-  //       },
-  //     },
-  //   }
+  it('Должен возвращать null, если аккаунт не найден', () => {
+    const testReq: UpdateOneAccountArgs = {
+      where: {
+        id: '1',
+      },
+      data: {
+        login: {
+          set: 'test2',
+        },
+      },
+    }
 
-  //   prisma.account.update.mockImplementation()
+    prisma.account.update.mockImplementationOnce(() => null!)
 
-  //   expect(repo.update(testReq)).resolves.toEqual()
-  // })
+    return repo.update(testReq).then((data) => expect(data).toBe(null))
+  })
 
   it('Должен возвращать найденный аккаунт', () => {
     const testReq: FindUniqueAccountArgs = {
@@ -152,27 +100,9 @@ describe('AccountRepository', () => {
       },
     }
 
-    const testRes: Account = {
-      id: '1',
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      email: null,
-      roles: [],
-      avatarId: null,
-      vkId: null,
-      vkAvatar: null,
-      name: null,
-      surname: null,
-      gender: null,
-      birthday: null,
-      loveId: null,
-      login: 'test2',
-      password: 'test',
-    }
+    prisma.account.findUnique.mockResolvedValueOnce(mockAccount)
 
-    prisma.account.findUnique.mockResolvedValueOnce(testRes)
-
-    return repo.findOne(testReq).then((data) => expect(data).toBe(testRes))
+    return repo.findOne(testReq).then((data) => expect(data).toBe(mockAccount))
   })
 
   it('Должен возвращать множество аккаунтов по параметру', () => {
@@ -184,45 +114,10 @@ describe('AccountRepository', () => {
       },
     }
 
-    const testRes: Account[] = [
-      {
-        id: '1',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        email: null,
-        roles: [],
-        avatarId: null,
-        vkId: null,
-        vkAvatar: null,
-        name: null,
-        surname: null,
-        gender: null,
-        birthday: null,
-        loveId: null,
-        login: 'test',
-        password: 'test',
-      },
-      {
-        id: '2',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        email: null,
-        roles: [],
-        avatarId: null,
-        vkId: null,
-        vkAvatar: null,
-        name: null,
-        surname: null,
-        gender: null,
-        birthday: null,
-        loveId: null,
-        login: 'test2',
-        password: 'test',
-      },
-    ]
+    prisma.account.findMany.mockResolvedValueOnce([mockAccount])
 
-    prisma.account.findMany.mockResolvedValueOnce(testRes)
-
-    return repo.findMany(testReq).then((data) => expect(data).toBe(testRes))
+    return repo
+      .findMany(testReq)
+      .then((data) => expect(data).toStrictEqual([mockAccount]))
   })
 })

@@ -94,7 +94,7 @@ export class AuthService {
    * @param {String} password Пароль от аккаунта
    * @returns {AuthenticatedUser} Аккаунт пользователя с токеном доступа
    */
-  private async verifyAccount(
+  async verifyAccount(
     account: Account | null,
     password: string,
   ): Promise<AuthenticatedUser> {

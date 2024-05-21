@@ -25,6 +25,7 @@
       "@graphql/*": ["src/common/graphql/*"],
       "@enums/*": ["src/common/enums/*"],
       "@utils/*": ["src/common/utils/*"],
+      "@mocks/*": ["src/common/mocks/*"],
       "@common/*": ["src/common/*"],
       "@core/*": ["src/core/*"],
       "@/*": ["src/*"]

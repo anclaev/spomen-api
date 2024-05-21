@@ -47,6 +47,7 @@
     "cookie-parser": "^1.4.6",
     "cross-env": "^7.0.3",
     "graphql": "^16.8.1",
+    "graphql-parse-resolve-info": "^4.13.0",
     "graphql-type-json": "^0.3.2",
     "joi": "^17.12.3",
     "moment": "^2.30.1",
@@ -114,6 +115,7 @@
       "@graphql/(.*)$": "<rootDir>/common/graphql/$1",
       "@enums/(.*)$": "<rootDir>/common/enums/$1",
       "@utils/(.*)$": "<rootDir>/common/utils/$1",
+      "@mocks/(.*)$": "<rootDir>/common/mocks/$1",
       "@common/(.*)$": "<rootDir>/common/$1",
       "@core/(.*)$": "<rootDir>/core/$1",
       "@/(.*)$": "<rootDir>/$1"
@@ -124,11 +126,11 @@
       "^.+\\.(t|j)s$": "ts-jest"
     },
     "collectCoverageFrom": [
-      "**/*.{!(module),}.ts"
+      "**/*.{!(module|guard),}.ts"
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node",
-    "maxWorkers": "50%"
+    "maxWorkers": "25%"
   },
   "lint-staged": {
     "*.ts": [
