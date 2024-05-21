@@ -21,10 +21,10 @@
       "@interceptors/*": ["src/common/interceptors/*"],
       "@interfaces/*": ["src/common/interfaces/*"],
       "@decorators/*": ["src/common/decorators/*"],
+      "@graphql/*": ["src/common/graphql/*"],
       "@enums/*": ["src/common/enums/*"],
       "@utils/*": ["src/common/utils/*"],
       "@common/*": ["src/common/*"],
-      "@graphql/*": ["graphql/*"],
       "@core/*": ["src/core/*"],
       "@/*": ["src/*"]
     }

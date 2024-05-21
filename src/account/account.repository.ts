@@ -8,7 +8,7 @@ import {
   FindManyAccountArgs,
   FindUniqueAccountArgs,
   UpdateOneAccountArgs,
-} from '@graphql/index'
+} from '@common/graphql/index'
 
 /**
  * Репозиторий аккаунта

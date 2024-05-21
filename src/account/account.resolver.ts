@@ -1,5 +1,5 @@
 import { Resolver, Args, Query, ID } from '@nestjs/graphql'
-import { Account } from '@graphql/index'
+import { Account } from '@common/graphql/index'
 
 import { UseGQLAuth } from '@decorators/auth'
 
@@ -21,7 +21,7 @@ export class AccountResolver {
    * @param {String} id ID аккаунта
    * @returns {Account | null} Аккаунт в системе
    */
-  @UseGQLAuth()
+  // @UseGQLAuth()
   @Query(() => Account, { name: 'account' })
   async findOne(
     @Args('id', { type: () => ID }) id: string,

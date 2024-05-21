@@ -4,7 +4,7 @@ generator client {
 
 generator graphql {
     provider                              = "prisma-nestjs-graphql"
-    output                                = "../graphql"
+    output                                = "../src/common/graphql"
     fields_Validator_from                 = "class-validator"
     fields_Validator_input                = true
     requireSingleFieldsInWhereUniqueInput = true
