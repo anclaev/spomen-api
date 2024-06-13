@@ -81,7 +81,7 @@ export class AuthController {
    * @param {AuthenticatedUser} user Авторизованный пользователь
    * @returns {AuthenticatedUser} Авторизованный пользователь
    */
-  @Post('sign-in-email')
+  @Post('sign-in/email')
   @HttpCode(200)
   @UseGuards(LocalEmailGuard)
   signInByEmail(@UseUser() user: AuthenticatedUser): AuthenticatedUser {

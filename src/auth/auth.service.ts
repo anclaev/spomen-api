@@ -1,7 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common'
 import { Account, Role } from '@prisma/client'
 import { JwtService } from '@nestjs/jwt'
-
 import * as argon2 from 'argon2'
 
 import { TokenPayload } from '@interfaces/token-payload'
@@ -38,6 +37,9 @@ export class AuthService {
       data: {
         ...dto,
         password,
+        birthday: dto.birthday
+          ? new Date(dto.birthday).toISOString()
+          : undefined,
         roles: {
           set: [Role.Public],
         },
