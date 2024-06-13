@@ -17,6 +17,7 @@ import { AuthenticatedUser, User } from '@interfaces/user'
 import { UseAuth } from '@decorators/auth'
 import { UseUser } from '@decorators/user'
 
+import { VKIDService } from '@core/vkid/vkid.service'
 import { AuthService } from './auth.service'
 
 import { LocalLoginGuard } from './guards/local-login.guard'
@@ -34,7 +35,10 @@ export class AuthController {
    * Конструктор контроллера авторизации
    * @param {AuthService} auth Сервис авторизации
    */
-  constructor(private readonly auth: AuthService) {}
+  constructor(
+    private readonly auth: AuthService,
+    private readonly vkid: VKIDService,
+  ) {}
 
   /**
    * Получение текущего авторизованного пользователя
@@ -87,6 +91,16 @@ export class AuthController {
   signInByEmail(@UseUser() user: AuthenticatedUser): AuthenticatedUser {
     return user
   }
-}
 
-// TODO: ТЕСТЫ!
+  // Только для разработки
+  // TODO: Разработать гард по ролям и повесить доступ на роль админа
+  @Post('exchange-token')
+  exchangeToken(
+    @Body() { silent_token, uuid }: { silent_token: string; uuid: string },
+  ) {
+    return this.vkid.exchangeToken({
+      silent_token,
+      uuid,
+    })
+  }
+}

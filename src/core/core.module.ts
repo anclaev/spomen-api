@@ -4,15 +4,19 @@ import { PrismaModule, PrismaService } from 'nestjs-prisma'
 import { Global, Logger, Module } from '@nestjs/common'
 import { GraphQLModule } from '@nestjs/graphql'
 import { ConfigModule } from '@nestjs/config'
+import { HttpModule } from '@nestjs/axios'
 import { JwtModule } from '@nestjs/jwt'
 
 import { ConfigService } from './config/config.service'
+import { VKIDService } from './vkid/vkid.service'
+
 import validationSchema from './config/config.schema'
 
 /**
  * Системный модуль приложения
  * @description Предоставляет ключевые модули и логгер.
  * @description Включает в себя:
+ * @description модуль HTTP Axios;
  * @description модуль конфигурации;
  * @description модуль работы с базой данных;
  * @description модуль сервера GraphQL;
@@ -22,6 +26,10 @@ import validationSchema from './config/config.schema'
 @Global()
 @Module({
   imports: [
+    HttpModule.register({
+      timeout: 5000,
+      maxRedirects: 5,
+    }),
     ConfigModule.forRoot({
       isGlobal: true,
       cache: true,
@@ -67,7 +75,13 @@ import validationSchema from './config/config.schema'
     }),
     TerminusModule,
   ],
-  providers: [Logger, ConfigService, PrismaService, PrismaHealthIndicator],
-  exports: [Logger, ConfigService, PrismaService],
+  providers: [
+    Logger,
+    ConfigService,
+    VKIDService,
+    PrismaService,
+    PrismaHealthIndicator,
+  ],
+  exports: [Logger, ConfigService, VKIDService, PrismaService],
 })
 export class CoreModule {}

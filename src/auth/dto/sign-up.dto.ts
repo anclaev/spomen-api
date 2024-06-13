@@ -70,5 +70,5 @@ export class SignUpDto {
     strict: true,
   })
   @IsOptional()
-  birthday: string
+  birthday?: string
 }
