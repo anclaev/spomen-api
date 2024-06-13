@@ -13,9 +13,7 @@ export const mockAccount: Account = {
   vkAvatar: null,
   name: null,
   surname: null,
-  gender: null,
   birthday: null,
-  loveId: null,
   login: 'test',
   password: 'test',
 }
@@ -31,9 +29,7 @@ export const mockUser: User = {
   vkAvatar: null,
   name: null,
   surname: null,
-  gender: null,
   birthday: null,
-  loveId: null,
   login: 'test',
 }
 

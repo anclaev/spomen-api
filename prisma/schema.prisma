@@ -19,20 +19,15 @@ datasource db {
     url      = env("DATABASE_URL")
 }
 
-enum Gender {
-    Male
-    Female
-}
-
 enum Permission {
     Public
-    Lovers
+    Family
     Owner
 }
 
 enum Role {
     Public
-    Lover
+    Verified
     Admin
 }
 
@@ -51,52 +46,32 @@ model Account {
 
     name     String?
     surname  String?
-    gender   Gender?
     birthday DateTime? @db.Date
 
     uploads Upload[] @relation("uploadOwner")
     chats   Chat[]   @relation("chatMembers")
 
-    offer Offer? @relation("offerTarget")
-
-    love   Love?   @relation(name: "accountLove", fields: [loveId], references: [id])
-    loveId String?
-
     ownedMessages Message[]
     ownedReviews  Review[]
-    ownedLoves    Love[]    @relation("loveOwner")
-    ownedOffers   Offer[]   @relation("offerOwner")
     ownedChats    Chat[]    @relation("chatOwner")
+    ownedEvents   Event[]   @relation("eventOwner")
 
     createdAt DateTime @default(now()) @db.Date
     updatedAt DateTime @updatedAt @db.Date
-}
-
-model Love {
-    id    String @id @default(uuid())
-    alias String @unique
-    name  String
-
-    isPrivate Boolean @default(false)
-
-    partners Account[] @relation("accountLove")
-
-    owner   Account @relation(name: "loveOwner", fields: [ownerId], references: [id])
-    ownerId String
-
-    createdAt DateTime @default(now()) @db.Date
-    updatedAt DateTime @updatedAt @db.Date
-    Offer     Offer[]
 }
 
 model Event {
-    id          String    @id @default(uuid())
+    id          String       @id @default(uuid())
     name        String
     description String
-    date        DateTime? @db.Date
+    date        DateTime?    @db.Date
+    permissions Permission[]
 
     pic   Upload @relation(name: "picUpload", fields: [picId], references: [id])
     picId String
+
+    owner   Account @relation(name: "eventOwner", fields: [ownerId], references: [id])
+    ownerId String
 
     reviews Review[]
     uploads Upload[] @relation("eventUploads")
@@ -115,25 +90,6 @@ model Review {
 
     event   Event  @relation(fields: [eventId], references: [id])
     eventId String @unique
-
-    createdAt DateTime @default(now()) @db.Date
-    updatedAt DateTime @updatedAt @db.Date
-}
-
-model Offer {
-    id   String @id @default(uuid())
-    code String
-
-    love   Love   @relation(fields: [loveId], references: [id])
-    loveId String
-
-    owner   Account @relation(name: "offerOwner", fields: [ownerId], references: [id])
-    ownerId String
-
-    target   Account @relation(name: "offerTarget", fields: [targetId], references: [id])
-    targetId String  @unique
-
-    isUsed Boolean @default(false)
 
     createdAt DateTime @default(now()) @db.Date
     updatedAt DateTime @updatedAt @db.Date
@@ -187,10 +143,11 @@ model Upload {
     event   Event?  @relation(name: "eventUploads", fields: [eventId], references: [id])
     eventId String?
 
-    events   Event[]   @relation("picUpload")
     accounts Account[] @relation("accountAvatar")
+    events   Event[]   @relation("picUpload")
     chats    Chat[]
     messages Message[]
 
     createdAt DateTime @default(now()) @db.Date
+    updatedAt DateTime @updatedAt @db.Date
 }
