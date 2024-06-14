@@ -2,10 +2,12 @@ import { BadRequestException, Injectable } from '@nestjs/common'
 import { Account, Role } from '@prisma/client'
 import { JwtService } from '@nestjs/jwt'
 
+import generator from 'generate-password-ts'
 import * as argon2 from 'argon2'
 
 import { TokenPayload } from '@interfaces/token-payload'
 import { AuthenticatedUser } from '@interfaces/user'
+import { VKIDUser } from '@interfaces/vkid'
 
 import { AccountRepository } from '@/account/account.repository'
 
@@ -123,5 +125,85 @@ export class AuthService {
     })
 
     return { ...account, access_token }
+  }
+
+  /**
+   * Проверка пользователя VKID
+   * @description Обновляет пользователя в случае наличия в базе;
+   * @description Создаёт в случае отсутствия.
+   * @param {VKIDUser} vkIdUser Пользователь VKID
+   * @returns {AuthenticatedUser} Авторизованный пользователь
+   */
+  async verifyVKIDUser(vkIdUser: VKIDUser): Promise<AuthenticatedUser> {
+    const isAlreadyExistsUser = await this.account.findOne({
+      where: {
+        vkId: String(vkIdUser.id),
+      },
+    })
+
+    if (!isAlreadyExistsUser) {
+      const login = `id${vkIdUser.id}`
+
+      const password = generator.generate({
+        length: 8,
+        strict: true,
+        numbers: true,
+        excludeSimilarCharacters: true,
+      })
+
+      const hashedPassword = await argon2.hash(password)
+
+      const user = await this.account.create({
+        data: {
+          login,
+          password: hashedPassword,
+          name: vkIdUser.first_name,
+          surname: vkIdUser.last_name,
+          birthday: vkIdUser.bdate
+            ? new Date(vkIdUser.bdate).toISOString()
+            : undefined,
+          vkId: String(vkIdUser.id),
+          vkAvatar: vkIdUser.photo_200,
+          roles: {
+            set: [Role.Public],
+          },
+        },
+      })
+
+      const access_token = await this.generateToken({
+        user_id: user!.id,
+        email: null,
+        login: user!.login,
+        vk_access_token: vkIdUser.access_token ?? null,
+        vk_id: String(user!.vkId),
+        vk_avatar: user!.vkAvatar,
+      })
+
+      user!.password = password
+
+      return { ...user!, access_token }
+    }
+
+    const user = await this.account.update({
+      where: {
+        id: isAlreadyExistsUser.id,
+      },
+      data: {
+        vkAvatar: {
+          set: vkIdUser.photo_200,
+        },
+      },
+    })
+
+    const access_token = await this.generateToken({
+      email: null,
+      login: user!.login,
+      user_id: user!.id,
+      vk_access_token: vkIdUser.access_token!,
+      vk_avatar: vkIdUser.photo_200!,
+      vk_id: String(vkIdUser.id),
+    })
+
+    return { ...user!, access_token }
   }
 }

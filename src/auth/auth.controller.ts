@@ -13,6 +13,7 @@ import {
 import { Account } from '@prisma/client'
 
 import { AuthenticatedUser } from '@interfaces/user'
+import { VKIDUser } from '@interfaces/vkid'
 
 import { UseAuth } from '@decorators/auth'
 import { UseUser } from '@decorators/user'
@@ -21,6 +22,7 @@ import { AuthService } from './auth.service'
 
 import { LocalLoginGuard } from './guards/local-login.guard'
 import { LocalEmailGuard } from './guards/local-email.guard'
+import { VKIDGuard } from './guards/vkid.guard'
 
 import { SignUpDto } from './dto/sign-up.dto'
 
@@ -86,5 +88,17 @@ export class AuthController {
   @UseGuards(LocalEmailGuard)
   signInByEmail(@UseUser() user: AuthenticatedUser): AuthenticatedUser {
     return user
+  }
+
+  /**
+   * Вход в систему через VKID
+   * @param {VKID_EXCHANGE_TOKEN_RESPONSE} user Access-токен VKID с данными пользователя
+   * @returns {unknown} Пользователь системы
+   */
+  @Post('vkid')
+  @HttpCode(200)
+  @UseGuards(VKIDGuard)
+  async signInByVKID(@UseUser() user: VKIDUser): Promise<AuthenticatedUser> {
+    return await this.auth.verifyVKIDUser(user)
   }
 }

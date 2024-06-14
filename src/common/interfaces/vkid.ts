@@ -73,9 +73,11 @@ export interface VKIDUser {
   screen_name?: string
   sex?: string
   site?: string
+  email?: string
   status?: string
   verified?: number // Верифицирована ли страница, 1 - да, 0 - нет
   is_verified?: boolean // Верифицированы ли паспортные данные
+  access_token?: string
 }
 
 export type VKIDUSER_FIELDS = keyof VKIDUser

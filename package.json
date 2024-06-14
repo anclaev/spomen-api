@@ -46,6 +46,7 @@
     "class-validator": "^0.14.1",
     "cookie-parser": "^1.4.6",
     "cross-env": "^7.0.3",
+    "generate-password-ts": "^1.6.5",
     "graphql": "^16.8.1",
     "graphql-parse-resolve-info": "^4.13.0",
     "graphql-type-json": "^0.3.2",
