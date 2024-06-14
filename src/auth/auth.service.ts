@@ -1,6 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common'
 import { Account, Role } from '@prisma/client'
-import { HttpService } from '@nestjs/axios'
 import { JwtService } from '@nestjs/jwt'
 
 import * as argon2 from 'argon2'
@@ -9,7 +8,6 @@ import { TokenPayload } from '@interfaces/token-payload'
 import { AuthenticatedUser } from '@interfaces/user'
 
 import { AccountRepository } from '@/account/account.repository'
-import { ConfigService } from '@core/config'
 
 import { SignUpDto } from './dto/sign-up.dto'
 

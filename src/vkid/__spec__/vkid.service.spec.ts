@@ -1,7 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import { VKIDService } from './vkid.service'
 import { HttpModule } from '@nestjs/axios'
+
 import { ConfigService } from '@core/config'
+
+import { VKIDService } from '../vkid.service'
+
 describe('VKIDService', () => {
   let service: VKIDService
 
