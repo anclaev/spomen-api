@@ -11,15 +11,15 @@ export class VKIDStrategy extends PassportStrategy(Strategy, 'vkid') {
   constructor(private vkid: VKIDService) {
     super({
       usernameField: 'uuid',
-      passwordField: 'silent_token',
+      passwordField: 'token',
     })
   }
 
-  async validate(uuid: string, silent_token: string): Promise<VKIDUser> {
+  async validate(uuid: string, token: string): Promise<VKIDUser> {
     try {
       const VKID_ACCESS_TOKEN = await this.vkid.exchangeToken({
         uuid,
-        silent_token,
+        silent_token: token,
       })
 
       const res = await this.vkid.getVKIDUsers({
