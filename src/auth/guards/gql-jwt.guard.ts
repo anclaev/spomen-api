@@ -7,7 +7,7 @@ import { Request } from 'express'
  * GraphQL-гард авторизации пользователя по JWT-токену
  */
 @Injectable()
-export class JwtGraphQLGuard extends AuthGuard('jwt') {
+export class GqlJwtGuard extends AuthGuard('jwt') {
   /**
    * Получение запроса из контекста GraphQL
    * @param {ExecutionContext} context Контекст выполнения

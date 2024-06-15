@@ -1,7 +1,7 @@
 import { Resolver, Args, Query, ID } from '@nestjs/graphql'
 import { Account } from '@common/graphql/index'
 
-import { UseGQLAuth } from '@decorators/auth'
+// import { UseGqlAuth } from '@decorators/gql-auth'
 
 import { AccountService } from './account.service'
 

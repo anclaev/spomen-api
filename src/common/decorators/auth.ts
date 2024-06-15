@@ -1,14 +1,16 @@
-import { UseGuards } from '@nestjs/common'
+import { applyDecorators, SetMetadata, UseGuards } from '@nestjs/common'
+import { Role } from '@prisma/client'
 
-import { JwtGraphQLGuard } from '@/auth/guards/jwt-graphql.guard'
-import JwtGuard from '@/auth/guards/jwt.guard'
-
-/**
- * Декоратор авторизации
- */
-export const UseAuth = () => UseGuards(JwtGuard)
+import { RoleGuard } from '@/auth/guards/role.guard'
+import { JwtGuard } from '@/auth/guards/jwt.guard'
 
 /**
- * Декоратор авторизации в GraphQL
+ * Декоратор для авторизации
+ * @param {Role[]} roles Массив разрешённых ролей пользователя
  */
-export const UseGQLAuth = () => UseGuards(JwtGraphQLGuard)
+export const UseAuth = (roles?: Role[]) =>
+  applyDecorators(
+    SetMetadata('roles', roles),
+    UseGuards(JwtGuard),
+    UseGuards(RoleGuard(roles)),
+  )

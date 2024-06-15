@@ -1,4 +1,5 @@
 import { Body, Controller, Get, HttpCode, Param, Post } from '@nestjs/common'
+import { Role } from '@prisma/client'
 
 import { VKIDService } from './vkid.service'
 
@@ -10,9 +11,8 @@ import {
 
 import { UseAuth } from '@decorators/auth'
 
-//TODO: Гард роли админа
 @Controller('vkid')
-@UseAuth()
+@UseAuth([Role.Admin])
 export class VKIDController {
   constructor(private readonly vkid: VKIDService) {}
 
