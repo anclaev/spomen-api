@@ -1,15 +1,18 @@
 import { BadRequestException, Injectable } from '@nestjs/common'
 import { Account, Role } from '@prisma/client'
-import { JwtService } from '@nestjs/jwt'
-
 import generator from 'generate-password-ts'
+import { JwtService } from '@nestjs/jwt'
 import * as argon2 from 'argon2'
+import * as moment from 'moment'
+
+import { AccountRepository } from '@/account/account.repository'
+import { ConfigService } from '@core/config'
+
+import { Cookies } from '@utils/cookies'
 
 import { TokenPayload } from '@interfaces/token-payload'
 import { AuthenticatedUser } from '@interfaces/user'
 import { VKIDUser } from '@interfaces/vkid'
-
-import { AccountRepository } from '@/account/account.repository'
 
 import { SignUpDto } from './dto/sign-up.dto'
 
@@ -18,15 +21,24 @@ import { SignUpDto } from './dto/sign-up.dto'
  */
 @Injectable()
 export class AuthService {
+  private cookie_domain: string
+
   /**
    * Конструктор сервиса авторизации
    * @param {AccountRepository} account Репозиторий аккаунта
    * @param {JwtService} jwt Сервис работы с JWT-токенами
+   * @param {ConfigService} config Сервис работы с конфигурацией
    */
   constructor(
     private readonly account: AccountRepository,
     private readonly jwt: JwtService,
-  ) {}
+    private readonly config: ConfigService,
+  ) {
+    this.cookie_domain =
+      process.env.NODE_ENV !== 'local'
+        ? `*.${this.config.gett('DOMAIN')}`
+        : 'localhost'
+  }
 
   /**
    * Регистрация в приложении
@@ -89,8 +101,21 @@ export class AuthService {
    * @param {TokenPayload} payload Авторизационные данные
    * @returns {String} Подписанный JWT-токен
    */
-  async generateToken(payload: TokenPayload): Promise<string> {
-    return await this.jwt.signAsync(payload)
+  async generateToken(
+    payload: TokenPayload,
+    type: 'access' | 'refresh' = 'access',
+  ): Promise<string> {
+    return await this.jwt.signAsync(payload, {
+      issuer: this.config.gett('ORIGIN'),
+      expiresIn: this.config.gett(
+        type === 'access'
+          ? 'ACCESS_TOKEN_EXPIRATION'
+          : 'REFRESH_TOKEN_EXPIRATION',
+      ),
+      secret: this.config.gett(
+        type === 'access' ? 'ACCESS_TOKEN_SECRET' : 'REFRESH_TOKEN_SECRET',
+      ),
+    })
   }
 
   /**
@@ -115,16 +140,19 @@ export class AuthService {
 
     account.password = undefined!
 
-    const access_token = await this.generateToken({
+    const token_payload = {
       user_id: account.id,
       login: account.login,
       email: account.email,
       vk_id: account.id,
       vk_avatar: account.vkAvatar,
       vk_access_token: null,
-    })
+    }
 
-    return { ...account, access_token }
+    const access_token = await this.generateToken(token_payload)
+    const refresh_token = await this.generateToken(token_payload, 'refresh')
+
+    return { ...account, access_token, refresh_token }
   }
 
   /**
@@ -170,18 +198,21 @@ export class AuthService {
         },
       })
 
-      const access_token = await this.generateToken({
+      const token_payload = {
         user_id: user!.id,
         email: null,
         login: user!.login,
         vk_access_token: vkIdUser.access_token ?? null,
         vk_id: String(user!.vkId),
         vk_avatar: user!.vkAvatar,
-      })
+      }
+
+      const access_token = await this.generateToken(token_payload)
+      const refresh_token = await this.generateToken(token_payload, 'refresh')
 
       user!.password = password
 
-      return { ...user!, access_token }
+      return { ...user!, access_token, refresh_token }
     }
 
     const user = await this.account.update({
@@ -195,15 +226,79 @@ export class AuthService {
       },
     })
 
-    const access_token = await this.generateToken({
+    const token_payload = {
       email: null,
       login: user!.login,
       user_id: user!.id,
       vk_access_token: vkIdUser.access_token!,
       vk_avatar: vkIdUser.photo_200!,
       vk_id: String(vkIdUser.id),
-    })
+    }
 
-    return { ...user!, access_token }
+    const access_token = await this.generateToken(token_payload)
+    const refresh_token = await this.generateToken(token_payload, 'refresh')
+
+    return { ...user!, access_token, refresh_token }
+  }
+
+  getCookieWithAccessToken(token: string): Cookies {
+    const exp = this.decodeTokenExpiration(
+      this.config.gett('ACCESS_TOKEN_EXPIRATION'),
+    )
+
+    const expires = moment()
+      .add(exp.v as moment.DurationInputArg1, exp.t as moment.DurationInputArg2)
+      .toString()
+
+    return new Cookies({
+      domain: this.cookie_domain,
+      key: 'Authentication',
+      path: '/',
+      value: token,
+      expires,
+      secure: process.env.NODE_ENV === 'production',
+      httpOnly: true,
+    })
+  }
+
+  getCookieWithRefreshToken(token: string): Cookies {
+    const exp = this.decodeTokenExpiration(
+      this.config.gett('REFRESH_TOKEN_EXPIRATION'),
+    )
+
+    const expires = moment()
+      .add(exp.v as moment.DurationInputArg1, exp.t as moment.DurationInputArg2)
+      .toString()
+
+    return new Cookies({
+      domain: this.cookie_domain,
+      key: 'Refresh',
+      path: '/auth/refresh',
+      value: token,
+      expires,
+      secure: process.env.NODE_ENV === 'production',
+      httpOnly: true,
+    })
+  }
+
+  getCookiesWithTokens(access: string, refresh: string): string[] {
+    return [
+      this.getCookieWithAccessToken(access).toString(),
+      this.getCookieWithRefreshToken(refresh).toString(),
+    ]
+  }
+
+  clearCookies(): string[] {
+    return [
+      `Authentication=; HttpOnly; Path=/; Max-Age=0;Domain=${this.cookie_domain}`,
+      `Refresh=; HttpOnly; Path=/auth/refresh; Max-Age=0;Domain=${this.cookie_domain}`,
+    ]
+  }
+
+  private decodeTokenExpiration(exp: string): {
+    t: string
+    v: number
+  } {
+    return { t: exp.slice(-1), v: Number(exp.slice(0, exp.length - 1)) }
   }
 }

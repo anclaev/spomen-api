@@ -1,16 +1,16 @@
 import {
   Body,
-  ClassSerializerInterceptor,
   ConflictException,
   Controller,
   Get,
   HttpCode,
   Post,
+  Res,
   UseGuards,
-  UseInterceptors,
 } from '@nestjs/common'
 
 import { Account } from '@prisma/client'
+import { Response } from 'express'
 
 import { AuthenticatedUser } from '@interfaces/user'
 import { VKIDUser } from '@interfaces/vkid'
@@ -29,7 +29,6 @@ import { SignUpDto } from './dto/sign-up.dto'
 /**
  * HTTP-контроллер авторизации
  */
-@UseInterceptors(ClassSerializerInterceptor)
 @Controller('auth')
 export class AuthController {
   /**
@@ -74,8 +73,16 @@ export class AuthController {
   @Post('sign-in')
   @HttpCode(200)
   @UseGuards(LocalLoginGuard)
-  signIn(@UseUser() user: AuthenticatedUser): AuthenticatedUser {
-    return user
+  signIn(
+    @UseUser() user: AuthenticatedUser,
+    @Res() res: Response,
+  ): Response<AuthenticatedUser> {
+    res.setHeader(
+      'Set-Cookie',
+      this.auth.getCookiesWithTokens(user.access_token, user.refresh_token),
+    )
+
+    return res.send(user)
   }
 
   /**
@@ -86,8 +93,16 @@ export class AuthController {
   @Post('sign-in/email')
   @HttpCode(200)
   @UseGuards(LocalEmailGuard)
-  signInByEmail(@UseUser() user: AuthenticatedUser): AuthenticatedUser {
-    return user
+  signInByEmail(
+    @UseUser() user: AuthenticatedUser,
+    @Res() res: Response,
+  ): Response<AuthenticatedUser> {
+    res.setHeader(
+      'Set-Cookie',
+      this.auth.getCookiesWithTokens(user.access_token, user.refresh_token),
+    )
+
+    return res.send(user)
   }
 
   /**
@@ -98,7 +113,28 @@ export class AuthController {
   @Post('vkid')
   @HttpCode(200)
   @UseGuards(VKIDGuard)
-  async signInByVKID(@UseUser() user: VKIDUser): Promise<AuthenticatedUser> {
-    return await this.auth.verifyVKIDUser(user)
+  async signInByVKID(
+    @UseUser() vkIdUser: VKIDUser,
+    @Res() res: Response,
+  ): Promise<Response<AuthenticatedUser>> {
+    const user = await this.auth.verifyVKIDUser(vkIdUser)
+
+    res.setHeader(
+      'Set-Cookie',
+      this.auth.getCookiesWithTokens(user.access_token, user.refresh_token),
+    )
+
+    return res.send(user)
+  }
+
+  @Post('logout')
+  @HttpCode(200)
+  @UseAuth()
+  async logout(@Res() res: Response) {
+    const cookies = this.auth.clearCookies()
+
+    res.setHeader('Set-Cookie', cookies)
+
+    res.send()
   }
 }

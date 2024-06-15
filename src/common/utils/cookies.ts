@@ -6,7 +6,7 @@ export type CookiesOptions = {
   value: string
   path: string
   domain: string
-  maxAge?: string
+  expires?: string
   secure?: boolean
   httpOnly?: boolean
 }
@@ -44,7 +44,7 @@ export class Cookies {
   /**
    * Срок действия кук
    */
-  maxAge?: string
+  expires?: string
 
   /**
    * Флаг поддерживаемого протокола
@@ -61,7 +61,7 @@ export class Cookies {
     this.value = options.value
     this.path = options.path
     this.domain = options.domain
-    this.maxAge = options.maxAge
+    this.expires = options.expires
     this.secure = options.secure ?? true
     this.httpOnly = options.httpOnly ?? true
   }
@@ -73,6 +73,6 @@ export class Cookies {
   toString(): string {
     return `${this.key}=${this.value}; ${this.httpOnly ? 'HttpOnly;' : ''} ${
       this.secure ? 'Secure;' : ''
-    } Path=${this.path}; ${this.maxAge ? 'Max-Age=' + this.maxAge + ';' : ''} Domain=${this.domain}`
+    } Path=${this.path}; ${this.expires ? 'Expires=' + this.expires + ';' : ''} Domain=${this.domain}`
   }
 }

@@ -15,4 +15,9 @@ export interface AuthenticatedUser extends User {
    * Токен доступа в систему
    */
   access_token: string
+
+  /**
+   * Токен обновления
+   */
+  refresh_token: string
 }

@@ -36,4 +36,5 @@ export const mockUser: User = {
 export const mockAuthenticatedUser: AuthenticatedUser = {
   ...mockUser,
   access_token: 'test',
+  refresh_token: 'test',
 }
