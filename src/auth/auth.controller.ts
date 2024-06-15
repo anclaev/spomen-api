@@ -82,7 +82,7 @@ export class AuthController {
       this.auth.getCookiesWithTokens(user.access_token, user.refresh_token),
     )
 
-    return res.send(user)
+    return res.send({ ...user, access_token: '', refresh_token: '' })
   }
 
   /**
@@ -102,7 +102,7 @@ export class AuthController {
       this.auth.getCookiesWithTokens(user.access_token, user.refresh_token),
     )
 
-    return res.send(user)
+    return res.send({ ...user, access_token: '', refresh_token: '' })
   }
 
   /**
@@ -124,7 +124,7 @@ export class AuthController {
       this.auth.getCookiesWithTokens(user.access_token, user.refresh_token),
     )
 
-    return res.send(user)
+    return res.send({ ...user, access_token: '', refresh_token: '' })
   }
 
   @Post('logout')

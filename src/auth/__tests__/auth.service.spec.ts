@@ -7,6 +7,7 @@ import * as argon2 from 'argon2'
 import { mockAccount, mockAuthenticatedUser } from '@mocks/account.mock'
 import { AccountRepository } from '@/account/account.repository'
 
+import { ConfigService } from '@core/config'
 import { AuthService } from '../auth.service'
 
 describe('AuthService', () => {
@@ -16,7 +17,7 @@ describe('AuthService', () => {
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [AccountRepository, AuthService, JwtService],
+      providers: [AccountRepository, AuthService, JwtService, ConfigService],
     })
       .overrideProvider(AccountRepository)
       .useValue(mockDeep<AccountRepository>())
