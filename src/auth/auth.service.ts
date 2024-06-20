@@ -54,16 +54,16 @@ export class AuthService {
 
   /**
    * Авторизация пользователя по логину
-   * @param {String} login Логин аккаунта
+   * @param {String} username Логин аккаунта
    * @param {String} password Пароль от аккаунта
    * @returns {AuthenticatedUser} Аккаунт пользователя с токеном доступа
    */
   async getAuthenticatedUserByLogin(
-    login: string,
+    username: string,
     password: string,
   ): Promise<AuthenticatedUser> {
     const account = await this.account.findOne({
-      where: { login: login.trim() },
+      where: { username: username.trim() },
     })
 
     return await this.verifyAccount(account, password)
@@ -131,11 +131,11 @@ export class AuthService {
     account.password = undefined!
 
     const token_payload = {
-      user_id: account.id,
-      login: account.login,
+      userid: account.id,
+      username: account.username,
       email: account.email,
       vk_id: account.id,
-      vk_avatar: account.vkAvatar,
+      vk_avatar: account.vk_avatar,
       vk_access_token: null,
     }
 
@@ -155,12 +155,12 @@ export class AuthService {
   async verifyVKIDUser(vkIdUser: VKIDUser): Promise<AuthenticatedUser> {
     const isAlreadyExistsUser = await this.account.findOne({
       where: {
-        vkId: String(vkIdUser.id),
+        vk_id: String(vkIdUser.id),
       },
     })
 
     if (!isAlreadyExistsUser) {
-      const login = `id${vkIdUser.id}`
+      const username = `id${vkIdUser.id}`
 
       const password = generator.generate({
         length: 8,
@@ -173,15 +173,15 @@ export class AuthService {
 
       const user = await this.account.create({
         data: {
-          login,
+          username,
           password: hashedPassword,
-          name: vkIdUser.first_name,
-          surname: vkIdUser.last_name,
+          first_name: vkIdUser.first_name,
+          last_name: vkIdUser.last_name,
           birthday: vkIdUser.bdate
             ? new Date(vkIdUser.bdate).toISOString()
             : undefined,
-          vkId: String(vkIdUser.id),
-          vkAvatar: vkIdUser.photo_200,
+          vk_id: String(vkIdUser.id),
+          vk_avatar: vkIdUser.photo_200,
           roles: {
             set: [Role.Public],
           },
@@ -189,12 +189,12 @@ export class AuthService {
       })
 
       const token_payload = {
-        user_id: user!.id,
+        userid: user!.id,
+        username: user!.username,
         email: null,
-        login: user!.login,
         vk_access_token: vkIdUser.access_token ?? null,
-        vk_id: String(user!.vkId),
-        vk_avatar: user!.vkAvatar,
+        vk_id: String(user!.vk_id),
+        vk_avatar: user!.vk_avatar,
       }
 
       const access_token = await this.generateToken(token_payload, 'access')
@@ -210,7 +210,7 @@ export class AuthService {
         id: isAlreadyExistsUser.id,
       },
       data: {
-        vkAvatar: {
+        vk_avatar: {
           set: vkIdUser.photo_200,
         },
       },
@@ -218,8 +218,8 @@ export class AuthService {
 
     const token_payload = {
       email: null,
-      login: user!.login,
-      user_id: user!.id,
+      username: user!.username,
+      userid: user!.id,
       vk_access_token: vkIdUser.access_token!,
       vk_avatar: vkIdUser.photo_200!,
       vk_id: String(vkIdUser.id),

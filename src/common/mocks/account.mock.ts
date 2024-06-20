@@ -1,36 +1,40 @@
+import { Sex } from '@enums/sex'
 import { Account } from '@graphql/index'
 
 import { AuthenticatedUser, User } from '@interfaces/user'
 
 export const mockAccount: Account = {
   id: '1',
-  createdAt: new Date(),
-  updatedAt: new Date(),
+  created_at: new Date(),
+  updated_at: new Date(),
   email: null,
   roles: ['Public'],
-  avatarId: null,
-  vkId: null,
-  vkAvatar: null,
-  name: null,
-  surname: null,
+  avatar: null,
+  vk_id: null,
+  vk_avatar: null,
+  first_name: null,
+  last_name: null,
   birthday: null,
-  login: 'test',
+  username: 'test',
   password: 'test',
+  passkey: null,
+  sex: Sex.None,
 }
 
 export const mockUser: User = {
   id: '1',
-  createdAt: new Date(),
-  updatedAt: new Date(),
+  created_at: new Date(),
+  updated_at: new Date(),
   email: null,
   roles: ['Public'],
-  avatarId: null,
-  vkId: null,
-  vkAvatar: null,
-  name: null,
-  surname: null,
+  vk_id: null,
+  vk_avatar: null,
+  first_name: null,
+  last_name: null,
   birthday: null,
-  login: 'test',
+  username: 'test',
+  passkey: null,
+  sex: Sex.None,
 }
 
 export const mockAuthenticatedUser: AuthenticatedUser = {

@@ -7,8 +7,7 @@ import { VKIDService } from '@/vkid/vkid.service'
 import { AuthController } from './auth.controller'
 import { AuthService } from './auth.service'
 
-import { EmailStrategy } from './strategies/email.strategy'
-import { LoginStrategy } from './strategies/login.strategy'
+import { LocalStrategy } from './strategies/local.strategy'
 import { VKIDStrategy } from './strategies/vkid.strategy'
 import { JwtStrategy } from './strategies/jwt.strategy'
 
@@ -25,8 +24,7 @@ import { JwtStrategy } from './strategies/jwt.strategy'
     AuthService,
     AccountRepository,
     VKIDService,
-    EmailStrategy,
-    LoginStrategy,
+    LocalStrategy,
     JwtStrategy,
     VKIDStrategy,
   ],

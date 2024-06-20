@@ -39,7 +39,7 @@ describe('AuthService', () => {
 
     service
       .signUp({
-        login: 'test',
+        username: 'test',
         password: 'test',
       })
       .then((data) => expect(data).toStrictEqual(mockAccount))
@@ -73,14 +73,17 @@ describe('AuthService', () => {
     jwt.signAsync.mockReturnValue(new Promise(() => 'test'))
 
     service
-      .generateToken({
-        login: 'test',
-        user_id: '1',
-        email: null,
-        vk_access_token: null,
-        vk_avatar: null,
-        vk_id: null,
-      })
+      .generateToken(
+        {
+          username: 'test',
+          userid: '1',
+          email: null,
+          vk_access_token: null,
+          vk_avatar: null,
+          vk_id: null,
+        },
+        'access',
+      )
       .then((data) => expect(data).toBe('test'))
   })
 

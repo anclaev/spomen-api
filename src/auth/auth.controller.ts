@@ -8,18 +8,16 @@ import {
   UseGuards,
 } from '@nestjs/common'
 
-import { Account } from '@prisma/client'
-
-import { AuthenticatedUser } from '@interfaces/user'
+import { AuthenticatedUser, User } from '@interfaces/user'
 import { VKIDUser } from '@interfaces/vkid'
 
 import { UseAuth } from '@decorators/auth'
 import { UseUser } from '@decorators/user'
+import { serializeUser } from '@utils/serialize'
 
 import { AuthService } from './auth.service'
 
-import { LocalLoginGuard } from './guards/local-login.guard'
-import { LocalEmailGuard } from './guards/local-email.guard'
+import { LocalGuard } from './guards/local.guard'
 import { VKIDGuard } from './guards/vkid.guard'
 
 import { SignUpDto } from './dto/sign-up.dto'
@@ -49,18 +47,18 @@ export class AuthController {
   /**
    * Регистрация аккаунта
    * @param {SignUpDto} dto Регистрационные данные
-   * @returns {Account} Созданный аккаунт
+   * @returns {User} Созданный аккаунт
    */
   @Post('sign-up')
   @HttpCode(200)
-  async signUp(@Body() dto: SignUpDto): Promise<Account> {
+  async signUp(@Body() dto: SignUpDto): Promise<User> {
     const createdAccount = await this.auth.signUp(dto)
 
     if (!createdAccount) {
       throw new ConflictException('Not unique login')
     }
 
-    return createdAccount
+    return serializeUser(createdAccount)
   }
 
   /**
@@ -68,22 +66,10 @@ export class AuthController {
    * @param {AuthenticatedUser} user Авторизованный пользователь
    * @returns {AuthenticatedUser} Авторизованный пользователь
    */
-  @Post('sign-in')
+  @Post('token')
   @HttpCode(200)
-  @UseGuards(LocalLoginGuard)
+  @UseGuards(LocalGuard)
   signIn(@UseUser() user: AuthenticatedUser): AuthenticatedUser {
-    return user
-  }
-
-  /**
-   * Вход в систему по почте
-   * @param {AuthenticatedUser} user Авторизованный пользователь
-   * @returns {AuthenticatedUser} Авторизованный пользователь
-   */
-  @Post('sign-in/email')
-  @HttpCode(200)
-  @UseGuards(LocalEmailGuard)
-  signInByEmail(@UseUser() user: AuthenticatedUser): AuthenticatedUser {
     return user
   }
 

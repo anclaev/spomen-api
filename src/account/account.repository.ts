@@ -29,7 +29,7 @@ export class AccountRepository {
    */
   async create(args: CreateOneAccountArgs): Promise<Account | null> {
     const alreadyExist = await this.findOne({
-      where: { login: args.data.login },
+      where: { username: args.data.username },
     })
 
     if (alreadyExist) return null

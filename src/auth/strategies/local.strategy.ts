@@ -7,27 +7,26 @@ import { AuthenticatedUser } from '@interfaces/user'
 import { AuthService } from '../auth.service'
 
 /**
- * Стратегия авторизации пользователя по почте
+ * Стратегия авторизации пользователя по логину
  */
 @Injectable()
-export class EmailStrategy extends PassportStrategy(Strategy, 'local-email') {
+export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
   /**
-   * Конструктор стратегии авторизации по почте
+   * Конструктор стратегии авторизации по логину
    * @param {AuthService} auth Сервис авторизации
    */
   constructor(private auth: AuthService) {
     super({
-      usernameField: 'email',
+      usernameField: 'username',
     })
   }
-
   /**
-   * Валидация пользователя по почте
-   * @param {String} email Почта аккаунта
+   * Валидация пользователя по логину
+   * @param {String} login Логин аккаунта
    * @param {String} password Пароль от аккаунта
    * @returns {AuthenticatedUser} Авторизованный пользователь
    */
-  async validate(email: string, password: string): Promise<AuthenticatedUser> {
-    return this.auth.getAuthenticatedUserByEmail(email, password)
+  async validate(login: string, password: string): Promise<AuthenticatedUser> {
+    return this.auth.getAuthenticatedUserByLogin(login, password)
   }
 }

@@ -37,7 +37,7 @@ describe('AccountRepository', () => {
   it('Должен возвращать созданный аккаунт', () => {
     const testReq: CreateOneAccountArgs = {
       data: {
-        login: 'test',
+        username: 'test',
         password: 'test',
       },
     }
@@ -49,7 +49,7 @@ describe('AccountRepository', () => {
   it('Должен возвращать null, если аккаунт не уникален', () => {
     const testReq: CreateOneAccountArgs = {
       data: {
-        login: 'test',
+        username: 'test',
         password: 'test',
       },
     }
@@ -65,7 +65,7 @@ describe('AccountRepository', () => {
         id: '1',
       },
       data: {
-        login: {
+        username: {
           set: 'test2',
         },
       },
@@ -82,7 +82,7 @@ describe('AccountRepository', () => {
         id: '1',
       },
       data: {
-        login: {
+        username: {
           set: 'test2',
         },
       },
@@ -108,7 +108,7 @@ describe('AccountRepository', () => {
   it('Должен возвращать множество аккаунтов по параметру', () => {
     const testReq: FindManyAccountArgs = {
       where: {
-        login: {
+        username: {
           contains: 'test',
         },
       },

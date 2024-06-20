@@ -16,8 +16,8 @@ describe('JwtStrategy', () => {
   let strategy: JwtStrategy
 
   const mockToken: TokenPayload = {
-    user_id: '1',
-    login: 'test',
+    userid: '1',
+    username: 'test',
     email: null,
     vk_id: null,
     vk_access_token: null,

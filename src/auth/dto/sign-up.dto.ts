@@ -19,7 +19,7 @@ export class SignUpDto {
   @IsString()
   @IsNotEmpty()
   @MinLength(4)
-  login: string
+  username: string
 
   /**
    * Пароль аккаунта
@@ -49,7 +49,7 @@ export class SignUpDto {
   @IsString()
   @IsOptional()
   @MinLength(2)
-  name?: string
+  first_name?: string
 
   /**
    * Фамилия пользователя
@@ -60,7 +60,7 @@ export class SignUpDto {
   @IsString()
   @IsOptional()
   @MinLength(2)
-  surname?: string
+  last_name?: string
 
   /**
    * Дата рождения пользователя

@@ -12,7 +12,7 @@ import {
 import { UseAuth } from '@decorators/auth'
 
 @Controller('vkid')
-@UseAuth([Role.Admin])
+@UseAuth([Role.Administrator])
 export class VKIDController {
   constructor(private readonly vkid: VKIDService) {}
 

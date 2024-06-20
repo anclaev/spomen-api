@@ -4,11 +4,11 @@ import { mockDeep, DeepMockProxy } from 'jest-mock-extended'
 import { mockAuthenticatedUser } from '@mocks/account.mock'
 import { AuthService } from '@/auth/auth.service'
 
-import { LoginStrategy } from '../login.strategy'
+import { LocalStrategy } from '../local.strategy'
 
-describe('LoginStrategy', () => {
+describe('LocalStrategy', () => {
   let service: DeepMockProxy<AuthService>
-  let strategy: LoginStrategy
+  let strategy: LocalStrategy
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -19,7 +19,7 @@ describe('LoginStrategy', () => {
       .compile()
 
     service = module.get(AuthService)
-    strategy = new LoginStrategy(service)
+    strategy = new LocalStrategy(service)
   })
 
   it('Должна быть определена', () => {
