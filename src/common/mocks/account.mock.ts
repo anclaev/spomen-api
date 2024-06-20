@@ -37,4 +37,5 @@ export const mockAuthenticatedUser: AuthenticatedUser = {
   ...mockUser,
   access_token: 'test',
   refresh_token: 'test',
+  token_type: 'bearer',
 }

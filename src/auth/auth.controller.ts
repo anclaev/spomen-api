@@ -5,12 +5,10 @@ import {
   Get,
   HttpCode,
   Post,
-  Res,
   UseGuards,
 } from '@nestjs/common'
 
 import { Account } from '@prisma/client'
-import { Response } from 'express'
 
 import { AuthenticatedUser } from '@interfaces/user'
 import { VKIDUser } from '@interfaces/vkid'
@@ -73,16 +71,8 @@ export class AuthController {
   @Post('sign-in')
   @HttpCode(200)
   @UseGuards(LocalLoginGuard)
-  signIn(
-    @UseUser() user: AuthenticatedUser,
-    @Res() res: Response,
-  ): Response<AuthenticatedUser> {
-    res.setHeader(
-      'Set-Cookie',
-      this.auth.getCookiesWithTokens(user.access_token, user.refresh_token),
-    )
-
-    return res.send({ ...user, access_token: '', refresh_token: '' })
+  signIn(@UseUser() user: AuthenticatedUser): AuthenticatedUser {
+    return user
   }
 
   /**
@@ -93,48 +83,37 @@ export class AuthController {
   @Post('sign-in/email')
   @HttpCode(200)
   @UseGuards(LocalEmailGuard)
-  signInByEmail(
-    @UseUser() user: AuthenticatedUser,
-    @Res() res: Response,
-  ): Response<AuthenticatedUser> {
-    res.setHeader(
-      'Set-Cookie',
-      this.auth.getCookiesWithTokens(user.access_token, user.refresh_token),
-    )
-
-    return res.send({ ...user, access_token: '', refresh_token: '' })
+  signInByEmail(@UseUser() user: AuthenticatedUser): AuthenticatedUser {
+    return user
   }
 
   /**
    * Вход в систему через VKID
-   * @param {VKID_EXCHANGE_TOKEN_RESPONSE} user Access-токен VKID с данными пользователя
-   * @returns {unknown} Пользователь системы
+   * @param {VKIDUser} vkIdUser Access-токен VKID с данными пользователя
+   * @returns {AuthenticatedUser} Пользователь системы
    */
   @Post('vkid')
   @HttpCode(200)
   @UseGuards(VKIDGuard)
   async signInByVKID(
     @UseUser() vkIdUser: VKIDUser,
-    @Res() res: Response,
-  ): Promise<Response<AuthenticatedUser>> {
+  ): Promise<AuthenticatedUser> {
     const user = await this.auth.verifyVKIDUser(vkIdUser)
 
-    res.setHeader(
-      'Set-Cookie',
-      this.auth.getCookiesWithTokens(user.access_token, user.refresh_token),
-    )
+    return user
+  }
 
-    return res.send({ ...user, access_token: '', refresh_token: '' })
+  @Post('refresh')
+  @HttpCode(200)
+  @UseAuth()
+  async refresh() {
+    // Логика обновления токена
   }
 
   @Post('logout')
   @HttpCode(200)
   @UseAuth()
-  async logout(@Res() res: Response) {
-    const cookies = this.auth.clearCookies()
-
-    res.setHeader('Set-Cookie', cookies)
-
-    res.send()
+  async logout() {
+    // Логика логаута
   }
 }

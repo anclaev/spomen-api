@@ -12,7 +12,7 @@ export type User = Omit<Account, 'password'>
  */
 export interface AuthenticatedUser extends User {
   /**
-   * Токен доступа в систему
+   * Токен доступа
    */
   access_token: string
 
@@ -20,4 +20,9 @@ export interface AuthenticatedUser extends User {
    * Токен обновления
    */
   refresh_token: string
+
+  /**
+   * Тип токена
+   */
+  token_type: string
 }
