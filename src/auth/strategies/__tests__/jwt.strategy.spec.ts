@@ -4,7 +4,7 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { AccountRepository } from '@/account/account.repository'
 import { ConfigService } from '@core/config'
 
-import { TokenPayload } from '@interfaces/token-payload'
+import { TokenPayload } from '@interfaces/tokens'
 import { mockUser } from '@mocks/account.mock'
 
 import { JwtStrategy } from '../jwt.strategy'

@@ -58,7 +58,7 @@ export class AuthController {
       throw new ConflictException('Not unique login')
     }
 
-    return serializeUser(createdAccount)
+    return serializeUser<User, User>(createdAccount)
   }
 
   /**
@@ -70,7 +70,7 @@ export class AuthController {
   @HttpCode(200)
   @UseGuards(LocalGuard)
   signIn(@UseUser() user: AuthenticatedUser): AuthenticatedUser {
-    return user
+    return serializeUser<AuthenticatedUser, AuthenticatedUser>(user)
   }
 
   /**
@@ -86,7 +86,7 @@ export class AuthController {
   ): Promise<AuthenticatedUser> {
     const user = await this.auth.verifyVKIDUser(vkIdUser)
 
-    return user
+    return serializeUser<AuthenticatedUser, AuthenticatedUser>(user)
   }
 
   @Post('refresh')
@@ -101,5 +101,17 @@ export class AuthController {
   @UseAuth()
   async logout() {
     // Логика логаута
+  }
+
+  /**
+   * Очистка токенов аккаунта
+   * @param {AuthenticatdUser} user Текущий пользователь
+   * @returns {Boolean} Результат очистки
+   */
+  @Post('clear')
+  @HttpCode(200)
+  @UseAuth()
+  async clear(@UseUser() user: AuthenticatedUser): Promise<boolean | null> {
+    return await this.auth.clear(user.id)
   }
 }

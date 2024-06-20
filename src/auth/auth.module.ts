@@ -5,6 +5,7 @@ import { AccountRepository } from '@/account/account.repository'
 import { VKIDService } from '@/vkid/vkid.service'
 
 import { AuthController } from './auth.controller'
+import { TokenService } from './token.service'
 import { AuthService } from './auth.service'
 
 import { LocalStrategy } from './strategies/local.strategy'
@@ -16,12 +17,13 @@ import { JwtStrategy } from './strategies/jwt.strategy'
  * @description Включает в себя:
  * @description HTTP-контроллер авторизации;
  * @description Сервис авторизации;
- * @description Стратегии авторизации по email, login и JWT-токену.
+ * @description Стратегии авторизации по username и JWT-токену.
  */
 @Module({
   imports: [HttpModule],
   providers: [
     AuthService,
+    TokenService,
     AccountRepository,
     VKIDService,
     LocalStrategy,

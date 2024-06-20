@@ -1,13 +1,12 @@
 import { BadRequestException, Injectable } from '@nestjs/common'
 import { Account, Role } from '@prisma/client'
 import generator from 'generate-password-ts'
-import { JwtService } from '@nestjs/jwt'
 import * as argon2 from 'argon2'
 
 import { AccountRepository } from '@/account/account.repository'
+import { TokenService } from './token.service'
 import { ConfigService } from '@core/config'
 
-import { TokenPayload } from '@interfaces/token-payload'
 import { AuthenticatedUser } from '@interfaces/user'
 import { VKIDUser } from '@interfaces/vkid'
 
@@ -26,8 +25,8 @@ export class AuthService {
    */
   constructor(
     private readonly account: AccountRepository,
-    private readonly jwt: JwtService,
     private readonly config: ConfigService,
+    private readonly token: TokenService,
   ) {}
 
   /**
@@ -50,6 +49,10 @@ export class AuthService {
         },
       },
     })
+  }
+
+  async clear(id: string): Promise<boolean | null> {
+    return await this.token.clear(id)
   }
 
   /**
@@ -87,28 +90,6 @@ export class AuthService {
   }
 
   /**
-   * Создание токена доступа
-   * @param {TokenPayload} payload Авторизационные данные
-   * @returns {String} Подписанный JWT-токен
-   */
-  async generateToken(
-    payload: TokenPayload,
-    type: 'access' | 'refresh',
-  ): Promise<string> {
-    return await this.jwt.signAsync(payload, {
-      issuer: this.config.gett('ORIGIN'),
-      expiresIn: this.config.gett(
-        type === 'access'
-          ? 'ACCESS_TOKEN_EXPIRATION'
-          : 'REFRESH_TOKEN_EXPIRATION',
-      ),
-      secret: this.config.gett(
-        type === 'access' ? 'ACCESS_TOKEN_SECRET' : 'REFRESH_TOKEN_SECRET',
-      ),
-    })
-  }
-
-  /**
    * Авторизация аккаунта по паролю
    * @param {Account} account Аккаунт пользователя
    * @param {String} password Пароль от аккаунта
@@ -130,19 +111,20 @@ export class AuthService {
 
     account.password = undefined!
 
-    const token_payload = {
+    const tokens = await this.token.grant({
       userid: account.id,
       username: account.username,
       email: account.email,
       vk_id: account.id,
       vk_avatar: account.vk_avatar,
       vk_access_token: null,
+    })
+
+    if (!tokens) {
+      throw new BadRequestException()
     }
 
-    const access_token = await this.generateToken(token_payload, 'access')
-    const refresh_token = await this.generateToken(token_payload, 'refresh')
-
-    return { ...account, access_token, refresh_token, token_type: 'bearer' }
+    return { ...account, ...tokens }
   }
 
   /**
@@ -188,21 +170,22 @@ export class AuthService {
         },
       })
 
-      const token_payload = {
+      const tokens = await this.token.grant({
         userid: user!.id,
         username: user!.username,
         email: null,
         vk_access_token: vkIdUser.access_token ?? null,
         vk_id: String(user!.vk_id),
         vk_avatar: user!.vk_avatar,
-      }
+      })
 
-      const access_token = await this.generateToken(token_payload, 'access')
-      const refresh_token = await this.generateToken(token_payload, 'refresh')
+      if (!tokens) {
+        throw new BadRequestException()
+      }
 
       user!.password = password
 
-      return { ...user!, access_token, refresh_token, token_type: 'bearer' }
+      return { ...user!, ...tokens }
     }
 
     const user = await this.account.update({
@@ -216,18 +199,19 @@ export class AuthService {
       },
     })
 
-    const token_payload = {
+    const tokens = await this.token.grant({
       email: null,
       username: user!.username,
       userid: user!.id,
       vk_access_token: vkIdUser.access_token!,
       vk_avatar: vkIdUser.photo_200!,
       vk_id: String(vkIdUser.id),
+    })
+
+    if (!tokens) {
+      throw new BadRequestException()
     }
 
-    const access_token = await this.generateToken(token_payload, 'access')
-    const refresh_token = await this.generateToken(token_payload, 'refresh')
-
-    return { ...user!, access_token, refresh_token, token_type: 'bearer' }
+    return { ...user!, ...tokens }
   }
 }

@@ -48,7 +48,9 @@ model Account {
     last_name  String?
     birthday   DateTime? @db.Date
     sex        Int       @default(0)
-    roles      Role[]
+
+    roles          Role[]
+    refresh_tokens String[]
 
     avatar Avatar?
 
@@ -59,8 +61,8 @@ model Account {
     owned_chats    Chat[]    @relation("ChatOwner")
     owned_messages Message[] @relation("MessageOwner")
     owned_memories Memory[]  @relation("MemoryOwner")
+    owned_comments Comment[] @relation("CommentOwner")
     uploaded_files Upload[]  @relation("UploadOwner")
-    Comment        Comment[] @relation("CommentOwner")
 
     created_at DateTime @default(now()) @db.Date
     updated_at DateTime @updatedAt @db.Date

@@ -1,3 +1,20 @@
+export interface Tokens {
+  /**
+   * Токен доступа
+   */
+  access_token: string
+
+  /**
+   * Токен обновления
+   */
+  refresh_token: string
+
+  /**
+   * Тип токена
+   */
+  token_type: string
+}
+
 /**
  * Авторизационные данные пользователя
  */

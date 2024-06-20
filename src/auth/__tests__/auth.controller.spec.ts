@@ -5,6 +5,7 @@ import { JwtService } from '@nestjs/jwt'
 import { AccountRepository } from '@/account/account.repository'
 
 import { AuthController } from '../auth.controller'
+import { TokenService } from '../token.service'
 import { AuthService } from '../auth.service'
 import { ConfigService } from '@core/config'
 
@@ -19,6 +20,7 @@ describe('AuthController', () => {
         JwtService,
         PrismaService,
         ConfigService,
+        TokenService,
         AccountRepository,
       ],
     }).compile()

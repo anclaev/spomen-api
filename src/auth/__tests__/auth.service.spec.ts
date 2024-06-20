@@ -9,6 +9,7 @@ import { AccountRepository } from '@/account/account.repository'
 
 import { ConfigService } from '@core/config'
 import { AuthService } from '../auth.service'
+import { TokenService } from '../token.service'
 
 describe('AuthService', () => {
   let service: AuthService
@@ -17,7 +18,13 @@ describe('AuthService', () => {
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [AccountRepository, AuthService, JwtService, ConfigService],
+      providers: [
+        AccountRepository,
+        AuthService,
+        JwtService,
+        ConfigService,
+        TokenService,
+      ],
     })
       .overrideProvider(AccountRepository)
       .useValue(mockDeep<AccountRepository>())
@@ -67,24 +74,6 @@ describe('AuthService', () => {
     service
       .verifyAccount(mockAccount, 'test')
       .then((data) => expect(data).toStrictEqual(mockAuthenticatedUser))
-  })
-
-  it('Должен генерировать токен', () => {
-    jwt.signAsync.mockReturnValue(new Promise(() => 'test'))
-
-    service
-      .generateToken(
-        {
-          username: 'test',
-          userid: '1',
-          email: null,
-          vk_access_token: null,
-          vk_avatar: null,
-          vk_id: null,
-        },
-        'access',
-      )
-      .then((data) => expect(data).toBe('test'))
   })
 
   it('Должен возвращать пользователя по почте и проверять его', () => {
