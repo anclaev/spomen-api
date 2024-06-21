@@ -10,7 +10,7 @@ import { AuthService } from './auth.service'
 
 import { RefreshStrategy } from './strategies/refresh.strategy'
 import { LocalStrategy } from './strategies/local.strategy'
-import { VKIDStrategy } from './strategies/vkid.strategy'
+import { VKIDStrategy } from './strategies/vk-id.strategy'
 import { JwtStrategy } from './strategies/jwt.strategy'
 
 /**

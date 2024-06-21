@@ -5,15 +5,16 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { AccountRepository } from '@/account/account.repository'
 import { ConfigService } from '@core/config'
 
-import { mockTokenPayload } from '@mocks/token.mock'
+import { mockTokenPayload, mockToken } from '@mocks/token.mock'
+import { mockRequestWithRefresh } from '@mocks/request.mock'
 import { mockUser } from '@mocks/account.mock'
 
-import { JwtStrategy } from '../jwt.strategy'
+import { RefreshStrategy } from '../refresh.strategy'
 
-describe('JwtStrategy', () => {
+describe('RefreshStrategy', () => {
   let repo: DeepMockProxy<AccountRepository>
   let service: DeepMockProxy<ConfigService>
-  let strategy: JwtStrategy
+  let strategy: RefreshStrategy
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -30,7 +31,7 @@ describe('JwtStrategy', () => {
 
     service.gett.mockImplementation((val: string) => '23d18313jd1d3')
 
-    strategy = new JwtStrategy(service, repo)
+    strategy = new RefreshStrategy(service, repo)
   })
 
   it('Должна быть определена', () => {
@@ -41,23 +42,38 @@ describe('JwtStrategy', () => {
     repo.findOne.mockResolvedValueOnce({
       ...mockUser,
       password: 'test',
-      refresh_tokens: [],
+      refresh_tokens: [mockToken],
     })
 
-    return strategy.validate(mockTokenPayload).then((data) =>
-      expect(data).toStrictEqual({
-        ...mockUser,
-        password: undefined,
-        refresh_tokens: undefined,
-      }),
-    )
+    return strategy
+      .validate(mockRequestWithRefresh(), mockTokenPayload)
+      .then((data) =>
+        expect(data).toStrictEqual({
+          ...mockUser,
+          password: undefined,
+          refresh_token: mockToken,
+          refresh_tokens: undefined,
+        }),
+      )
   })
 
-  it('Должна выдавать исключение', () => {
+  it('Должна выдавать исключение, если аккаунт не найден', () => {
     repo.findOne.mockResolvedValueOnce(null)
 
     return strategy
-      .validate(mockTokenPayload)
+      .validate(mockRequestWithRefresh(), mockTokenPayload)
+      .catch((err) => expect(err).toBeInstanceOf(UnauthorizedException))
+  })
+
+  it('Должна выдавать исключение, если токены не совпадают', () => {
+    repo.findOne.mockResolvedValueOnce({
+      ...mockUser,
+      password: 'test',
+      refresh_tokens: ['test'],
+    })
+
+    return strategy
+      .validate(mockRequestWithRefresh(), mockTokenPayload)
       .catch((err) => expect(err).toBeInstanceOf(UnauthorizedException))
   })
 })
