@@ -5,7 +5,7 @@ import { TokensResponse } from './tokens'
  * Модель пользователя
  * @description Аккаунт без авторизационных данных.
  */
-export type User = Omit<Account, 'password'>
+export type User = Omit<Account, 'password' | 'refresh_tokens'>
 
 /**
  * Модель авторизованного пользователя

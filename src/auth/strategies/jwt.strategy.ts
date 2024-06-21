@@ -1,14 +1,16 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { PassportStrategy } from '@nestjs/passport'
 import { ExtractJwt, Strategy } from 'passport-jwt'
+import { Account } from '@prisma/client'
 import { Request } from 'express'
 
 import { TokenPayload } from '@interfaces/tokens'
 import { User } from '@interfaces/user'
 
+import { AccountRepository } from '@/account/account.repository'
 import { ConfigService } from '@core/config'
 
-import { AccountRepository } from '@/account/account.repository'
+import { serializeUser } from '@utils/serialize'
 
 /**
  * Стратегия авторизации пользователя по JWT-токену
@@ -47,9 +49,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     })
 
     if (account) {
-      const { password, ...user } = account
-
-      return user
+      return serializeUser<Account, User>(account)
     } else {
       throw new UnauthorizedException()
     }

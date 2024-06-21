@@ -20,6 +20,7 @@ import { VKIDUser } from '@interfaces/vkid'
 import { Tokens } from '@interfaces/tokens'
 
 import { SignUpDto } from './dto/sign-up.dto'
+import { LogoutDto } from './dto/logout.dto'
 
 /**
  * Сервис авторизации
@@ -247,6 +248,21 @@ export class AuthService {
     }
 
     return { ...user!, ...tokens }
+  }
+
+  /**
+   * Логаут пользователя
+   * @param {LogoutDto} dto Данные пользователя
+   * @returns {Boolean} Результат логаута
+   */
+  async logout({ user_id, refresh_token }: LogoutDto): Promise<Boolean> {
+    const completed = await this.token.logout(user_id, refresh_token)
+
+    if (completed === null) {
+      throw new BadRequestException()
+    }
+
+    return completed
   }
 
   cookiesWithTokens(tokens: Tokens): Cookies[] {

@@ -36,7 +36,6 @@ export const mockUser: User = {
   username: 'test',
   passkey: null,
   sex: Sex.None,
-  refresh_tokens: [],
 }
 
 export const mockAuthenticatedUser: AuthenticatedUser = {

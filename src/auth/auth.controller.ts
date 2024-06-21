@@ -109,8 +109,18 @@ export class AuthController {
   @Post('logout')
   @HttpCode(200)
   @UseAuth()
-  async logout() {
-    // Логика логаута
+  async logout(
+    @UseUser() user: AuthenticatedUser,
+    @Res() res: Response,
+  ): Promise<Response<Boolean>> {
+    const completed = await this.auth.logout({
+      user_id: user.id,
+      refresh_token: user.refresh_token,
+    })
+
+    const cookies = this.auth.logoutCookies()
+
+    return injectCookies(res, cookies).send(completed)
   }
 
   /**

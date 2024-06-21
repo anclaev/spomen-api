@@ -84,7 +84,7 @@ export class TokenService {
     }
 
     const tokens = account.refresh_tokens.filter(
-      (token) => token !== refresh_token,
+      (token) => token === refresh_token,
     )
 
     const updated = await this.account.update({

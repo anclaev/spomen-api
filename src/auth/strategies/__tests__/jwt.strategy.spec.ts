@@ -47,11 +47,19 @@ describe('JwtStrategy', () => {
   })
 
   it('Должна возвращать пользователя', () => {
-    repo.findOne.mockResolvedValueOnce({ ...mockUser, password: 'test' })
+    repo.findOne.mockResolvedValueOnce({
+      ...mockUser,
+      password: 'test',
+      refresh_tokens: [],
+    })
 
-    return strategy
-      .validate(mockToken)
-      .then((data) => expect(data).toStrictEqual(mockUser))
+    return strategy.validate(mockToken).then((data) =>
+      expect(data).toStrictEqual({
+        ...mockUser,
+        password: undefined,
+        refresh_tokens: undefined,
+      }),
+    )
   })
 
   it('Должна выдавать исключение', () => {
