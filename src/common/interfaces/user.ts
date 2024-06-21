@@ -1,5 +1,5 @@
 import { Account } from '@prisma/client'
-import { Tokens } from './tokens'
+import { TokensResponse } from './tokens'
 
 /**
  * Модель пользователя
@@ -11,4 +11,4 @@ export type User = Omit<Account, 'password'>
  * Модель авторизованного пользователя
  * @description Пользователь с токеном доступа.
  */
-export interface AuthenticatedUser extends User, Tokens {}
+export interface AuthenticatedUser extends User, TokensResponse {}

@@ -5,7 +5,7 @@ import { AccountRepository } from '@/account/account.repository'
 
 import { ConfigService } from '@core/config'
 
-import { TokenPayload, Tokens } from '@interfaces/tokens'
+import { TokenPayload, TokensResponse } from '@interfaces/tokens'
 
 @Injectable()
 export class TokenService {
@@ -19,13 +19,18 @@ export class TokenService {
     this.max_refresh_tokens = this.config.gett('MAX_REFRESH_TOKENS')
   }
 
-  async grant(payload: TokenPayload): Promise<Tokens | null> {
-    const account = await this.account.findOne({
-      where: { id: payload.userid },
-    })
+  async grant(
+    payload: TokenPayload,
+    force: boolean = false,
+  ): Promise<TokensResponse | null> {
+    if (!force) {
+      const account = await this.account.findOne({
+        where: { id: payload.userid },
+      })
 
-    if (!account) {
-      return null
+      if (!account) {
+        return null
+      }
     }
 
     return await this.generate(payload)
@@ -40,7 +45,7 @@ export class TokenService {
   async refresh(
     payload: TokenPayload,
     refresh_token: string,
-  ): Promise<Tokens | null> {
+  ): Promise<TokensResponse | null> {
     const account = await this.account.findOne({
       where: { id: payload.userid },
     })
@@ -142,7 +147,9 @@ export class TokenService {
    * @param {TokenPayload} payload Данные токена
    * @returns {Tokens | null} Новая пара токенов
    */
-  private async generate(payload: TokenPayload): Promise<Tokens | null> {
+  private async generate(
+    payload: TokenPayload,
+  ): Promise<TokensResponse | null> {
     const account = await this.account.findOne({
       where: { id: payload.userid },
     })
@@ -151,7 +158,7 @@ export class TokenService {
       return null
     }
 
-    const tokens: Tokens = {
+    const tokens: TokensResponse = {
       access_token: await this.sign(payload, 'access'),
       refresh_token: await this.sign(payload, 'refresh'),
       token_type: 'bearer',

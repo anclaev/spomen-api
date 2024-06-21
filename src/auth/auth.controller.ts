@@ -1,24 +1,28 @@
 import {
   Body,
-  ConflictException,
   Controller,
   Get,
   HttpCode,
   Post,
+  Res,
   UseGuards,
 } from '@nestjs/common'
+
+import { Response } from 'express'
 
 import { AuthenticatedUser, User } from '@interfaces/user'
 import { VKIDUser } from '@interfaces/vkid'
 
 import { UseAuth } from '@decorators/auth'
 import { UseUser } from '@decorators/user'
-import { serializeUser } from '@utils/serialize'
 
 import { AuthService } from './auth.service'
 
 import { LocalGuard } from './guards/local.guard'
 import { VKIDGuard } from './guards/vkid.guard'
+
+import { serializeUser } from '@utils/serialize'
+import { injectCookies } from '@utils/cookies'
 
 import { SignUpDto } from './dto/sign-up.dto'
 
@@ -51,14 +55,20 @@ export class AuthController {
    */
   @Post('sign-up')
   @HttpCode(200)
-  async signUp(@Body() dto: SignUpDto): Promise<User> {
-    const createdAccount = await this.auth.signUp(dto)
+  async signUp(
+    @Body() dto: SignUpDto,
+    @Res() res: Response,
+  ): Promise<Response<AuthenticatedUser>> {
+    const account = await this.auth.signUp(dto)
 
-    if (!createdAccount) {
-      throw new ConflictException('Not unique login')
-    }
+    const cookies = this.auth.cookiesWithTokens({
+      access_token: account.access_token,
+      refresh_token: account.refresh_token,
+    })
 
-    return serializeUser<User, User>(createdAccount)
+    return injectCookies(res, cookies).send(
+      serializeUser<AuthenticatedUser, AuthenticatedUser>(account),
+    )
   }
 
   /**

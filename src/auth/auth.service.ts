@@ -1,14 +1,23 @@
-import { BadRequestException, Injectable } from '@nestjs/common'
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+} from '@nestjs/common'
+
 import { Account, Role } from '@prisma/client'
 import generator from 'generate-password-ts'
+import * as moment from 'moment'
 import * as argon2 from 'argon2'
 
 import { AccountRepository } from '@/account/account.repository'
 import { TokenService } from './token.service'
 import { ConfigService } from '@core/config'
 
+import { Cookies } from '@utils/cookies'
+
 import { AuthenticatedUser } from '@interfaces/user'
 import { VKIDUser } from '@interfaces/vkid'
+import { Tokens } from '@interfaces/tokens'
 
 import { SignUpDto } from './dto/sign-up.dto'
 
@@ -17,6 +26,8 @@ import { SignUpDto } from './dto/sign-up.dto'
  */
 @Injectable()
 export class AuthService {
+  private cookieDomain: string
+
   /**
    * Конструктор сервиса авторизации
    * @param {AccountRepository} account Репозиторий аккаунта
@@ -27,17 +38,22 @@ export class AuthService {
     private readonly account: AccountRepository,
     private readonly config: ConfigService,
     private readonly token: TokenService,
-  ) {}
+  ) {
+    this.cookieDomain =
+      process.env.NODE_ENV !== 'local'
+        ? `*.${this.config.gett('DOMAIN')}`
+        : 'localhost'
+  }
 
   /**
    * Регистрация в приложении
    * @param {SignUpDto} dto Данные для авторизации
    * @returns {Account | null} Созданный аккаунт
    */
-  async signUp(dto: SignUpDto): Promise<Account | null> {
+  async signUp(dto: SignUpDto): Promise<AuthenticatedUser> {
     const password = await argon2.hash(dto.password)
 
-    return await this.account.create({
+    const createdAccount = await this.account.create({
       data: {
         ...dto,
         password,
@@ -49,6 +65,24 @@ export class AuthService {
         },
       },
     })
+
+    if (!createdAccount) {
+      throw new ConflictException('Not unique login')
+    }
+
+    const tokens = await this.token.grant(
+      {
+        email: createdAccount.email,
+        userid: createdAccount.id,
+        username: createdAccount.username,
+        vk_avatar: createdAccount.vk_avatar,
+        vk_id: createdAccount.vk_id,
+        vk_access_token: null,
+      },
+      true,
+    )
+
+    return { ...createdAccount, ...tokens! }
   }
 
   async clear(id: string): Promise<boolean | null> {
@@ -213,5 +247,80 @@ export class AuthService {
     }
 
     return { ...user!, ...tokens }
+  }
+
+  cookiesWithTokens(tokens: Tokens): Cookies[] {
+    const accessTokenExp = this.decodeTokenExpiration(
+      this.config.gett('ACCESS_TOKEN_EXPIRATION'),
+    )
+
+    const refreshTokenExp = this.decodeTokenExpiration(
+      this.config.gett('REFRESH_TOKEN_EXPIRATION'),
+    )
+
+    const authenticationExpires = moment()
+      .add(
+        accessTokenExp.v as moment.DurationInputArg1,
+        accessTokenExp.t as moment.DurationInputArg2,
+      )
+      .toString()
+
+    const refreshExpires = moment()
+      .add(
+        refreshTokenExp.v as moment.DurationInputArg1,
+        refreshTokenExp.t as moment.DurationInputArg2,
+      )
+      .toString()
+
+    return [
+      new Cookies({
+        domain: this.cookieDomain,
+        key: 'Authentication',
+        path: '/',
+        value: tokens.access_token,
+        expires: authenticationExpires,
+        secure: process.env.NODE_ENV === 'production',
+        httpOnly: true,
+      }),
+      new Cookies({
+        domain: this.cookieDomain,
+        key: 'Refresh',
+        path: '/auth/refresh',
+        value: tokens.refresh_token,
+        expires: refreshExpires,
+        secure: process.env.NODE_ENV === 'production',
+        httpOnly: true,
+      }),
+    ]
+  }
+
+  logoutCookies(): Cookies[] {
+    return [
+      new Cookies({
+        domain: this.cookieDomain,
+        key: 'Authentication',
+        path: '/',
+        value: '',
+        maxAge: 0,
+        secure: process.env.NODE_ENV === 'production',
+        httpOnly: true,
+      }),
+      new Cookies({
+        domain: this.cookieDomain,
+        key: 'Refresh',
+        path: '/auth/refresh',
+        value: '',
+        maxAge: 0,
+        secure: process.env.NODE_ENV === 'production',
+        httpOnly: true,
+      }),
+    ]
+  }
+
+  private decodeTokenExpiration(exp: string): {
+    t: string
+    v: number
+  } {
+    return { t: exp.slice(-1), v: Number(exp.slice(0, exp.length - 1)) }
   }
 }

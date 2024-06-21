@@ -8,7 +8,9 @@ export interface Tokens {
    * Токен обновления
    */
   refresh_token: string
+}
 
+export interface TokensResponse extends Tokens {
   /**
    * Тип токена
    */

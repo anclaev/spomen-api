@@ -1,3 +1,5 @@
+import { Response } from 'express'
+
 /**
  * Опции cookies
  */
@@ -82,4 +84,11 @@ export class Cookies {
       this.secure ? 'Secure;' : ''
     } Path=${this.path}; ${this.expires ? 'Expires=' + this.expires + ';' : ''} Domain=${this.domain}${this.maxAge ? `; Max-Age=${this.maxAge};` : ''}`
   }
+}
+
+export const injectCookies = (res: Response, cookies: Cookies[]): Response => {
+  return res.setHeader(
+    'Set-Cookie',
+    cookies.map((cookie) => cookie.toString()),
+  )
 }
