@@ -79,8 +79,18 @@ export class AuthController {
   @Post('token')
   @HttpCode(200)
   @UseGuards(LocalGuard)
-  signIn(@UseUser() user: AuthenticatedUser): AuthenticatedUser {
-    return serializeUser<AuthenticatedUser, AuthenticatedUser>(user)
+  signIn(
+    @UseUser() user: AuthenticatedUser,
+    @Res() res: Response,
+  ): Response<AuthenticatedUser> {
+    const cookies = this.auth.cookiesWithTokens({
+      access_token: user.access_token,
+      refresh_token: user.refresh_token,
+    })
+
+    return injectCookies(res, cookies).send(
+      serializeUser<AuthenticatedUser, AuthenticatedUser>(user),
+    )
   }
 
   /**
