@@ -51,7 +51,8 @@ export class AuthController {
   /**
    * Регистрация аккаунта
    * @param {SignUpDto} dto Регистрационные данные
-   * @returns {User} Созданный аккаунт
+   * @param {Response} res Объект ответа
+   * @returns {AuthenticatedUser} Созданный аккаунт
    */
   @Post('sign-up')
   @HttpCode(200)
@@ -74,6 +75,7 @@ export class AuthController {
   /**
    * Вход в систему по логину
    * @param {AuthenticatedUser} user Авторизованный пользователь
+   * @param {Response} res Объект ответа
    * @returns {AuthenticatedUser} Авторизованный пользователь
    */
   @Post('token')
@@ -96,6 +98,7 @@ export class AuthController {
   /**
    * Вход в систему через VKID
    * @param {VKIDUser} vkIdUser Access-токен VKID с данными пользователя
+   * @param {Response} res Объект ответа
    * @returns {AuthenticatedUser} Пользователь системы
    */
   @Post('vkid')
@@ -103,10 +106,18 @@ export class AuthController {
   @UseGuards(VKIDGuard)
   async signInByVKID(
     @UseUser() vkIdUser: VKIDUser,
-  ): Promise<AuthenticatedUser> {
+    @Res() res: Response,
+  ): Promise<Response<AuthenticatedUser>> {
     const user = await this.auth.verifyVKIDUser(vkIdUser)
 
-    return serializeUser<AuthenticatedUser, AuthenticatedUser>(user)
+    const cookies = this.auth.cookiesWithTokens({
+      access_token: user.access_token,
+      refresh_token: user.refresh_token,
+    })
+
+    return injectCookies(res, cookies).send(
+      serializeUser<AuthenticatedUser, AuthenticatedUser>(user),
+    )
   }
 
   @Post('refresh')
@@ -116,6 +127,12 @@ export class AuthController {
     // Логика обновления токена
   }
 
+  /**
+   * Логаут из приложения
+   * @param {AuthenticatedUser} user Авторизованный пользователь
+   * @param {Response} res Объект ответа
+   * @returns {Boolean} Результат логаута
+   */
   @Post('logout')
   @HttpCode(200)
   @UseAuth()
@@ -141,7 +158,7 @@ export class AuthController {
   @Post('clear')
   @HttpCode(200)
   @UseAuth()
-  async clear(@UseUser() user: AuthenticatedUser): Promise<boolean | null> {
+  async clearMe(@UseUser() user: AuthenticatedUser): Promise<boolean | null> {
     return await this.auth.clear(user.id)
   }
 }
