@@ -18,6 +18,7 @@ import { UseUser } from '@decorators/user'
 
 import { AuthService } from './auth.service'
 
+import { RefreshGuard } from './guards/refresh.guard'
 import { LocalGuard } from './guards/local.guard'
 import { VKIDGuard } from './guards/vkid.guard'
 
@@ -120,13 +121,6 @@ export class AuthController {
     )
   }
 
-  @Post('refresh')
-  @HttpCode(200)
-  @UseAuth()
-  async refresh() {
-    // Логика обновления токена
-  }
-
   /**
    * Логаут из приложения
    * @param {AuthenticatedUser} user Авторизованный пользователь
@@ -150,15 +144,26 @@ export class AuthController {
     return injectCookies(res, cookies).send(completed)
   }
 
+  @Post('refresh')
+  @HttpCode(200)
+  @UseGuards(RefreshGuard)
+  async refresh(@UseUser() user: AuthenticatedUser, @Res() res: Response) {
+    const refreshedTokens = await this.auth.refreshTokens(user)
+
+    const cookies = this.auth.cookiesWithTokens(refreshedTokens)
+
+    return injectCookies(res, cookies).send(refreshedTokens)
+  }
+
   /**
-   * Очистка токенов аккаунта
+   * Очистка токенов обновления аккаунта
    * @param {AuthenticatdUser} user Текущий пользователь
    * @returns {Boolean} Результат очистки
    */
-  @Post('clear')
+  @Post('refresh/clear')
   @HttpCode(200)
   @UseAuth()
   async clearMe(@UseUser() user: AuthenticatedUser): Promise<boolean | null> {
-    return await this.auth.clear(user.id)
+    return await this.auth.refreshClear(user.id)
   }
 }

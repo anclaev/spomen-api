@@ -5,7 +5,7 @@ import { Account } from '@prisma/client'
 import { Request } from 'express'
 
 import { TokenPayload } from '@interfaces/tokens'
-import { User } from '@interfaces/user'
+import { AuthenticatedUser, User } from '@interfaces/user'
 
 import { AccountRepository } from '@/account/account.repository'
 import { ConfigService } from '@core/config'
@@ -13,11 +13,11 @@ import { ConfigService } from '@core/config'
 import { serializeUser } from '@utils/serialize'
 
 /**
- * Стратегия авторизации пользователя по JWT-токену
+ * Стратегия проверки токена обновления
  * @description Получает токен из авторизационной куки.
  */
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
+export class RefreshStrategy extends PassportStrategy(Strategy, 'refresh') {
   /**
    * Конструктор стратегии
    * @param {ConfigService} config Сервис конфигурации
@@ -30,11 +30,12 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
         (req: Request) => {
-          return req.cookies.Authentication
+          return req.cookies.Refresh
         },
       ]),
       ignoreExpiration: false,
-      secretOrKey: config.gett('ACCESS_TOKEN_SECRET'),
+      passReqToCallback: true,
+      secretOrKey: config.gett('REFRESH_TOKEN_SECRET'),
     })
   }
 
@@ -43,15 +44,29 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
    * @param {TokenPayload} payload Авторизационные данные
    * @returns {AuthenticatedUser} Авторизованный пользователь
    */
-  async validate(payload: TokenPayload): Promise<User> {
+  async validate(
+    req: Request,
+    payload: TokenPayload,
+  ): Promise<AuthenticatedUser> {
     const account = await this.account.findOne({
       where: { id: payload.userid },
     })
 
-    if (account) {
-      return serializeUser<Account, User>(account)
-    } else {
+    if (!account) {
       throw new UnauthorizedException()
+    }
+
+    const verified = !!account.refresh_tokens.find(
+      (token) => token === req.cookies.Refresh,
+    )
+
+    if (!verified) {
+      throw new UnauthorizedException()
+    }
+
+    return {
+      ...serializeUser<Account, AuthenticatedUser>(account),
+      refresh_token: req.cookies.Refresh,
     }
   }
 }

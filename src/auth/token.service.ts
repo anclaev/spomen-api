@@ -83,9 +83,11 @@ export class TokenService {
       return null
     }
 
-    const tokens = account.refresh_tokens.filter(
-      (token) => token === refresh_token,
-    )
+    const tokens = account.refresh_tokens
+
+    const removeTokenIndex = tokens.indexOf(refresh_token)
+
+    if (removeTokenIndex > -1) tokens.splice(removeTokenIndex, 1)
 
     const updated = await this.account.update({
       where: { id: user_id },

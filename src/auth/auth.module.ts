@@ -8,6 +8,7 @@ import { AuthController } from './auth.controller'
 import { TokenService } from './token.service'
 import { AuthService } from './auth.service'
 
+import { RefreshStrategy } from './strategies/refresh.strategy'
 import { LocalStrategy } from './strategies/local.strategy'
 import { VKIDStrategy } from './strategies/vkid.strategy'
 import { JwtStrategy } from './strategies/jwt.strategy'
@@ -17,7 +18,7 @@ import { JwtStrategy } from './strategies/jwt.strategy'
  * @description Включает в себя:
  * @description HTTP-контроллер авторизации;
  * @description Сервис авторизации;
- * @description Стратегии авторизации по username и JWT-токену.
+ * @description Стратегии авторизации.
  */
 @Module({
   imports: [HttpModule],
@@ -29,6 +30,7 @@ import { JwtStrategy } from './strategies/jwt.strategy'
     LocalStrategy,
     JwtStrategy,
     VKIDStrategy,
+    RefreshStrategy,
   ],
   controllers: [AuthController],
 })

@@ -19,6 +19,7 @@ import { AuthenticatedUser } from '@interfaces/user'
 import { VKIDUser } from '@interfaces/vkid'
 import { Tokens } from '@interfaces/tokens'
 
+import { RefreshTokensDto } from './dto/refresh-tokens.dto'
 import { SignUpDto } from './dto/sign-up.dto'
 import { LogoutDto } from './dto/logout.dto'
 
@@ -86,10 +87,6 @@ export class AuthService {
     return { ...createdAccount, ...tokens! }
   }
 
-  async clear(id: string): Promise<boolean | null> {
-    return await this.token.clear(id)
-  }
-
   /**
    * Авторизация пользователя по логину
    * @param {String} username Логин аккаунта
@@ -150,7 +147,7 @@ export class AuthService {
       userid: account.id,
       username: account.username,
       email: account.email,
-      vk_id: account.id,
+      vk_id: account.vk_id,
       vk_avatar: account.vk_avatar,
       vk_access_token: null,
     })
@@ -263,6 +260,28 @@ export class AuthService {
     }
 
     return completed
+  }
+
+  async refreshTokens(user: AuthenticatedUser): Promise<Tokens> {
+    await this.token.logout(user.id, user.refresh_token)
+
+    const tokens = await this.token.grant(
+      {
+        email: user.email,
+        userid: user.id,
+        username: user.username,
+        vk_avatar: user.vk_avatar,
+        vk_id: user.vk_id,
+        vk_access_token: null,
+      },
+      true,
+    )
+
+    return tokens!
+  }
+
+  async refreshClear(user_id: string): Promise<boolean | null> {
+    return await this.token.clear(user_id)
   }
 
   cookiesWithTokens(tokens: Tokens): Cookies[] {
