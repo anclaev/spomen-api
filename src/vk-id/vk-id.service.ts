@@ -14,7 +14,7 @@ import {
   VKID_EXCHANGE_TOKEN_RESPONSE,
   VKID_USERS_GET_PAYLOAD,
   VKID_USERS_GET_RESPONSE,
-} from '@interfaces/vkid'
+} from '@interfaces/vk-id'
 
 @Injectable()
 export class VKIDService {

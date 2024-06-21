@@ -2,7 +2,7 @@ import { HttpModule } from '@nestjs/axios'
 import { Module } from '@nestjs/common'
 
 import { AccountRepository } from '@/account/account.repository'
-import { VKIDService } from '@/vkid/vkid.service'
+import { VKIDService } from '@/vk-id/vk-id.service'
 
 import { AuthController } from './auth.controller'
 import { TokenService } from './token.service'

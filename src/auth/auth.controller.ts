@@ -10,8 +10,8 @@ import {
 
 import { Response } from 'express'
 
-import { AuthenticatedUser, User } from '@interfaces/user'
-import { VKIDUser } from '@interfaces/vkid'
+import { AuthenticatedUser } from '@interfaces/user'
+import { VKIDUser } from '@interfaces/vk-id'
 
 import { UseAuth } from '@decorators/auth'
 import { UseUser } from '@decorators/user'

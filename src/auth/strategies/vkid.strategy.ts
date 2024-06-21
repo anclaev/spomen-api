@@ -2,9 +2,9 @@ import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { PassportStrategy } from '@nestjs/passport'
 import { Strategy } from 'passport-local'
 
-import { VKIDUser } from '@interfaces/vkid'
+import { VKIDUser } from '@interfaces/vk-id'
 
-import { VKIDService } from '@/vkid/vkid.service'
+import { VKIDService } from '@/vk-id/vk-id.service'
 
 @Injectable()
 export class VKIDStrategy extends PassportStrategy(Strategy, 'vkid') {

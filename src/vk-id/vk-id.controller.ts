@@ -1,22 +1,24 @@
 import { Body, Controller, Get, HttpCode, Param, Post } from '@nestjs/common'
 import { Role } from '@prisma/client'
 
-import { VKIDService } from './vkid.service'
+import { VKIDService } from './vk-id.service'
 
 import {
   VKID_EXCHANGE_TOKEN_PAYLOAD,
   VKID_EXCHANGE_TOKEN_RESPONSE,
   VKIDUser,
-} from '@interfaces/vkid'
+} from '@interfaces/vk-id'
 
+import { UseRoles } from '@decorators/roles'
 import { UseAuth } from '@decorators/auth'
 
-@Controller('vkid')
-@UseAuth([Role.Administrator])
+@Controller('vk-id')
+@UseAuth()
 export class VKIDController {
   constructor(private readonly vkid: VKIDService) {}
 
   @Get(':id')
+  @UseRoles([Role.Administrator])
   async getVKIDUserById(
     @Param('id') id: string,
     @Body() { access_token }: { access_token: string },

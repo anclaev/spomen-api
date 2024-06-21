@@ -3,23 +3,21 @@ import { HttpModule } from '@nestjs/axios'
 
 import { ConfigService } from '@core/config'
 
-import { VKIDController } from '../vkid.controller'
-import { VKIDService } from '../vkid.service'
+import { VKIDService } from '../vk-id.service'
 
-describe('VKIDController', () => {
-  let controller: VKIDController
+describe('VKIDService', () => {
+  let service: VKIDService
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [HttpModule],
-      controllers: [VKIDController],
       providers: [VKIDService, ConfigService],
     }).compile()
 
-    controller = module.get<VKIDController>(VKIDController)
+    service = module.get<VKIDService>(VKIDService)
   })
 
   it('should be defined', () => {
-    expect(controller).toBeDefined()
+    expect(service).toBeDefined()
   })
 })

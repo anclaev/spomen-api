@@ -16,7 +16,7 @@ import { ConfigService } from '@core/config'
 import { Cookies } from '@utils/cookies'
 
 import { AuthenticatedUser } from '@interfaces/user'
-import { VKIDUser } from '@interfaces/vkid'
+import { VKIDUser } from '@interfaces/vk-id'
 import { Tokens } from '@interfaces/tokens'
 
 import { RefreshTokensDto } from './dto/refresh-tokens.dto'

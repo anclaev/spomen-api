@@ -71,7 +71,7 @@ export interface VKIDUser {
   about?: string
   bdate?: string
   screen_name?: string
-  sex?: string
+  sex?: string // Пол, 0 - не указан, 1 - женский, 2 - мужской
   site?: string
   email?: string
   status?: string

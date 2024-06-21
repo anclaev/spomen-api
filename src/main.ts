@@ -37,7 +37,7 @@ const bootstrap = async () => {
 
   app.enableCors({
     credentials: true,
-    origin: 'http://localhost',
+    origin: config.gett<string>('ORIGIN'),
   })
 
   try {
