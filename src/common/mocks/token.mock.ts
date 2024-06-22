@@ -1,4 +1,4 @@
-import { TokenPayload } from '@interfaces/tokens'
+import { TokenPayload, Tokens, TokensResponse } from '@interfaces/tokens'
 
 export const mockTokenPayload: TokenPayload = {
   userid: '1',
@@ -10,3 +10,13 @@ export const mockTokenPayload: TokenPayload = {
 }
 
 export const mockToken = '1f3813u13u9913kx1'
+
+export const mockTokens: Tokens = {
+  access_token: '2d13d13d13d1',
+  refresh_token: 'd313d13d13d13d',
+}
+
+export const mockTokenResponse: TokensResponse = {
+  ...mockTokens,
+  token_type: 'bearer',
+}
