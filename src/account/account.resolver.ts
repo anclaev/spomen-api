@@ -22,11 +22,24 @@ export class AccountResolver {
    * @returns {Account | null} Аккаунт в системе
    */
   @UseGqlAuth()
-  @Query(() => Account, { name: 'account' })
-  async findOne(
-    @Args('id', { type: () => ID }) id: string,
+  @Query(() => Account, { name: 'accountById' })
+  async findOneById(
+    @Args('id', { type: () => String }) id: string,
   ): Promise<Account | null> {
     return await this.account.findOne(id)
+  }
+
+  /**
+   * Запрос на получение аккаунта по имени пользователя
+   * @param {String} username Имя аккаунта
+   * @returns {Account | null} Аккаунт в системе
+   */
+  @UseGqlAuth()
+  @Query(() => Account, { name: 'account' })
+  async findOne(
+    @Args('username', { type: () => String }) username: string,
+  ): Promise<Account | null> {
+    return await this.account.findByUsername(username)
   }
 
   // @Mutation(() => Account)
