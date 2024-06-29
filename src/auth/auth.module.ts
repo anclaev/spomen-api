@@ -1,12 +1,16 @@
+import { HttpModule } from '@nestjs/axios'
 import { Module } from '@nestjs/common'
 
 import { AccountRepository } from '@/account/account.repository'
+import { VKIDService } from '@/vk-id/vk-id.service'
 
 import { AuthController } from './auth.controller'
+import { TokenService } from './token.service'
 import { AuthService } from './auth.service'
 
-import { EmailStrategy } from './strategies/email.strategy'
-import { LoginStrategy } from './strategies/login.strategy'
+import { RefreshStrategy } from './strategies/refresh.strategy'
+import { LocalStrategy } from './strategies/local.strategy'
+import { VKIDStrategy } from './strategies/vk-id.strategy'
 import { JwtStrategy } from './strategies/jwt.strategy'
 
 /**
@@ -14,15 +18,19 @@ import { JwtStrategy } from './strategies/jwt.strategy'
  * @description Включает в себя:
  * @description HTTP-контроллер авторизации;
  * @description Сервис авторизации;
- * @description Стратегии авторизации по email, login и JWT-токену.
+ * @description Стратегии авторизации.
  */
 @Module({
+  imports: [HttpModule],
   providers: [
     AuthService,
+    TokenService,
     AccountRepository,
-    EmailStrategy,
-    LoginStrategy,
+    VKIDService,
+    LocalStrategy,
     JwtStrategy,
+    VKIDStrategy,
+    RefreshStrategy,
   ],
   controllers: [AuthController],
 })

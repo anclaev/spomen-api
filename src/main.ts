@@ -25,11 +25,6 @@ const bootstrap = async () => {
   const config = app.get(ConfigService)
   const logger = app.get(Logger)
 
-  app.enableCors({
-    credentials: true,
-    origin: config.gett<string>('ORIGIN'),
-  })
-
   app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter))
 
   app.useGlobalPipes(
@@ -39,6 +34,11 @@ const bootstrap = async () => {
   )
 
   app.use(cookieParser(config.gett<string>('COOKIE_SECRET')))
+
+  app.enableCors({
+    credentials: true,
+    origin: config.gett<string>('ORIGIN'),
+  })
 
   try {
     await prismaHealthIndicator.pingCheck('Prisma', prisma)

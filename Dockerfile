@@ -33,7 +33,6 @@ COPY --from=builder --chown=nestjs:nodejs /app/dist ./
 COPY --from=builder --chown=nestjs:nodejs /app/package.json ./package.json
 COPY --from=builder --chown=nestjs:nodejs /app/yarn.lock ./yarn.lock
 COPY --from=builder --chown=nestjs:nodejs /app/prisma ./prisma
-COPY --from=builder --chown=nestjs:nodejs /app/graphql ./graphql
 COPY --from=builder --chown=nestjs:nodejs /app/node_modules ./node_modules
 
 RUN yarn prisma migrate deploy

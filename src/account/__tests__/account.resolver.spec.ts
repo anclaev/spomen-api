@@ -1,27 +1,36 @@
+import { DeepMockProxy, mockDeep } from 'jest-mock-extended'
 import { Test, TestingModule } from '@nestjs/testing'
-import { PrismaService } from 'nestjs-prisma'
+
+import { mockAccount } from '@mocks/account.mock'
 
 import { AccountResolver } from '../account.resolver'
 import { AccountService } from '../account.service'
-import { AccountRepository } from '../account.repository'
 
 describe('AccountResolver', () => {
   let resolver: AccountResolver
+  let service: DeepMockProxy<AccountService>
 
-  beforeEach(async () => {
+  beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        AccountResolver,
-        AccountService,
-        AccountRepository,
-        PrismaService,
-      ],
-    }).compile()
+      providers: [AccountResolver, AccountService],
+    })
+      .overrideProvider(AccountService)
+      .useValue(mockDeep<AccountService>())
+      .compile()
 
     resolver = module.get<AccountResolver>(AccountResolver)
+    service = module.get(AccountService)
   })
 
-  it('should be defined', () => {
+  it('Должен быть определён', () => {
     expect(resolver).toBeDefined()
+  })
+
+  it('Должен возвращать найденный аккаунт', () => {
+    service.findByUsername.mockResolvedValueOnce(mockAccount)
+
+    return resolver
+      .findOne('test')
+      .then((data) => expect(data).toBe(mockAccount))
   })
 })

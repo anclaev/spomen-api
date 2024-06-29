@@ -1,14 +1,17 @@
+import { Response } from 'express'
+
 /**
  * Опции cookies
  */
-type CookiesOptions = {
+export type CookiesOptions = {
   key: string
   value: string
   path: string
   domain: string
+  expires?: string
   secure?: boolean
-  maxAge?: string
   httpOnly?: boolean
+  maxAge?: number
 }
 
 /**
@@ -44,7 +47,12 @@ export class Cookies {
   /**
    * Срок действия кук
    */
-  maxAge?: string
+  expires?: string
+
+  /**
+   * Время жизни кук
+   */
+  maxAge?: number
 
   /**
    * Флаг поддерживаемого протокола
@@ -61,6 +69,7 @@ export class Cookies {
     this.value = options.value
     this.path = options.path
     this.domain = options.domain
+    this.expires = options.expires
     this.maxAge = options.maxAge
     this.secure = options.secure ?? true
     this.httpOnly = options.httpOnly ?? true
@@ -73,6 +82,13 @@ export class Cookies {
   toString(): string {
     return `${this.key}=${this.value}; ${this.httpOnly ? 'HttpOnly;' : ''} ${
       this.secure ? 'Secure;' : ''
-    } Path=${this.path}; Max-Age=${this.maxAge}; Domain=${this.domain}`
+    } Path=${this.path}; ${this.expires ? 'Expires=' + this.expires + ';' : ''} Domain=${this.domain}${this.maxAge ? `; Max-Age=${this.maxAge};` : ''}`
   }
+}
+
+export const injectCookies = (res: Response, cookies: Cookies[]): Response => {
+  return res.setHeader(
+    'Set-Cookie',
+    cookies.map((cookie) => cookie.toString()),
+  )
 }

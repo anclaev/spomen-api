@@ -7,12 +7,14 @@ import { ConfigModule } from '@nestjs/config'
 import { JwtModule } from '@nestjs/jwt'
 
 import { ConfigService } from './config/config.service'
+
 import validationSchema from './config/config.schema'
 
 /**
  * Системный модуль приложения
  * @description Предоставляет ключевые модули и логгер.
  * @description Включает в себя:
+ * @description модуль HTTP Axios;
  * @description модуль конфигурации;
  * @description модуль работы с базой данных;
  * @description модуль сервера GraphQL;

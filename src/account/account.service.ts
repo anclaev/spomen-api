@@ -23,6 +23,15 @@ export class AccountService {
     return await this.account.findOne({ where: { id } })
   }
 
+  /**
+   * Получение аккаунта по имени пользоватедя
+   * @param {String} username Имя аккаунта
+   * @returns {Account | null} Аккаунт в базе данных
+   */
+  async findByUsername(username: string): Promise<Account | null> {
+    return await this.account.findOne({ where: { username } })
+  }
+
   // create(AccountCreateInput: AccountCreateInput) {
   //   return 'This action adds a new account'
   // }

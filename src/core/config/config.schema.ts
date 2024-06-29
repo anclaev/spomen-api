@@ -20,6 +20,7 @@ const configSchema = Joi.object({
   ACCESS_TOKEN_EXPIRATION: Joi.string().required(),
   REFRESH_TOKEN_SECRET: Joi.string().required(),
   REFRESH_TOKEN_EXPIRATION: Joi.string().required(),
+  MAX_REFRESH_TOKENS: Joi.number().default(10),
 })
 
 export default configSchema

@@ -1,34 +1,35 @@
 import {
   Body,
-  ClassSerializerInterceptor,
-  ConflictException,
   Controller,
   Get,
   HttpCode,
   Post,
+  Res,
   UseGuards,
-  UseInterceptors,
 } from '@nestjs/common'
 
-import { Account } from '@prisma/client'
+import { Response } from 'express'
 
-import { AuthenticatedUser, User } from '@interfaces/user'
+import { AuthenticatedUser } from '@interfaces/user'
+import { VKIDUser } from '@interfaces/vk-id'
 
-import { UseTransform } from '@decorators/transform'
 import { UseAuth } from '@decorators/auth'
 import { UseUser } from '@decorators/user'
 
 import { AuthService } from './auth.service'
 
-import { LocalLoginGuard } from './guards/local-login.guard'
-import { LocalEmailGuard } from './guards/local-email.guard'
+import { RefreshGuard } from './guards/refresh.guard'
+import { LocalGuard } from './guards/local.guard'
+import { VKIDGuard } from './guards/vkid.guard'
+
+import { serializeUser } from '@utils/serialize'
+import { injectCookies } from '@utils/cookies'
 
 import { SignUpDto } from './dto/sign-up.dto'
 
 /**
  * HTTP-контроллер авторизации
  */
-@UseInterceptors(ClassSerializerInterceptor)
 @Controller('auth')
 export class AuthController {
   /**
@@ -51,41 +52,118 @@ export class AuthController {
   /**
    * Регистрация аккаунта
    * @param {SignUpDto} dto Регистрационные данные
-   * @returns {Account} Созданный аккаунт
+   * @param {Response} res Объект ответа
+   * @returns {AuthenticatedUser} Созданный аккаунт
    */
   @Post('sign-up')
   @HttpCode(200)
-  async signUp(@Body() dto: SignUpDto): Promise<Account> {
-    const createdAccount = await this.auth.signUp(dto)
+  async signUp(
+    @Body() dto: SignUpDto,
+    @Res() res: Response,
+  ): Promise<Response<AuthenticatedUser>> {
+    const account = await this.auth.signUp(dto)
 
-    if (!createdAccount) {
-      throw new ConflictException('Not unique login')
-    }
+    const cookies = this.auth.cookiesWithTokens({
+      access_token: account.access_token,
+      refresh_token: account.refresh_token,
+    })
 
-    return createdAccount
+    return injectCookies(res, cookies).send(
+      serializeUser<AuthenticatedUser, AuthenticatedUser>(account),
+    )
   }
 
   /**
    * Вход в систему по логину
    * @param {AuthenticatedUser} user Авторизованный пользователь
+   * @param {Response} res Объект ответа
    * @returns {AuthenticatedUser} Авторизованный пользователь
    */
-  @Post('sign-in')
+  @Post('token')
   @HttpCode(200)
-  @UseGuards(LocalLoginGuard)
-  signIn(@UseUser() user: AuthenticatedUser): AuthenticatedUser {
-    return user
+  @UseGuards(LocalGuard)
+  signIn(
+    @UseUser() user: AuthenticatedUser,
+    @Res() res: Response,
+  ): Response<AuthenticatedUser> {
+    const cookies = this.auth.cookiesWithTokens({
+      access_token: user.access_token,
+      refresh_token: user.refresh_token,
+    })
+
+    return injectCookies(res, cookies).send(
+      serializeUser<AuthenticatedUser, AuthenticatedUser>(user),
+    )
   }
 
   /**
-   * Вход в систему по почте
-   * @param {AuthenticatedUser} user Авторизованный пользователь
-   * @returns {AuthenticatedUser} Авторизованный пользователь
+   * Вход в систему через VKID
+   * @param {VKIDUser} vkIdUser Access-токен VKID с данными пользователя
+   * @param {Response} res Объект ответа
+   * @returns {AuthenticatedUser} Пользователь системы
    */
-  @Post('sign-in-email')
+  @Post('vkid')
   @HttpCode(200)
-  @UseGuards(LocalEmailGuard)
-  signInByEmail(@UseUser() user: AuthenticatedUser): AuthenticatedUser {
-    return user
+  @UseGuards(VKIDGuard)
+  async signInByVKID(
+    @UseUser() vkIdUser: VKIDUser,
+    @Res() res: Response,
+  ): Promise<Response<AuthenticatedUser>> {
+    const user = await this.auth.verifyVKIDUser(vkIdUser)
+
+    const cookies = this.auth.cookiesWithTokens({
+      access_token: user.access_token,
+      refresh_token: user.refresh_token,
+    })
+
+    return injectCookies(res, cookies).send(
+      serializeUser<AuthenticatedUser, AuthenticatedUser>(user),
+    )
+  }
+
+  /**
+   * Логаут из приложения
+   * @param {AuthenticatedUser} user Авторизованный пользователь
+   * @param {Response} res Объект ответа
+   * @returns {Boolean} Результат логаута
+   */
+  @Post('logout')
+  @HttpCode(200)
+  @UseAuth()
+  async logout(
+    @UseUser() user: AuthenticatedUser,
+    @Res() res: Response,
+  ): Promise<Response<Boolean>> {
+    const completed = await this.auth.logout({
+      user_id: user.id,
+      refresh_token: user.refresh_token,
+    })
+
+    const cookies = this.auth.logoutCookies()
+
+    return injectCookies(res, cookies).send(completed)
+  }
+
+  @Post('refresh')
+  @HttpCode(200)
+  @UseGuards(RefreshGuard)
+  async refresh(@UseUser() user: AuthenticatedUser, @Res() res: Response) {
+    const refreshedTokens = await this.auth.refreshTokens(user)
+
+    const cookies = this.auth.cookiesWithTokens(refreshedTokens)
+
+    return injectCookies(res, cookies).send(refreshedTokens)
+  }
+
+  /**
+   * Очистка токенов обновления аккаунта
+   * @param {AuthenticatdUser} user Текущий пользователь
+   * @returns {Boolean} Результат очистки
+   */
+  @Post('refresh/clear')
+  @HttpCode(200)
+  @UseAuth()
+  async clearMe(@UseUser() user: AuthenticatedUser): Promise<boolean | null> {
+    return await this.auth.refreshClear(user.id)
   }
 }

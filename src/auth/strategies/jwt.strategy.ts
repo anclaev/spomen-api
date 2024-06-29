@@ -1,22 +1,25 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { PassportStrategy } from '@nestjs/passport'
 import { ExtractJwt, Strategy } from 'passport-jwt'
+import { Account } from '@prisma/client'
+import { Request } from 'express'
 
-import { TokenPayload } from '@interfaces/token-payload'
+import { TokenPayload } from '@interfaces/tokens'
 import { User } from '@interfaces/user'
 
+import { AccountRepository } from '@/account/account.repository'
 import { ConfigService } from '@core/config'
 
-import { AccountRepository } from '@/account/account.repository'
+import { serializeUser } from '@utils/serialize'
 
 /**
  * Стратегия авторизации пользователя по JWT-токену
- * @description Получает токен из заголовка Bearer.
+ * @description Получает токен из авторизационной куки.
  */
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy) {
+export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   /**
-   * Конструктор стратегии авторизации по почте
+   * Конструктор стратегии
    * @param {ConfigService} config Сервис конфигурации
    * @param {AccountRepository} account Репозиторий аккаунта
    */
@@ -25,7 +28,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     private readonly account: AccountRepository,
   ) {
     super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      jwtFromRequest: ExtractJwt.fromExtractors([
+        (req: Request) => {
+          return req.cookies.Authentication
+        },
+      ]),
       ignoreExpiration: false,
       secretOrKey: config.gett('ACCESS_TOKEN_SECRET'),
     })
@@ -38,13 +45,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
    */
   async validate(payload: TokenPayload): Promise<User> {
     const account = await this.account.findOne({
-      where: { id: payload.user_id },
+      where: { id: payload.userid },
     })
 
     if (account) {
-      const { password, ...user } = account
-
-      return user
+      return serializeUser<Account, User>(account)
     } else {
       throw new UnauthorizedException()
     }

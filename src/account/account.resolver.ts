@@ -1,7 +1,7 @@
 import { Resolver, Args, Query, ID } from '@nestjs/graphql'
-import { Account } from '@graphql/index'
+import { Account } from '@common/graphql/index'
 
-import { UseGQLAuth } from '@decorators/auth'
+import { UseGqlAuth } from '@decorators/gql-auth'
 
 import { AccountService } from './account.service'
 
@@ -21,12 +21,25 @@ export class AccountResolver {
    * @param {String} id ID аккаунта
    * @returns {Account | null} Аккаунт в системе
    */
-  @UseGQLAuth()
-  @Query(() => Account, { name: 'account' })
-  async findOne(
-    @Args('id', { type: () => ID }) id: string,
+  @UseGqlAuth()
+  @Query(() => Account, { name: 'accountById' })
+  async findOneById(
+    @Args('id', { type: () => String }) id: string,
   ): Promise<Account | null> {
     return await this.account.findOne(id)
+  }
+
+  /**
+   * Запрос на получение аккаунта по имени пользователя
+   * @param {String} username Имя аккаунта
+   * @returns {Account | null} Аккаунт в системе
+   */
+  @UseGqlAuth()
+  @Query(() => Account, { name: 'account' })
+  async findOne(
+    @Args('username', { type: () => String }) username: string,
+  ): Promise<Account | null> {
+    return await this.account.findByUsername(username)
   }
 
   // @Mutation(() => Account)
