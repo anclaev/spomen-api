@@ -27,8 +27,10 @@ describe('AccountResolver', () => {
   })
 
   it('Должен возвращать найденный аккаунт', () => {
-    service.findOne.mockResolvedValueOnce(mockAccount)
+    service.findByUsername.mockResolvedValueOnce(mockAccount)
 
-    return resolver.findOne('1').then((data) => expect(data).toBe(mockAccount))
+    return resolver
+      .findOne('test')
+      .then((data) => expect(data).toBe(mockAccount))
   })
 })
