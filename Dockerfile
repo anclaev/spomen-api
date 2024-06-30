@@ -34,10 +34,9 @@ COPY --from=builder --chown=nestjs:nodejs /app/package.json ./package.json
 COPY --from=builder --chown=nestjs:nodejs /app/yarn.lock ./yarn.lock
 COPY --from=builder --chown=nestjs:nodejs /app/prisma ./prisma
 COPY --from=builder --chown=nestjs:nodejs /app/node_modules ./node_modules
-COPY --from=builder --chown=nestjs:nodejs /app/entrypoint.sh ./entrypoint.sh
 
 USER nestjs
 
 EXPOSE ${PORT}
 
-CMD ["/entrypoint.sh"]
+CMD [  "yarn", "start:production" ]

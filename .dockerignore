@@ -3,5 +3,6 @@ dist
 .github
 REAMDE.md
 scripts
+docs
 .husky
 *.tsbuildinfo
