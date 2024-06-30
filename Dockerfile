@@ -39,4 +39,4 @@ USER nestjs
 
 EXPOSE ${PORT}
 
-CMD [  "yarn", "start:production" ]
+CMD [  "yarn", "start:migrate:production" ]
