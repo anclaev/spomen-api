@@ -43,7 +43,7 @@ export class AuthService {
   ) {
     this.cookieDomain =
       process.env.NODE_ENV !== 'local'
-        ? `*.${this.config.gett('DOMAIN')}`
+        ? this.config.gett('DOMAIN')
         : 'localhost'
   }
 
