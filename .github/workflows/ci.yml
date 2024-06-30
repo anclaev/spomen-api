@@ -39,6 +39,7 @@ jobs:
   #     - run: yarn test:cov
 
   build:
+    if: "!contains(github.event.commits[0].message, '[skip ci]')"
     name: Build project
     runs-on: ubuntu-latest
     # needs: tests
