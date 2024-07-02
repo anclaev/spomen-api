@@ -9,7 +9,7 @@ import { WinstonModule } from 'nest-winston'
 import * as Sentry from '@sentry/node'
 
 import { winstonOptions } from '@common/utils/winston'
-import { SentryFilter } from '@common/filters'
+ import { SentryFilter } from '@common/filters'
 
 import { ConfigService } from '@core/config'
 
@@ -41,8 +41,7 @@ const bootstrap = async () => {
 
   app.enableCors({
     credentials: true,
-    origin: config.gett<string>('ORIGIN'),
-    allowedHeaders: '*',
+    origin: config.gett<string>('ORIGIN')
   })
 
   try {
