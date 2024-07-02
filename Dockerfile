@@ -1,5 +1,7 @@
 FROM node:18-alpine AS base
 
+ARG SENTRY_AUTH_TOKEN
+
 # Stage 1: Установка зависимостей
 FROM base AS deps
 RUN apk add --no-cache libc6-compat
@@ -17,6 +19,7 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
+RUN yarn sentry-cli login --auth-token ${SENTRY_AUTH_TOKEN}
 RUN yarn prisma generate
 RUN yarn build:production
 
