@@ -22,7 +22,7 @@ export class VKIDStrategy extends PassportStrategy(Strategy, 'vkid') {
   }
 
   async validate(uuid: string, token: string): Promise<AuthenticatedUser> {
-    console.log(uuid, token)
+    console.log(token)
 
     try {
       const VKID_ACCESS_TOKEN = await this.vkid.exchangeToken({
