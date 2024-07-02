@@ -19,7 +19,7 @@ export class VKIDStrategy extends PassportStrategy(Strategy, 'vkid') {
     try {
       const VKID_ACCESS_TOKEN = await this.vkid.exchangeToken({
         uuid,
-        silent_token: token,
+        token,
       })
 
       const res = await this.vkid.getVKIDUsers({

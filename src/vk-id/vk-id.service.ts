@@ -38,10 +38,10 @@ export class VKIDService {
    * @returns {VK_ID_EXCHANGE_TOKEN_RESPONSE} Данные access-токена
    */
   async exchangeToken({
+    token,
     uuid,
-    silent_token,
   }: VKID_EXCHANGE_TOKEN_PAYLOAD): Promise<VKID_EXCHANGE_TOKEN_RESPONSE> {
-    let url = `${this.options.url}${VK_API.EXCHANGE_SILENT_AUTH_TOKEN}?v=${this.options.version}&token=${silent_token}&access_token=${this.options.service}&uuid=${uuid}`
+    let url = `${this.options.url}${VK_API.EXCHANGE_SILENT_AUTH_TOKEN}?v=${this.options.version}&token=${token}&access_token=${this.options.service}&uuid=${uuid}`
 
     const res = await firstValueFrom(
       this.http.get<VK_API_RESPONSE<VKID_EXCHANGE_TOKEN_RESPONSE>>(url),

@@ -32,7 +32,7 @@ export class VKID_EXCHANGE_TOKEN_PAYLOAD {
 
   @IsString()
   @IsNotEmpty()
-  silent_token: string
+  token: string
 }
 
 export type VKID_EXCHANGE_TOKEN_RESPONSE = {

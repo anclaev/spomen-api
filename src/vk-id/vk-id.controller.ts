@@ -42,10 +42,10 @@ export class VKIDController {
   @Post('exchange-token')
   @HttpCode(200)
   async exchangeToken(
-    @Body() { silent_token, uuid }: VKID_EXCHANGE_TOKEN_PAYLOAD,
+    @Body() { token, uuid }: VKID_EXCHANGE_TOKEN_PAYLOAD,
   ): Promise<VKID_EXCHANGE_TOKEN_RESPONSE> {
     const res = await this.vkid.exchangeToken({
-      silent_token,
+      token,
       uuid,
     })
 
