@@ -1,5 +1,7 @@
 FROM node:18-alpine AS base
 
+ARG SENTRY_AUTH_TOKEN
+
 # Stage 1: Установка зависимостей
 FROM base AS deps
 RUN apk add --no-cache libc6-compat
@@ -8,7 +10,7 @@ WORKDIR /app
 COPY package.json yarn.lock*  ./
 
 RUN yarn install --frozen-lockfile --production
-RUN yarn add -D prisma
+RUN yarn add -D prisma prisma-nestjs-graphql
 
 
 # Stage 2: Сборка проекта
@@ -17,14 +19,15 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
+RUN yarn sentry-cli login --auth-token ${SENTRY_AUTH_TOKEN}
 RUN yarn prisma generate
-RUN yarn build
+RUN yarn build:production
 
 # State 3: Запуск приложения
 FROM base AS runner
 WORKDIR /app
 
-ENV NODE_ENV production
+ENV NODE_ENV=production
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nestjs
@@ -35,10 +38,8 @@ COPY --from=builder --chown=nestjs:nodejs /app/yarn.lock ./yarn.lock
 COPY --from=builder --chown=nestjs:nodejs /app/prisma ./prisma
 COPY --from=builder --chown=nestjs:nodejs /app/node_modules ./node_modules
 
-RUN yarn prisma migrate deploy
-
 USER nestjs
 
 EXPOSE ${PORT}
 
-CMD HOSTNAME="0.0.0.0" node main.js
+CMD [  "yarn", "start:migrate:production" ]

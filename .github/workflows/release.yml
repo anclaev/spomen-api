@@ -82,6 +82,8 @@ jobs:
         with:
           push: true
           tags: anclaev/spomen-api:${{ github.ref_name }}
+          build-args: |
+            SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
 
   release:
     name: Release app

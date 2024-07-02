@@ -21,6 +21,7 @@ const configSchema = Joi.object({
   REFRESH_TOKEN_SECRET: Joi.string().required(),
   REFRESH_TOKEN_EXPIRATION: Joi.string().required(),
   MAX_REFRESH_TOKENS: Joi.number().default(10),
+  SENTRY_DSN: Joi.string().required(),
 })
 
 export default configSchema

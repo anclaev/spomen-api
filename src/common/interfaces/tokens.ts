@@ -10,12 +10,7 @@ export interface Tokens {
   refresh_token: string
 }
 
-export interface TokensResponse extends Tokens {
-  /**
-   * Тип токена
-   */
-  token_type: string
-}
+export interface TokensResponse extends Tokens {}
 
 /**
  * Авторизационные данные пользователя

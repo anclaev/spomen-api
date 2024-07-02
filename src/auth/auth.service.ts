@@ -19,7 +19,6 @@ import { AuthenticatedUser } from '@interfaces/user'
 import { VKIDUser } from '@interfaces/vk-id'
 import { Tokens } from '@interfaces/tokens'
 
-import { RefreshTokensDto } from './dto/refresh-tokens.dto'
 import { SignUpDto } from './dto/sign-up.dto'
 import { LogoutDto } from './dto/logout.dto'
 
@@ -43,7 +42,7 @@ export class AuthService {
   ) {
     this.cookieDomain =
       process.env.NODE_ENV !== 'local'
-        ? `*.${this.config.gett('DOMAIN')}`
+        ? this.config.gett('DOMAIN')
         : 'localhost'
   }
 
@@ -214,8 +213,6 @@ export class AuthService {
       if (!tokens) {
         throw new BadRequestException()
       }
-
-      user!.password = password
 
       return { ...user!, ...tokens }
     }

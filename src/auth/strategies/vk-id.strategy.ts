@@ -2,24 +2,30 @@ import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { PassportStrategy } from '@nestjs/passport'
 import { Strategy } from 'passport-local'
 
-import { VKIDUser } from '@interfaces/vk-id'
+import { AuthenticatedUser } from '@interfaces/user'
 
 import { VKIDService } from '@/vk-id/vk-id.service'
+import { AuthService } from '@/auth/auth.service'
+
+import { serializeUser } from '@utils/serialize'
 
 @Injectable()
 export class VKIDStrategy extends PassportStrategy(Strategy, 'vkid') {
-  constructor(private vkid: VKIDService) {
+  constructor(
+    private vkid: VKIDService,
+    private auth: AuthService,
+  ) {
     super({
       usernameField: 'uuid',
       passwordField: 'token',
     })
   }
 
-  async validate(uuid: string, token: string): Promise<VKIDUser> {
+  async validate(uuid: string, token: string): Promise<AuthenticatedUser> {
     try {
       const VKID_ACCESS_TOKEN = await this.vkid.exchangeToken({
         uuid,
-        silent_token: token,
+        token,
       })
 
       const res = await this.vkid.getVKIDUsers({
@@ -35,10 +41,12 @@ export class VKIDStrategy extends PassportStrategy(Strategy, 'vkid') {
         user_ids: [String(VKID_ACCESS_TOKEN.user_id)],
       })
 
-      return {
+      const user = await this.auth.verifyVKIDUser({
         ...res[0],
         access_token: VKID_ACCESS_TOKEN.access_token,
-      }
+      })
+
+      return serializeUser<AuthenticatedUser, AuthenticatedUser>(user)
     } catch (e) {
       throw new UnauthorizedException()
     }
