@@ -42,6 +42,7 @@ const bootstrap = async () => {
   app.enableCors({
     credentials: true,
     origin: config.gett<string>('ORIGIN'),
+    allowedHeaders: '*',
   })
 
   try {
