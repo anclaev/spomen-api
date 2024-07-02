@@ -1,7 +1,7 @@
 import '@utils/sentry'
 
-import { HttpAdapterHost, NestFactory, BaseExceptionFilter } from '@nestjs/core'
 import { PrismaClientExceptionFilter, PrismaService } from 'nestjs-prisma'
+import { HttpAdapterHost, NestFactory } from '@nestjs/core'
 import { PrismaHealthIndicator } from '@nestjs/terminus'
 import { Logger, ValidationPipe } from '@nestjs/common'
 import * as cookieParser from 'cookie-parser'
@@ -9,6 +9,7 @@ import { WinstonModule } from 'nest-winston'
 import * as Sentry from '@sentry/node'
 
 import { winstonOptions } from '@common/utils/winston'
+import { SentryFilter } from '@common/filters'
 
 import { ConfigService } from '@core/config'
 
@@ -53,7 +54,7 @@ const bootstrap = async () => {
     logger.error('No connection to database!', null, 'PrismaClient')
   }
 
-  Sentry.setupNestErrorHandler(app, new BaseExceptionFilter(httpAdapter))
+  Sentry.setupNestErrorHandler(app, new SentryFilter(httpAdapter))
 
   await await app.listen(config.port).finally(() => {
     logger.log(

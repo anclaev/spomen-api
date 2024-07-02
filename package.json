@@ -7,12 +7,12 @@
   "license": "UNLICENSED",
   "scripts": {
     "prisma:local": "dotenv -e .env.local yarn prisma",
-    "build": "nest build",
+    "build": "nest build && yarn sentry:sourcemaps",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
-    "start:production": "cross-env NODE_ENV=prod node dist/main",
+    "start:production": "node dist/main",
     "start:migrate:production": "prisma migrate deploy && node main",
-    "dev": " nest start --watch",
+    "dev": " cross-env NODE_ENV=local nest start --watch",
     "debug": "nest start --debug --watch",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
@@ -22,7 +22,8 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "docs": "compodoc -c .compodocrc",
     "docs:serve": "compodoc -c .compodocrc -s",
-    "prepare": "husky"
+    "prepare": "husky",
+    "sentry:sourcemaps": "sentry-cli sourcemaps inject --org anclaev-ti --project spomen-api ./dist/src && sentry-cli sourcemaps upload --org anclaev-ti --project spomen-api ./dist/src"
   },
   "dependencies": {
     "@apollo/server": "^4.10.4",
@@ -38,6 +39,7 @@
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/terminus": "^10.2.3",
     "@prisma/client": "^5.12.1",
+    "@sentry/cli": "^2.32.1",
     "@sentry/node": "^8.13.0",
     "@sentry/profiling-node": "^8.13.0",
     "@vkid/sdk": "^1.1.0",
