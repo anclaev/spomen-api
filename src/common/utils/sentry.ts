@@ -22,7 +22,7 @@ const filterSentryEvents = (
 }
 
 Sentry.init({
-  dsn: 'https://da7f865f54172d5aaba97940d38f4722@o4506607592996864.ingest.us.sentry.io/4507530979901440',
+  dsn: process.env.SENTRY_DSN,
   integrations: [nodeProfilingIntegration()],
   tracesSampleRate: 1.0,
   profilesSampleRate: 1.0,
