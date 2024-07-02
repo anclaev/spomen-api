@@ -47,8 +47,6 @@ export class VKIDService {
       this.http.get<VK_API_RESPONSE<VKID_EXCHANGE_TOKEN_RESPONSE>>(url),
     ).then(({ data }) => data)
 
-    console.log(url)
-
     if (res.error) {
       throw new BadRequestException(res.error)
     } else {
