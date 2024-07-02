@@ -18,7 +18,7 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 RUN yarn prisma generate
-RUN yarn build
+RUN yarn build:production
 
 # State 3: Запуск приложения
 FROM base AS runner
