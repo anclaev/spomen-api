@@ -1,5 +1,5 @@
+import { Global, Module } from '@nestjs/common'
 import { HttpModule } from '@nestjs/axios'
-import { Module } from '@nestjs/common'
 
 import { AccountRepository } from '@/account/account.repository'
 import { VKIDService } from '@/vk-id/vk-id.service'
@@ -20,6 +20,8 @@ import { JwtStrategy } from './strategies/jwt.strategy'
  * @description Сервис авторизации;
  * @description Стратегии авторизации.
  */
+
+@Global()
 @Module({
   imports: [HttpModule],
   providers: [
@@ -33,5 +35,6 @@ import { JwtStrategy } from './strategies/jwt.strategy'
     RefreshStrategy,
   ],
   controllers: [AuthController],
+  exports: [AuthService],
 })
 export class AuthModule {}

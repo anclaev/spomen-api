@@ -5,9 +5,12 @@ import {
   HttpCode,
   Param,
   Post,
+  Res,
   UseGuards,
 } from '@nestjs/common'
+
 import { Role } from '@prisma/client'
+import { Response } from 'express'
 
 import { VKIDService } from './vk-id.service'
 
@@ -17,10 +20,16 @@ import { UseAuth } from '@decorators/auth'
 import { UseUser } from '@decorators/user'
 
 import { VKIDGuard } from '@/auth/guards/vkid.guard'
+import { AuthService } from '@/auth/auth.service'
+import { serializeUser } from '@utils/serialize'
+import { injectCookies } from '@utils/cookies'
 
 @Controller('vk-id')
 export class VKIDController {
-  constructor(private readonly vkid: VKIDService) {}
+  constructor(
+    private readonly vkid: VKIDService,
+    private readonly auth: AuthService,
+  ) {}
 
   @Get(':id')
   @UseAuth([Role.Administrator])
@@ -47,7 +56,14 @@ export class VKIDController {
   @Post('exchange-token')
   @HttpCode(200)
   @UseGuards(VKIDGuard)
-  exchangeToken(@UseUser() user: AuthenticatedUser): AuthenticatedUser {
-    return user
+  exchangeToken(@UseUser() user: AuthenticatedUser, @Res() res: Response) {
+    const cookies = this.auth.cookiesWithTokens({
+      access_token: user.access_token,
+      refresh_token: user.refresh_token,
+    })
+
+    return injectCookies(res, cookies).send(
+      serializeUser<AuthenticatedUser, AuthenticatedUser>(user),
+    )
   }
 }
