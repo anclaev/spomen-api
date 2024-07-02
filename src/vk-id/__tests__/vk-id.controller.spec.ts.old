@@ -1,8 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing'
 import { HttpModule } from '@nestjs/axios'
 
-import { ConfigService } from '@core/config'
-
 import { VKIDController } from '../vk-id.controller'
 import { VKIDService } from '../vk-id.service'
 
@@ -13,7 +11,7 @@ describe('VKIDController', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [HttpModule],
       controllers: [VKIDController],
-      providers: [VKIDService, ConfigService],
+      providers: [VKIDService],
     }).compile()
 
     controller = module.get<VKIDController>(VKIDController)
