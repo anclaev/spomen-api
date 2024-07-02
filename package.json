@@ -8,6 +8,7 @@
   "scripts": {
     "prisma:local": "dotenv -e .env.local yarn prisma",
     "build": "nest build && yarn sentry:sourcemaps",
+    "build:production": "nest build && yarn sentry:sourcemaps:production",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:production": "node dist/main",
@@ -23,7 +24,8 @@
     "docs": "compodoc -c .compodocrc",
     "docs:serve": "compodoc -c .compodocrc -s",
     "prepare": "husky",
-    "sentry:sourcemaps": "sentry-cli sourcemaps inject --org anclaev-ti --project spomen-api ./dist/src && sentry-cli sourcemaps upload --org anclaev-ti --project spomen-api ./dist/src"
+    "sentry:sourcemaps": "sentry-cli sourcemaps inject --org anclaev-ti --project spomen-api ./dist/src && sentry-cli sourcemaps upload --org anclaev-ti --project spomen-api ./dist/src",
+    "sentry:sourcemaps:production": "sentry-cli sourcemaps inject --org anclaev-ti --project spomen-api ./dist && sentry-cli sourcemaps upload --org anclaev-ti --project spomen-api ./dist"
   },
   "dependencies": {
     "@apollo/server": "^4.10.4",
