@@ -18,5 +18,4 @@ export const mockTokens: Tokens = {
 
 export const mockTokenResponse: TokensResponse = {
   ...mockTokens,
-  token_type: 'bearer',
 }

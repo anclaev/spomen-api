@@ -163,7 +163,6 @@ export class TokenService {
     const tokens: TokensResponse = {
       access_token: await this.sign(payload, 'access'),
       refresh_token: await this.sign(payload, 'refresh'),
-      token_type: 'bearer',
     }
 
     const token_count = account.refresh_tokens.length

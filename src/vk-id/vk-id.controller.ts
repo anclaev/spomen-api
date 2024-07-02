@@ -1,24 +1,29 @@
-import { Body, Controller, Get, HttpCode, Param, Post } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common'
 import { Role } from '@prisma/client'
 
 import { VKIDService } from './vk-id.service'
 
-import {
-  VKID_EXCHANGE_TOKEN_PAYLOAD,
-  VKID_EXCHANGE_TOKEN_RESPONSE,
-  VKIDUser,
-} from '@interfaces/vk-id'
-
-import { UseRoles } from '@decorators/roles'
+import { AuthenticatedUser } from '@interfaces/user'
+import { VKIDUser } from '@interfaces/vk-id'
 import { UseAuth } from '@decorators/auth'
+import { UseUser } from '@decorators/user'
+
+import { VKIDGuard } from '@/auth/guards/vkid.guard'
 
 @Controller('vk-id')
-@UseAuth()
 export class VKIDController {
   constructor(private readonly vkid: VKIDService) {}
 
   @Get(':id')
-  @UseRoles([Role.Administrator])
+  @UseAuth([Role.Administrator])
   async getVKIDUserById(
     @Param('id') id: string,
     @Body() { access_token }: { access_token: string },
@@ -41,14 +46,8 @@ export class VKIDController {
 
   @Post('exchange-token')
   @HttpCode(200)
-  async exchangeToken(
-    @Body() { token, uuid }: VKID_EXCHANGE_TOKEN_PAYLOAD,
-  ): Promise<VKID_EXCHANGE_TOKEN_RESPONSE> {
-    const res = await this.vkid.exchangeToken({
-      token,
-      uuid,
-    })
-
-    return res
+  @UseGuards(VKIDGuard)
+  exchangeToken(@UseUser() user: AuthenticatedUser): AuthenticatedUser {
+    return user
   }
 }

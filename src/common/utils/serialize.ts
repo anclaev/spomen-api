@@ -1,5 +1,3 @@
-import { Account } from '@prisma/client'
-
 export const serializeUser = <T, X>(account: T) =>
   ({
     ...account,
