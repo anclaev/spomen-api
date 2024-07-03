@@ -3,6 +3,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo'
 import { PrismaModule, PrismaService } from 'nestjs-prisma'
 import { Global, Logger, Module } from '@nestjs/common'
 import { GraphQLModule } from '@nestjs/graphql'
+import { NestMinioModule } from 'nestjs-minio'
 import { ConfigModule } from '@nestjs/config'
 import { JwtModule } from '@nestjs/jwt'
 
@@ -17,6 +18,7 @@ import validationSchema from './config/config.schema'
  * @description модуль HTTP Axios;
  * @description модуль конфигурации;
  * @description модуль работы с базой данных;
+ * @description модуль работы с S3;
  * @description модуль сервера GraphQL;
  * @description модуль работы с JWT-токенами;
  * @description модуль healthcheck.
@@ -33,6 +35,17 @@ import validationSchema from './config/config.schema'
         abortEarly: true,
       },
       validationSchema,
+    }),
+    NestMinioModule.registerAsync({
+      isGlobal: true,
+      useFactory: (config: ConfigService) => ({
+        accessKey: config.gett('MINIO_ACCESS_KEY'),
+        secretKey: config.gett('MINIO_SECRET_KEY'),
+        endPoint: config.gett('MINIO_HOST'),
+        port: Number(config.gett('MINIO_PORT')),
+        useSSL: false,
+      }),
+      inject: [ConfigService],
     }),
     PrismaModule.forRootAsync({
       useFactory: (config: ConfigService) => ({
