@@ -22,6 +22,10 @@ const configSchema = Joi.object({
   REFRESH_TOKEN_EXPIRATION: Joi.string().required(),
   MAX_REFRESH_TOKENS: Joi.number().default(10),
   SENTRY_DSN: Joi.string().required(),
+  MINIO_HOST: Joi.string().default('localhost'),
+  MINIO_PORT: Joi.number().default(9000),
+  MINIO_ACCESS_KEY: Joi.string().required(),
+  MINIO_SECRET_KEY: Joi.string().required(),
 })
 
 export default configSchema
