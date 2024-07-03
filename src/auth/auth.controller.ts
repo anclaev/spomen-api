@@ -97,31 +97,6 @@ export class AuthController {
   }
 
   /**
-   * Вход в систему через VKID
-   * @param {VKIDUser} vkIdUser Access-токен VKID с данными пользователя
-   * @param {Response} res Объект ответа
-   * @returns {AuthenticatedUser} Пользователь системы
-   */
-  @Post('vkid')
-  @HttpCode(200)
-  @UseGuards(VKIDGuard)
-  async signInByVKID(
-    @UseUser() vkIdUser: VKIDUser,
-    @Res() res: Response,
-  ): Promise<Response<AuthenticatedUser>> {
-    const user = await this.auth.verifyVKIDUser(vkIdUser)
-
-    const cookies = this.auth.cookiesWithTokens({
-      access_token: user.access_token,
-      refresh_token: user.refresh_token,
-    })
-
-    return injectCookies(res, cookies).send(
-      serializeUser<AuthenticatedUser, AuthenticatedUser>(user),
-    )
-  }
-
-  /**
    * Логаут из приложения
    * @param {AuthenticatedUser} user Авторизованный пользователь
    * @param {Response} res Объект ответа

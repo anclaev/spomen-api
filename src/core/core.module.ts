@@ -2,13 +2,13 @@ import { PrismaHealthIndicator, TerminusModule } from '@nestjs/terminus'
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo'
 import { PrismaModule, PrismaService } from 'nestjs-prisma'
 import { Global, Logger, Module } from '@nestjs/common'
+import { NestjsFormDataModule } from 'nestjs-form-data'
 import { GraphQLModule } from '@nestjs/graphql'
 import { NestMinioModule } from 'nestjs-minio'
 import { ConfigModule } from '@nestjs/config'
 import { JwtModule } from '@nestjs/jwt'
 
 import { ConfigService } from './config/config.service'
-
 import validationSchema from './config/config.schema'
 
 /**
@@ -17,6 +17,7 @@ import validationSchema from './config/config.schema'
  * @description Включает в себя:
  * @description модуль HTTP Axios;
  * @description модуль конфигурации;
+ * @description модуль работы с файлами;
  * @description модуль работы с базой данных;
  * @description модуль работы с S3;
  * @description модуль сервера GraphQL;
@@ -35,6 +36,12 @@ import validationSchema from './config/config.schema'
         abortEarly: true,
       },
       validationSchema,
+    }),
+    NestjsFormDataModule.config({
+      isGlobal: true,
+      limits: {
+        files: 10,
+      },
     }),
     NestMinioModule.registerAsync({
       isGlobal: true,

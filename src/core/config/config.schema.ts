@@ -26,6 +26,7 @@ const configSchema = Joi.object({
   MINIO_PORT: Joi.number().default(9000),
   MINIO_ACCESS_KEY: Joi.string().required(),
   MINIO_SECRET_KEY: Joi.string().required(),
+  MINIO_BUCKET: Joi.string().default('spomen'),
 })
 
 export default configSchema
