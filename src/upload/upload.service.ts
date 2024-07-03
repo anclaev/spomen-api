@@ -7,7 +7,7 @@ import { ConfigService } from '@core/config'
 
 import { toWebp } from '@utils/sharp'
 
-import { PutObjectOptions } from '@interfaces/upload'
+import { PutObjectOptions, Metadata } from '@interfaces/upload'
 
 @Injectable()
 export class UploadService {
@@ -32,11 +32,11 @@ export class UploadService {
       file.ext = 'webp'
     }
 
-    const metadata = {
+    const metadata: Metadata = {
       owner,
       name: file.name,
       ext: file.ext,
-      acl: acl ?? 'public-read',
+      acl: 'OwnerOnly',
     }
 
     const uploaded = await this.s3.putObject(

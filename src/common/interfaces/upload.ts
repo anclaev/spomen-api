@@ -1,6 +1,4 @@
-import { ACL } from '@enums/upload'
-
-export type ACLType = keyof ACL
+import { Permission } from '@prisma/client'
 
 export interface File {
   name: string
@@ -13,6 +11,13 @@ export type PutObjectOptions = {
   file: File
   path: string
   owner: string
-  acl?: ACL
+  acl?: Permission
   compress?: boolean
+}
+
+export type Metadata = {
+  owner: string
+  name: string
+  ext: string
+  acl: Permission
 }

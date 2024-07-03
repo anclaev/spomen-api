@@ -8,7 +8,7 @@ import {
 
 import { IsFile, MaxFileSize, MemoryStoredFile } from 'nestjs-form-data'
 
-import { ACL } from '@enums/upload'
+import { Permission } from '@prisma/client'
 
 export class PutFileDto {
   @IsFile()
@@ -23,7 +23,7 @@ export class PutFileDto {
   @IsOptional()
   compress?: boolean
 
-  @IsEnum(ACL)
+  @IsEnum(Permission)
   @IsOptional()
-  acl?: ACL
+  acl?: Permission
 }
