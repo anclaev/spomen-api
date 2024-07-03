@@ -8,7 +8,7 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
 COPY package.json yarn.lock*  ./
-COPY .yarnrc.yml ./
+COPY .yarnrc ./
 
 RUN yarn install --ignore-engines --frozen-lockfile --production  
 RUN yarn add -D prisma prisma-nestjs-graphql --ignore-engines

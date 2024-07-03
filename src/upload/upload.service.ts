@@ -3,21 +3,25 @@ import { InjectMinio } from 'nestjs-minio'
 import { v4 as uuid } from 'uuid'
 import { Client } from 'minio'
 
+const translit = require('cyrillic-to-translit-js')
+
 import { ConfigService } from '@core/config'
 
 import { toWebp } from '@utils/sharp'
 
-import { PutObjectOptions, Metadata } from '@interfaces/upload'
+import { Metadata, PutObjectOptions } from '@interfaces/upload'
 
 @Injectable()
 export class UploadService {
   private bucket: string
+  private translit: any
 
   constructor(
     @InjectMinio() private readonly s3: Client,
     private readonly config: ConfigService,
   ) {
     this.bucket = config.gett<string>('MINIO_BUCKET')
+    this.translit = translit()
   }
 
   async putObject({
@@ -32,11 +36,13 @@ export class UploadService {
       file.ext = 'webp'
     }
 
+    file.name = this.translit.transform(file.name.replace(' ', '_'))
+
     const metadata: Metadata = {
       owner,
       name: file.name,
       ext: file.ext,
-      acl: 'OwnerOnly',
+      acl: acl ?? 'OwnerOnly',
     }
 
     const uploaded = await this.s3.putObject(
