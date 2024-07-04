@@ -45,6 +45,8 @@ export class UploadService {
       acl: acl ?? 'OwnerOnly',
     }
 
+    await this.checkBucket(this.bucket)
+
     const uploaded = await this.s3.putObject(
       this.bucket,
       `${path}/${file.name}-${uuid()}.${file.ext}`,
@@ -54,5 +56,15 @@ export class UploadService {
     )
 
     return uploaded
+  }
+
+  private async checkBucket(bucket: string): Promise<void> {
+    const isExist = await this.s3.bucketExists(bucket)
+
+    if (!isExist) {
+      return await this.s3.makeBucket(bucket)
+    }
+
+    return
   }
 }
