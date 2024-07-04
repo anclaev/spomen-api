@@ -23,6 +23,24 @@ export class AccountRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   /**
+   * Получение аккаунта по уникальному полю
+   * @param {FindUniqueAccountArgs} args Уникальные поля для отбора
+   * @returns {Account | null} Загрузка в системе
+   */
+  async findOne(args: FindUniqueAccountArgs): Promise<Account | null> {
+    return await this.prisma.account.findUnique(args)
+  }
+
+  /**
+   * Получение множества аккаунтов по полям отбора
+   * @param {FindManyAccountArgs} args Поля для отбора
+   * @returns {Account[]} Загрузки в базе данных
+   */
+  async findMany(args: FindManyAccountArgs): Promise<Account[]> {
+    return await this.prisma.account.findMany(args)
+  }
+
+  /**
    * Создание аккаунта в базе данных
    * @param {CreateOneAccountArgs} args Данные нового аккаунта
    * @returns {Account | null} Созданный аккаунт
@@ -44,23 +62,5 @@ export class AccountRepository {
    */
   async update(args: UpdateOneAccountArgs): Promise<Account | null> {
     return await this.prisma.account.update(args)
-  }
-
-  /**
-   * Получение аккаунта по уникальному полю
-   * @param {FindUniqueAccountArgs} args Уникальные поля для отбора
-   * @returns {Account | null} Аккаунт в системе
-   */
-  async findOne(args: FindUniqueAccountArgs): Promise<Account | null> {
-    return await this.prisma.account.findUnique(args)
-  }
-
-  /**
-   * Получение множества аккаунтов по полям отбора
-   * @param {FindManyAccountArgs} args Поля для отбора
-   * @returns {Account[]} Аккаунты в системе
-   */
-  async findMany(args: FindManyAccountArgs): Promise<Account[]> {
-    return await this.prisma.account.findMany(args)
   }
 }
