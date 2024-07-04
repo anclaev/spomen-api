@@ -1,3 +1,4 @@
+import { Permission } from '@graphql/index'
 import * as Joi from 'joi'
 
 /**
@@ -22,11 +23,22 @@ const configSchema = Joi.object({
   REFRESH_TOKEN_EXPIRATION: Joi.string().required(),
   MAX_REFRESH_TOKENS: Joi.number().default(10),
   SENTRY_DSN: Joi.string().required(),
+  MINIO_ENDPOINT: Joi.string().default('localhost:9000'),
   MINIO_HOST: Joi.string().default('localhost'),
   MINIO_PORT: Joi.number().default(9000),
   MINIO_ACCESS_KEY: Joi.string().required(),
   MINIO_SECRET_KEY: Joi.string().required(),
   MINIO_BUCKET: Joi.string().default('spomen'),
+  MINIO_BUCKET_PUBLIC: Joi.string().default('spomen-public'),
+  MINIO_DEFAULT_ACL: Joi.string()
+    .valid(
+      Permission.Public,
+      Permission.ChatOnly,
+      Permission.MemoryOnly,
+      Permission.TimelineOnly,
+      Permission.OwnerOnly,
+    )
+    .default(Permission.Public),
 })
 
 export default configSchema

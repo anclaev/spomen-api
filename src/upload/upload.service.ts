@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common'
+import { Permission, Upload } from '@prisma/client'
 import { InjectMinio } from 'nestjs-minio'
-import { Upload } from '@prisma/client'
 import { Client, S3Error } from 'minio'
 import { v4 as uuid } from 'uuid'
 
@@ -8,11 +8,12 @@ const translit = require('cyrillic-to-translit-js')
 
 import { ConfigService } from '@core/config'
 
+import { publicBucketPolicy } from '@utils/s3'
 import { toWebp } from '@utils/sharp'
 
 import {
   Metadata,
-  PutObjectOptions,
+  PutFileOptions,
   SaveUploadOptions,
   S3File,
 } from '@interfaces/upload'
@@ -25,14 +26,29 @@ import { UploadRepository } from './upload.repository'
 @Injectable()
 export class UploadService {
   /**
+   * Эндпойнт S3-хранилища
+   */
+  private endpoint: string
+
+  /**
    * Бакет приложения
    */
   private bucket: string
 
   /**
+   * Публичный бакет приложения
+   */
+  private publicBucket: string
+
+  /**
    * Сервис работы с транслитом
    */
   private translit: any
+
+  /**
+   * Базовые права доступа к файлу
+   */
+  private defaultACL: Permission
 
   /**
    * Конструктор сервиса
@@ -47,7 +63,10 @@ export class UploadService {
     private readonly config: ConfigService,
     private readonly upload: UploadRepository,
   ) {
+    this.endpoint = config.gett<string>('MINIO_ENDPOINT')
     this.bucket = config.gett<string>('MINIO_BUCKET')
+    this.publicBucket = config.gett<string>('MINIO_BUCKET_PUBLIC')
+    this.defaultACL = config.gett<Permission>('MINIO_DEFAULT_ACL')
     this.translit = translit()
   }
 
@@ -58,16 +77,16 @@ export class UploadService {
    * @description * Загружает файл в S3-хранилище (MinIO)
    * @description * Сохраняет данные о файле в базе данных
    * @description * Удаляет файл из хранилища в случае ошибки БД
-   * @param {PutObjectOptions} options Данные загружаемого файла
+   * @param {PutFileOptions} options Данные загружаемого файла
    * @returns {Upload} Данные о загрузке в БД
    */
-  async putObject({
+  async putFile({
     file,
     path,
     owner,
     acl,
     compress = false,
-  }: PutObjectOptions): Promise<Upload | null> {
+  }: PutFileOptions): Promise<Upload | null> {
     // Преобразование изображения в webp
     if (file.mime && file.mime.match(/^image\/(.*)/)) {
       file.buffer = await toWebp(file.buffer, compress)
@@ -90,12 +109,12 @@ export class UploadService {
       acl: acl ?? 'Public',
     }
 
-    await this.checkBucket(this.bucket)
+    s3File.bucket = await this.checkBucket(acl)
 
     // Загрузка файла в хранилище
     try {
       await this.s3.putObject(
-        this.bucket,
+        s3File.bucket,
         s3File.path,
         file.buffer,
         undefined,
@@ -110,7 +129,7 @@ export class UploadService {
         owner,
         file,
         s3File,
-        permissions: [acl ?? 'Public'],
+        permissions: [acl ?? this.defaultACL],
       })
     } catch (e) {
       // Компенсирующая транзакция, если файл не сохранился в БД
@@ -134,10 +153,12 @@ export class UploadService {
     try {
       const createdUpload = await this.upload.create({
         data: {
-          file_name: s3File.name,
-          url: s3File.path,
-          ext: file.ext,
           name: file.name,
+          ext: file.ext,
+          url: `${this.endpoint}/${s3File.bucket}/${s3File.path}`,
+          file_name: s3File.name,
+          bucket: s3File.bucket,
+          path: s3File.path,
           permissions: {
             set: permissions,
           },
@@ -156,18 +177,25 @@ export class UploadService {
   }
 
   /**
-   * Проверка существования бакета
-   * @description Проверяет бакет на существование и создаёт при отсутствии
-   * @param {string} bucket Название бакета
+   * Назначение бакета для файла
+   * @description * Проверяет бакет на существование и создаёт его при отсутствии
+   * @description * Назначает публичную политику бакета на основе доступа к файлу
+   * @param {string} acl Права доступа к файлу
+   * @returns {string} Бакет для файла
    */
-  private async checkBucket(bucket: string): Promise<void> {
-    const isExist = await this.s3.bucketExists(bucket)
+  private async checkBucket(acl: string = this.defaultACL): Promise<string> {
+    const targetBucket = acl !== 'Public' ? this.bucket : this.publicBucket
+
+    const isExist = await this.s3.bucketExists(targetBucket)
 
     if (!isExist) {
-      return await this.s3.makeBucket(bucket)
-    }
+      await this.s3.makeBucket(targetBucket)
 
-    return
+      if (acl === 'Public') {
+        await this.s3.setBucketPolicy(targetBucket, publicBucketPolicy)
+      }
+    }
+    return targetBucket
   }
 
   /**

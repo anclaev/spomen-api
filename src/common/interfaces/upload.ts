@@ -6,7 +6,7 @@ export interface File {
   mime?: string
 }
 
-export type PutObjectOptions = {
+export type PutFileOptions = {
   file: File
   path: string
   owner: string
@@ -23,6 +23,7 @@ export type Metadata = {
 
 export class S3File {
   name: string
+  bucket: string
   path: string
   etag: string | null = null
   versionId: string | null = null

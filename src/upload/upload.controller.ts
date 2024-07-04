@@ -1,4 +1,4 @@
-import { Body, Controller, Put } from '@nestjs/common'
+import { Body, Controller, Post } from '@nestjs/common'
 import { FormDataRequest } from 'nestjs-form-data'
 import { Upload } from '@prisma/client'
 import * as mime from 'mime-types'
@@ -18,16 +18,16 @@ import { PutFileDto } from './dto/put-file.dto'
 export class UploadController {
   constructor(private readonly upload: UploadService) {}
 
+  @Post()
   @UseAuth(['Administrator'])
-  @Put()
   @FormDataRequest()
-  async putFile(
+  async uploadFile(
     @UseUser() user: AuthenticatedUser,
     @Body() dto: PutFileDto,
   ): Promise<Upload | null> {
     const { file, path, acl, compress } = dto
 
-    return await this.upload.putObject({
+    return await this.upload.putFile({
       file: {
         name: file.originalName.slice(0, file.originalName.lastIndexOf('.')),
         ext: mime.extension(file.mimetype) || '',

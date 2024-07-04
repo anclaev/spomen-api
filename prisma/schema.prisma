@@ -71,11 +71,14 @@ model Account {
 }
 
 model Upload {
-    id        String  @id @default(uuid())
+    id   String @id @default(uuid())
+    name String
+    ext  String
+    url  String
+
     file_name String
-    url       String
-    name      String?
-    ext       String?
+    bucket    String
+    path      String
 
     permissions Permission[]
 
