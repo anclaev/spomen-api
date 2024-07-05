@@ -3,6 +3,8 @@ import { Module } from '@nestjs/common'
 import { AccountRepository } from './account.repository'
 import { AccountResolver } from './account.resolver'
 import { AccountService } from './account.service'
+import { AccountController } from './account.controller'
+import { UploadModule } from '@/upload/upload.module'
 
 /**
  * Модуль сущности аккаунта
@@ -12,6 +14,8 @@ import { AccountService } from './account.service'
  * @description GraphQL-ресольвер аккаунта.
  */
 @Module({
+  imports: [UploadModule],
   providers: [AccountRepository, AccountService, AccountResolver],
+  controllers: [AccountController],
 })
 export class AccountModule {}
