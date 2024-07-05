@@ -1,7 +1,15 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common'
+import {
+  ForbiddenException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+  StreamableFile,
+} from '@nestjs/common'
+
+import { BucketItemStat, Client, S3Error } from 'minio'
 import { Permission, Upload } from '@prisma/client'
 import { InjectMinio } from 'nestjs-minio'
-import { Client, S3Error } from 'minio'
+import { Response } from 'express'
 import { v4 as uuid } from 'uuid'
 
 const translit = require('cyrillic-to-translit-js')
@@ -11,6 +19,7 @@ import { ConfigService } from '@core/config'
 import { publicBucketPolicy } from '@utils/s3'
 import { toWebp } from '@utils/sharp'
 
+import { AuthenticatedUser } from '@interfaces/user'
 import {
   Metadata,
   PutFileOptions,
@@ -71,6 +80,57 @@ export class UploadService {
   }
 
   /**
+   * Получение файла по ID
+   * @param {String} id Идентификатор загрузки
+   * @param {AuthenticatedUser} user Текущий пользователь системы
+   * @param {Response} res Объект запроса
+   * @returns {StreamableFile} Стрим файла из хранилища
+   */
+  async getFile(
+    id: string,
+    user: AuthenticatedUser,
+    res: Response,
+  ): Promise<StreamableFile> {
+    const upload = await this.upload.findOne({
+      where: {
+        id,
+      },
+    })
+
+    if (!upload) {
+      throw new NotFoundException('Upload not found')
+    }
+
+    // Проверка доступа к файлу
+    await this.verifyUploadPermissions(upload, user)
+
+    // Проверка существования файла в хранилище
+    const object = await this.checkObject(upload.bucket, upload.path)
+
+    if (!object) {
+      try {
+        await this.upload.delete({
+          where: {
+            id: upload.id,
+          },
+        })
+      } catch (e) {
+        throw new InternalServerErrorException(e)
+      }
+
+      throw new NotFoundException('Upload not found')
+    }
+
+    res.set({
+      'Content-Type': object.metaData['content-type'] ?? 'multipart/form-data',
+    })
+
+    return new StreamableFile(
+      await this.s3.getObject(upload!.bucket, upload!.path),
+    )
+  }
+
+  /**
    * Загрузка файла в систему
    * @description * Преобразовывает изображение в webp
    * @description * Преобразовывает имя файла в транслит (для кириллицы)
@@ -107,6 +167,7 @@ export class UploadService {
       name: s3File.name,
       ext: file.ext,
       acl: acl ?? 'Public',
+      'Content-Type': file.mime ?? 'multipart/form-data',
     }
 
     s3File.bucket = await this.checkBucket(acl)
@@ -150,12 +211,18 @@ export class UploadService {
     owner,
     permissions,
   }: SaveUploadOptions): Promise<Upload | null> {
+    const id = uuid()
+    const url = permissions.find((item) => item === 'Public')
+      ? `${this.endpoint}/${s3File.bucket}/${s3File.path}`
+      : `${this.config.apiEndpoint}/upload/file/${id}`
+
     try {
       const createdUpload = await this.upload.create({
         data: {
+          id,
           name: file.name,
           ext: file.ext,
-          url: `${this.endpoint}/${s3File.bucket}/${s3File.path}`,
+          url,
           file_name: s3File.name,
           bucket: s3File.bucket,
           path: s3File.path,
@@ -196,6 +263,45 @@ export class UploadService {
       }
     }
     return targetBucket
+  }
+
+  /**
+   * Проверка существования файла в хранилище
+   * @param {string} bucket Бакет файла
+   * @param {string} path Путь к файлу в хранилище
+   * @returns {boolean} Результат проверки
+   */
+  private async checkObject(
+    bucket: string,
+    path: string,
+  ): Promise<BucketItemStat | null> {
+    try {
+      return await this.s3.statObject(bucket, path)
+    } catch (e) {
+      return null
+    }
+  }
+
+  /**
+   * Проверка доступа к файлу
+   * @param {Upload} upload Загрузка в базе данных
+   * @param {AuthenticatedUser} user Пользователь системы
+   */
+  private async verifyUploadPermissions(
+    upload: Upload,
+    user: AuthenticatedUser,
+  ): Promise<void> {
+    if (
+      upload.permissions.find(
+        (item) => item === Permission.Public || upload.owner_id === user.id,
+      )
+    ) {
+      return
+    }
+
+    // TODO: Проверка доступа на уровне таймлайна, воспоминания, чата
+
+    throw new ForbiddenException('Access denied')
   }
 
   /**

@@ -28,8 +28,8 @@ const configSchema = Joi.object({
   MINIO_PORT: Joi.number().default(9000),
   MINIO_ACCESS_KEY: Joi.string().required(),
   MINIO_SECRET_KEY: Joi.string().required(),
-  MINIO_BUCKET: Joi.string().default('spomen'),
-  MINIO_BUCKET_PUBLIC: Joi.string().default('spomen-public'),
+  MINIO_BUCKET: Joi.string().default('private'),
+  MINIO_BUCKET_PUBLIC: Joi.string().default('public'),
   MINIO_DEFAULT_ACL: Joi.string()
     .valid(
       Permission.Public,

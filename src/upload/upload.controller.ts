@@ -1,6 +1,16 @@
-import { Body, Controller, Post } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Res,
+  StreamableFile,
+} from '@nestjs/common'
+
 import { FormDataRequest } from 'nestjs-form-data'
 import { Upload } from '@prisma/client'
+import { Response } from 'express'
 import * as mime from 'mime-types'
 
 import { UseAuth } from '@decorators/auth'
@@ -17,6 +27,16 @@ import { PutFileDto } from './dto/put-file.dto'
 @Controller('upload')
 export class UploadController {
   constructor(private readonly upload: UploadService) {}
+
+  @Get('file/:id')
+  @UseAuth()
+  async getFile(
+    @Param('id') id: string,
+    @UseUser() user: AuthenticatedUser,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<StreamableFile> {
+    return await this.upload.getFile(id, user, res)
+  }
 
   @Post()
   @UseAuth(['Administrator'])

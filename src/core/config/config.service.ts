@@ -45,4 +45,13 @@ export class ConfigService extends RootService {
   get port(): number {
     return this.gett<number>('PORT')
   }
+
+  /**
+   * Эндпойнт API
+   */
+  get apiEndpoint(): string {
+    return this.environment === 'local'
+      ? `${this.gett('DOMAIN')}:${this.gett('PORT')}`
+      : this.gett('DOMAIN')
+  }
 }

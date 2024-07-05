@@ -1,4 +1,6 @@
+import { StreamableFile } from '@nestjs/common'
 import { Permission } from '@prisma/client'
+import { Readable } from 'stream'
 export interface File {
   name: string
   ext: string
@@ -19,6 +21,7 @@ export type Metadata = {
   name: string
   ext: string
   acl: Permission
+  'Content-Type': string
 }
 
 export class S3File {
