@@ -9,7 +9,7 @@ import { WinstonModule } from 'nest-winston'
 import * as Sentry from '@sentry/node'
 
 import { winstonOptions } from '@common/utils/winston'
- import { SentryFilter } from '@common/filters'
+import { SentryFilter } from '@common/filters'
 
 import { ConfigService } from '@core/config'
 
@@ -34,6 +34,8 @@ const bootstrap = async () => {
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,
+      transformOptions: { enableImplicitConversion: true },
+      forbidNonWhitelisted: true,
     }),
   )
 
@@ -41,7 +43,7 @@ const bootstrap = async () => {
 
   app.enableCors({
     credentials: true,
-    origin: config.gett<string>('ORIGIN')
+    origin: config.gett<string>('ORIGIN'),
   })
 
   try {

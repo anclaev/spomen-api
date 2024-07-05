@@ -16,9 +16,12 @@ const translit = require('cyrillic-to-translit-js')
 
 import { ConfigService } from '@core/config'
 
+import { UploadRepository } from './upload.repository'
+
 import { publicBucketPolicy } from '@utils/s3'
 import { toWebp } from '@utils/sharp'
 
+import { PaginatedResult } from '@interfaces/pagination'
 import { AuthenticatedUser } from '@interfaces/user'
 import {
   Metadata,
@@ -27,7 +30,7 @@ import {
   S3File,
 } from '@interfaces/upload'
 
-import { UploadRepository } from './upload.repository'
+import { GetUploadsDto } from './dto/get-uploads.dto'
 
 /**
  * Сервис загрузок
@@ -77,6 +80,23 @@ export class UploadService {
     this.publicBucket = config.gett<string>('MINIO_BUCKET_PUBLIC')
     this.defaultACL = config.gett<Permission>('MINIO_DEFAULT_ACL')
     this.translit = translit()
+  }
+
+  async getUploads({
+    pagination,
+    user,
+  }: GetUploadsDto): Promise<PaginatedResult<Upload[]>> {
+    const { page, size } = pagination
+
+    return await this.upload.findMany({
+      page,
+      size,
+      where: {
+        owner_id: {
+          equals: user.id,
+        },
+      },
+    })
   }
 
   /**

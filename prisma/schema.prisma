@@ -80,6 +80,8 @@ model Upload {
     bucket    String
     path      String
 
+    is_system Boolean @default(false)
+
     permissions Permission[]
 
     avatar    Avatar? @relation(fields: [avatar_id], references: [id])

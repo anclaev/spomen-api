@@ -6,12 +6,16 @@ import {
   CreateOneUploadArgs,
   DeleteManyUploadArgs,
   DeleteOneUploadArgs,
-  FindManyUploadArgs,
   FindUniqueUploadArgs,
   UpdateOneUploadArgs,
+  UploadOrderByWithRelationInput,
+  UploadWhereInput,
 } from '@graphql/index'
 
+import { PaginatedResult, PaginateFunction } from '@interfaces/pagination'
 import { DeleteManyResult } from '@interfaces/prisma'
+
+import { paginator } from '@utils/paginator'
 
 /**
  * Репозиторий загрузок
@@ -39,8 +43,30 @@ export class UploadRepository {
    * @param {FindManyUploadArgs} args Поля для отбора
    * @returns {Account[]} Загрузки в базе данных
    */
-  async findMany(args: FindManyUploadArgs): Promise<Upload[]> {
-    return await this.prisma.upload.findMany(args)
+  async findMany({
+    where,
+    orderBy,
+    page,
+    size = 10,
+  }: {
+    where?: UploadWhereInput
+    orderBy?: UploadOrderByWithRelationInput
+    page?: number
+    size?: number
+  }): Promise<PaginatedResult<Upload[]>> {
+    return paginator({
+      page,
+      perPage: size,
+    })(
+      this.prisma.upload,
+      {
+        where,
+        orderBy,
+      },
+      {
+        page,
+      },
+    )
   }
 
   /**
