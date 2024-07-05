@@ -1,16 +1,15 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { PassportStrategy } from '@nestjs/passport'
 import { ExtractJwt, Strategy } from 'passport-jwt'
-import { Account } from '@prisma/client'
+import { Account } from '@graphql'
 import { Request } from 'express'
 
-import { TokenPayload } from '@interfaces/tokens'
-import { AuthenticatedUser, User } from '@interfaces/user'
-
 import { AccountRepository } from '@/account/account.repository'
+import { serializeUser } from '@utils/serialize'
 import { ConfigService } from '@core/config'
 
-import { serializeUser } from '@utils/serialize'
+import { AuthenticatedUser } from '@interfaces/user'
+import { TokenPayload } from '@interfaces/tokens'
 
 /**
  * Стратегия проверки токена обновления

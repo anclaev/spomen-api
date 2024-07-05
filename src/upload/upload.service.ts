@@ -221,6 +221,54 @@ export class UploadService {
   }
 
   /**
+   * Удаление файла по идентификатору
+   * @param {string} id Идентификатор файла
+   * @returns {Upload | null} Удалённый файл
+   */
+  async deleteFile(id: string): Promise<Upload | null> {
+    const upload = await this.upload.findOne({
+      where: {
+        id,
+      },
+    })
+
+    // Проверка на существования файла в базе
+    if (!upload) {
+      throw new NotFoundException('Upload not found')
+    }
+
+    // Удаление файла из базы
+    await this.upload.delete({
+      where: {
+        id: upload.id,
+      },
+    })
+
+    try {
+      await this.s3.removeObject(upload.bucket, upload.path)
+    } catch (e: unknown) {
+      // Компенсирующая транзакция, если файл не был удалён из хранилища
+      await this.upload.create({
+        data: {
+          ...upload,
+          permissions: {
+            set: upload.permissions,
+          },
+          owner: {
+            connect: {
+              id: upload.owner_id,
+            },
+          },
+        },
+      })
+
+      this.handleS3Error(e as S3Error)
+    }
+
+    return upload
+  }
+
+  /**
    * Сохранение загруженного файла в базе данных
    * @param {SaveUploadOptions} options Данные файла
    * @returns {Upload | null} Запись в базе данных

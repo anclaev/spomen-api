@@ -54,7 +54,8 @@ model Account {
     roles          Role[]
     refresh_tokens String[]
 
-    avatar Avatar?
+    avatar   Upload? @relation("AccountAvatars", fields: [avatarId], references: [id])
+    avatarId String?
 
     chats    Chat[]          @relation("ChatMember")
     messages MessageTarget[] @relation("MessageTarget")
@@ -84,27 +85,13 @@ model Upload {
 
     permissions Permission[]
 
-    avatar    Avatar? @relation(fields: [avatar_id], references: [id])
-    avatar_id String?
-
     messages Message[] @relation("MessageUploads")
     memories Memory[]  @relation("MemoryUploads")
     comments Comment[] @relation("CommentUploads")
+    accounts Account[] @relation("AccountAvatars")
 
     owner    Account @relation("UploadOwner", fields: [owner_id], references: [id])
     owner_id String
-
-    created_at DateTime @default(now()) @db.Date
-    updated_at DateTime @updatedAt @db.Date
-}
-
-model Avatar {
-    id String @id @default(uuid())
-
-    owner    Account @relation(fields: [owner_id], references: [id])
-    owner_id String  @unique
-
-    upload Upload[]
 
     created_at DateTime @default(now()) @db.Date
     updated_at DateTime @updatedAt @db.Date

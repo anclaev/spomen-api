@@ -10,9 +10,9 @@ import {
   UpdateOneUploadArgs,
   UploadOrderByWithRelationInput,
   UploadWhereInput,
-} from '@graphql/index'
+} from '@graphql'
 
-import { PaginatedResult, PaginateFunction } from '@interfaces/pagination'
+import { PaginatedResult } from '@interfaces/pagination'
 import { DeleteManyResult } from '@interfaces/prisma'
 
 import { paginator } from '@utils/paginator'

@@ -4,8 +4,10 @@ import {
   Injectable,
 } from '@nestjs/common'
 
-import { Account, Role } from '@prisma/client'
 import generator from 'generate-password-ts'
+import { Role } from '@prisma/client'
+import { Account } from '@graphql'
+
 import * as moment from 'moment'
 import * as argon2 from 'argon2'
 
@@ -166,9 +168,12 @@ export class AuthService {
    * @returns {AuthenticatedUser} Авторизованный пользователь
    */
   async verifyVKIDUser(vkIdUser: VKIDUser): Promise<AuthenticatedUser> {
-    const isAlreadyExistsUser = await this.account.findOne({
+    const isAlreadyExistsUser = await this.account.native.findUnique({
       where: {
         vk_id: String(vkIdUser.id),
+      },
+      include: {
+        avatar: true,
       },
     })
 

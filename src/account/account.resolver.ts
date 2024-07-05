@@ -1,5 +1,5 @@
-import { Resolver, Args, Query, ID } from '@nestjs/graphql'
-import { Account } from '@common/graphql/index'
+import { Resolver, Args, Query } from '@nestjs/graphql'
+import { Account } from '@graphql'
 
 import { UseGqlAuth } from '@decorators/gql-auth'
 

@@ -51,7 +51,7 @@ export class ConfigService extends RootService {
    */
   get apiEndpoint(): string {
     return this.environment === 'local'
-      ? `${this.gett('DOMAIN')}:${this.gett('PORT')}`
+      ? `http://${this.gett('DOMAIN')}:${this.gett('PORT')}`
       : this.gett('HOST')
   }
 }

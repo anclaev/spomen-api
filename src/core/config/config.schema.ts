@@ -1,4 +1,4 @@
-import { Permission } from '@graphql/index'
+import { Permission } from '@graphql'
 import * as Joi from 'joi'
 
 /**
@@ -24,7 +24,7 @@ const configSchema = Joi.object({
   REFRESH_TOKEN_EXPIRATION: Joi.string().required(),
   MAX_REFRESH_TOKENS: Joi.number().default(10),
   SENTRY_DSN: Joi.string().required(),
-  MINIO_ENDPOINT: Joi.string().default('localhost:9000'),
+  MINIO_ENDPOINT: Joi.string().default('http://localhost:9000'),
   MINIO_HOST: Joi.string().default('localhost'),
   MINIO_PORT: Joi.number().default(9000),
   MINIO_ACCESS_KEY: Joi.string().required(),

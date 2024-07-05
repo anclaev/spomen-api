@@ -1,4 +1,5 @@
-import { Account } from '@prisma/client'
+import { Account } from '@graphql'
+
 import { TokensResponse } from './tokens'
 
 /**

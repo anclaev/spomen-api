@@ -1,13 +1,12 @@
 import { PrismaService } from 'nestjs-prisma'
 import { Injectable } from '@nestjs/common'
 
-import { Account } from '@prisma/client'
-
 import {
   CreateOneAccountArgs,
   FindManyAccountArgs,
   FindUniqueAccountArgs,
   UpdateOneAccountArgs,
+  Account,
 } from '@common/graphql/index'
 
 /**
@@ -21,6 +20,13 @@ export class AccountRepository {
    * @param {PrismaService} prisma Сервис для работы с БД
    */
   constructor(private readonly prisma: PrismaService) {}
+
+  /**
+   * Доступ к клиенту Prisma
+   */
+  get native() {
+    return this.prisma.account
+  }
 
   /**
    * Получение аккаунта по уникальному полю
