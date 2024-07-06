@@ -43,12 +43,17 @@ export class AccountService {
   }
 
   /**
-   * Получение аккаунта по имени пользоватедя
+   * Получение аккаунта по имени пользователя
    * @param {String} username Имя аккаунта
    * @returns {Account | null} Аккаунт в базе данных
    */
   async findByUsername(username: string): Promise<Account | null> {
-    return await this.account.findOne({ where: { username } })
+    return await this.account.findOne({
+      where: { username },
+      select: {
+        avatar: true,
+      },
+    })
   }
 
   /**
