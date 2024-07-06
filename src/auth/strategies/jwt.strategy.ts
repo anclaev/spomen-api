@@ -43,7 +43,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
    * @returns {AuthenticatedUser} Авторизованный пользователь
    */
   async validate(payload: TokenPayload): Promise<User> {
-    const account = await this.account.native.findUnique({
+    const account = await this.account.findOne({
       where: { id: payload.userid },
       include: {
         avatar: true,

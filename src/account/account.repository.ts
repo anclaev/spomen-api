@@ -1,13 +1,16 @@
 import { PrismaService } from 'nestjs-prisma'
 import { Injectable } from '@nestjs/common'
+import { Prisma } from '@prisma/client'
 
 import {
   CreateOneAccountArgs,
   FindManyAccountArgs,
-  FindUniqueAccountArgs,
   UpdateOneAccountArgs,
+  FindUniqueAccountArgs,
   Account,
 } from '@common/graphql/index'
+
+import { ToPrisma } from '@interfaces/prisma'
 
 /**
  * Репозиторий аккаунта
@@ -22,18 +25,17 @@ export class AccountRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   /**
-   * Доступ к клиенту Prisma
-   */
-  get native() {
-    return this.prisma.account
-  }
-
-  /**
    * Получение аккаунта по уникальному полю
    * @param {FindUniqueAccountArgs} args Уникальные поля для отбора
    * @returns {Account | null} Загрузка в системе
    */
-  async findOne(args: FindUniqueAccountArgs): Promise<Account | null> {
+  async findOne(
+    args: ToPrisma<
+      FindUniqueAccountArgs,
+      Prisma.AccountSelect,
+      Prisma.AccountInclude
+    >,
+  ): Promise<Account | null> {
     return await this.prisma.account.findUnique(args)
   }
 

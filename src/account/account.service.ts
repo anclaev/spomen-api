@@ -1,6 +1,6 @@
 import {
+  BadRequestException,
   ConflictException,
-  ForbiddenException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -64,27 +64,7 @@ export class AccountService {
     targetId?: string,
   ): Promise<Upload | null> {
     if (targetId) {
-      if (
-        targetId !== user.id &&
-        !user.roles.find((role) => role === 'Administrator')
-      ) {
-        throw new ForbiddenException('Access denied')
-      }
-
-      // Проверка на существование целевого аккаунта
-      const targetAccount = await this.account.native.findUnique({
-        where: {
-          id: targetId,
-        },
-        select: {
-          avatar: true,
-        },
-      })
-
-      // Если целевой аккаунт не найден
-      if (!targetAccount) {
-        throw new NotFoundException('Account not found')
-      }
+      const targetAccount = await this.accountIsExists(targetId)
 
       // Если аватар уже существует
       if (targetAccount && targetAccount.avatar) {
@@ -130,5 +110,55 @@ export class AccountService {
     }
 
     return uploadedFile
+  }
+
+  /**
+   * Удаление аватара аккаунта
+   * @param {AuthenticatedUser} user Текущий пользователь системы
+   * @param {string} targetId Идентификатор аккаунта (опционально)
+   * @returns {Upload | null} Удалённый файл
+   */
+  async removeAvatar(
+    user: AuthenticatedUser,
+    targetId?: string,
+  ): Promise<Upload | null> {
+    let targetAvatar: Upload | null = user.avatar || null
+
+    if (targetId) {
+      const { avatar } = await this.accountIsExists(targetId)
+
+      if (avatar) {
+        targetAvatar = avatar
+      }
+    }
+
+    if (!targetAvatar) {
+      throw new BadRequestException('Avatar not found')
+    }
+
+    return await this.upload.deleteFile(targetAvatar.id)
+  }
+
+  /**
+   * Проверка на существование аккаунта
+   * @param {string} id Идентификатор аккаунта
+   * @returns {Account} Аккаунт в базе данных
+   */
+  private async accountIsExists(id: string): Promise<Account> {
+    const account = await this.account.findOne({
+      where: {
+        id,
+      },
+      select: {
+        avatar: true,
+      },
+    })
+
+    // Если целевой аккаунт не найден
+    if (!account) {
+      throw new NotFoundException('Account not found')
+    }
+
+    return account
   }
 }

@@ -168,7 +168,7 @@ export class AuthService {
    * @returns {AuthenticatedUser} Авторизованный пользователь
    */
   async verifyVKIDUser(vkIdUser: VKIDUser): Promise<AuthenticatedUser> {
-    const isAlreadyExistsUser = await this.account.native.findUnique({
+    const isAlreadyExistsUser = await this.account.findOne({
       where: {
         vk_id: String(vkIdUser.id),
       },
