@@ -50,7 +50,7 @@ export class AccountService {
   async findByUsername(username: string): Promise<Account | null> {
     return await this.account.findOne({
       where: { username },
-      select: {
+      include: {
         avatar: true,
       },
     })
