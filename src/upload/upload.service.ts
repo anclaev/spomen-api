@@ -1,11 +1,4 @@
-import {
-  ForbiddenException,
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
-  StreamableFile,
-} from '@nestjs/common'
-
+import { StreamableFile, Injectable, HttpStatus } from '@nestjs/common'
 import { BucketItemStat, Client, S3Error } from 'minio'
 import { Permission, Upload } from '@prisma/client'
 import { InjectMinio } from 'nestjs-minio'
@@ -14,15 +7,17 @@ import { v4 as uuid } from 'uuid'
 
 const translit = require('cyrillic-to-translit-js')
 
+// Сервисы
 import { ConfigService } from '@core/config'
 
+// Репозитории
 import { UploadRepository } from './upload.repository'
 
+// Утилиты
 import { publicBucketPolicy } from '@utils/s3'
 import { toWebp } from '@utils/sharp'
 
-import { PaginatedResult } from '@interfaces/pagination'
-import { AuthenticatedUser } from '@interfaces/user'
+// Интерфейсы
 import {
   Metadata,
   PutFileOptions,
@@ -30,6 +25,11 @@ import {
   S3File,
 } from '@interfaces/upload'
 
+import { PaginatedResult } from '@interfaces/pagination'
+import { AuthenticatedUser } from '@interfaces/user'
+import { APIError } from '@interfaces/api-error'
+
+// DTO
 import { GetUploadsDto } from './dto/get-uploads.dto'
 
 /**
@@ -64,8 +64,9 @@ export class UploadService {
 
   /**
    * Конструктор сервиса
-   * @description * Устанавливает текущий бакет приложения из конфигурации
-   * @description * Инициализирует сервис транслита
+   * @description
+   * * Устанавливает текущий бакет приложения из конфигурации
+   * * Инициализирует сервис транслита
    * @param {Client} s3 Клиент MinIO
    * @param {ConfigService} config Сервис конфигурации
    * @param {UploadRepository} upload Репозиторий загрузок
@@ -75,13 +76,18 @@ export class UploadService {
     private readonly config: ConfigService,
     private readonly upload: UploadRepository,
   ) {
-    this.endpoint = config.gett<string>('MINIO_ENDPOINT')
-    this.bucket = config.gett<string>('MINIO_BUCKET')
     this.publicBucket = config.gett<string>('MINIO_BUCKET_PUBLIC')
     this.defaultACL = config.gett<Permission>('MINIO_DEFAULT_ACL')
+    this.endpoint = config.gett<string>('MINIO_ENDPOINT')
+    this.bucket = config.gett<string>('MINIO_BUCKET')
     this.translit = translit()
   }
 
+  /**
+   * Получение списка загрузок
+   * @param {GetUploadsDto} Параметры поиска
+   * @returns {PaginatedResult<Upload[]>} Список загрузок
+   */
   async getUploads({
     pagination,
     user,
@@ -101,33 +107,37 @@ export class UploadService {
 
   /**
    * Получение файла по ID
+   * @description
+   * * Возвращает ошибку 404, если загрузка не найдена
+   * * Возвращает ошибку 403, если к загрузке нет доступа
    * @param {String} id Идентификатор загрузки
    * @param {AuthenticatedUser} user Текущий пользователь системы
    * @param {Response} res Объект запроса
-   * @returns {StreamableFile} Стрим файла из хранилища
+   * @returns {StreamableFile | APIError} Стрим файла из хранилища
    */
   async getFile(
     id: string,
     user: AuthenticatedUser,
     res: Response,
-  ): Promise<StreamableFile> {
-    const upload = await this.upload.findOne({
-      where: {
-        id,
-      },
-    })
+  ): Promise<StreamableFile | APIError> {
+    const upload = await this.uploadIsExists(id)
 
-    if (!upload) {
-      throw new NotFoundException('Upload not found')
+    if (upload instanceof APIError) {
+      return upload
     }
 
     // Проверка доступа к файлу
-    await this.verifyUploadPermissions(upload, user)
+    const isAccessed = await this.verifyUploadPermissions(upload, user)
+
+    if (!isAccessed) {
+      return new APIError(HttpStatus.FORBIDDEN)
+    }
 
     // Проверка существования файла в хранилище
-    const object = await this.checkObject(upload.bucket, upload.path)
+    const result = await this.checkObject(upload.bucket, upload.path)
 
-    if (!object) {
+    if (result instanceof APIError) {
+      // Удаление данных о загрузке при отсутствии в хранилище
       try {
         await this.upload.delete({
           where: {
@@ -135,14 +145,15 @@ export class UploadService {
           },
         })
       } catch (e) {
-        throw new InternalServerErrorException(e)
+        return new APIError(HttpStatus.NOT_FOUND, 'Загрузка не найдена')
       }
-
-      throw new NotFoundException('Upload not found')
     }
 
+    // Прикрепление типа файла к запросу
     res.set({
-      'Content-Type': object.metaData['content-type'] ?? 'multipart/form-data',
+      'Content-Type':
+        (result as BucketItemStat).metaData['content-type'] ??
+        'multipart/form-data',
     })
 
     return new StreamableFile(
@@ -152,13 +163,14 @@ export class UploadService {
 
   /**
    * Загрузка файла в систему
-   * @description * Преобразовывает изображение в webp
-   * @description * Преобразовывает имя файла в транслит (для кириллицы)
-   * @description * Загружает файл в S3-хранилище (MinIO)
-   * @description * Сохраняет данные о файле в базе данных
-   * @description * Удаляет файл из хранилища в случае ошибки БД
+   * @description
+   * * Преобразовывает изображение в webp
+   * * Преобразовывает имя файла в транслит (для кириллицы)
+   * * Загружает файл в S3-хранилище (MinIO)
+   * * Сохраняет данные о файле в базе данных
+   * * Удаляет файл из хранилища в случае ошибки БД
    * @param {PutFileOptions} options Данные загружаемого файла
-   * @returns {Upload} Данные о загрузке в БД
+   * @returns {Upload | APIError} Данные о загрузке в БД
    */
   async putFile({
     file,
@@ -166,10 +178,17 @@ export class UploadService {
     owner,
     acl,
     compress = false,
-  }: PutFileOptions): Promise<Upload | null> {
+  }: PutFileOptions): Promise<Upload | APIError> {
     // Преобразование изображения в webp
     if (file.mime && file.mime.match(/^image\/(.*)/)) {
-      file.buffer = await toWebp(file.buffer, compress)
+      try {
+        file.buffer = await toWebp(file.buffer, compress)
+      } catch (e) {
+        return new APIError(
+          HttpStatus.INTERNAL_SERVER_ERROR,
+          'Ошибка преобразования изображения',
+        )
+      }
       file.ext = 'webp'
     }
 
@@ -190,6 +209,7 @@ export class UploadService {
       'Content-Type': file.mime ?? 'multipart/form-data',
     }
 
+    // Проверка существования бакета
     s3File.bucket = await this.checkBucket(acl)
 
     // Загрузка файла в хранилище
@@ -202,42 +222,42 @@ export class UploadService {
         metadata,
       )
     } catch (e: unknown) {
-      this.handleS3Error(e as S3Error)
+      return this.handleS3Error(e as S3Error)
     }
 
-    try {
-      return await this.saveUpload({
-        owner,
-        file,
-        s3File,
-        permissions: [acl ?? this.defaultACL],
-      })
-    } catch (e) {
+    const result = await this.saveUpload({
+      owner,
+      file,
+      s3File,
+      permissions: [acl ?? this.defaultACL],
+    })
+
+    if (result instanceof APIError) {
       // Компенсирующая транзакция, если файл не сохранился в БД
       await this.s3.removeObject(this.bucket, s3File.path)
-
-      throw new InternalServerErrorException(e.message)
     }
+
+    return result
   }
 
   /**
    * Удаление файла по идентификатору
    * @param {string} id Идентификатор файла
-   * @returns {Upload | null} Удалённый файл
+   * @returns {Upload} Удалённый файл
    */
-  async deleteFile(id: string): Promise<Upload | null> {
-    const upload = await this.upload.findOne({
-      where: {
-        id,
-      },
-    })
+  async deleteFile(id: string): Promise<Upload | APIError> {
+    const upload = await this.uploadIsExists(id)
 
-    // Проверка на существования файла в базе
-    if (!upload) {
-      throw new NotFoundException('Upload not found')
+    if (upload instanceof APIError) {
+      return upload
     }
 
-    // Удаление файла из базы
+    // Проверка на то, создан ли файл сторонним сервисом
+    if (upload.is_system) {
+      return new APIError(HttpStatus.FORBIDDEN)
+    }
+
+    // Удаление данных о загрузке из базы
     await this.upload.delete({
       where: {
         id: upload.id,
@@ -262,7 +282,7 @@ export class UploadService {
         },
       })
 
-      this.handleS3Error(e as S3Error)
+      return this.handleS3Error(e as S3Error)
     }
 
     return upload
@@ -271,21 +291,21 @@ export class UploadService {
   /**
    * Сохранение загруженного файла в базе данных
    * @param {SaveUploadOptions} options Данные файла
-   * @returns {Upload | null} Запись в базе данных
+   * @returns {Upload | APIError} Запись в базе данных
    */
   private async saveUpload({
     file,
     s3File,
     owner,
     permissions,
-  }: SaveUploadOptions): Promise<Upload | null> {
+  }: SaveUploadOptions): Promise<Upload | APIError> {
     const id = uuid()
     const url = permissions.find((item) => item === 'Public')
       ? `${this.endpoint}/${s3File.bucket}/${s3File.path}`
       : `${this.config.apiEndpoint}/upload/file/${id}`
 
     try {
-      const createdUpload = await this.upload.create({
+      return await this.upload.create({
         data: {
           id,
           name: file.name,
@@ -304,17 +324,16 @@ export class UploadService {
           },
         },
       })
-
-      return createdUpload
     } catch (e) {
-      throw new Error(e)
+      return new APIError(HttpStatus.BAD_REQUEST, e.message)
     }
   }
 
   /**
    * Назначение бакета для файла
-   * @description * Проверяет бакет на существование и создаёт его при отсутствии
-   * @description * Назначает публичную политику бакета на основе доступа к файлу
+   * @description
+   * * Проверяет бакет на существование и создаёт его при отсутствии
+   * * Назначает публичную политику бакета на основе доступа к файлу
    * @param {string} acl Права доступа к файлу
    * @returns {string} Бакет для файла
    */
@@ -337,16 +356,16 @@ export class UploadService {
    * Проверка существования файла в хранилище
    * @param {string} bucket Бакет файла
    * @param {string} path Путь к файлу в хранилище
-   * @returns {boolean} Результат проверки
+   * @returns {BucketItemStat | APIError} Результат проверки
    */
   private async checkObject(
     bucket: string,
     path: string,
-  ): Promise<BucketItemStat | null> {
+  ): Promise<BucketItemStat | APIError> {
     try {
       return await this.s3.statObject(bucket, path)
     } catch (e) {
-      return null
+      return this.handleS3Error(e as S3Error)
     }
   }
 
@@ -354,29 +373,48 @@ export class UploadService {
    * Проверка доступа к файлу
    * @param {Upload} upload Загрузка в базе данных
    * @param {AuthenticatedUser} user Пользователь системы
+   * @returns {boolean} Флаг доступа
    */
   private async verifyUploadPermissions(
     upload: Upload,
     user: AuthenticatedUser,
-  ): Promise<void> {
-    if (
-      upload.permissions.find(
-        (item) => item === Permission.Public || upload.owner_id === user.id,
-      )
-    ) {
-      return
+  ): Promise<boolean> {
+    if (user.roles.find((role) => role === 'Administrator')) {
+      return true
     }
 
-    // TODO: Проверка доступа на уровне таймлайна, воспоминания, чата
+    return !!upload.permissions.find(
+      (item) => item === Permission.Public || upload.owner_id === user.id,
+    )
 
-    throw new ForbiddenException('Access denied')
+    // TODO: Проверка доступа на уровне таймлайна, воспоминания, чата
   }
 
   /**
    * Обработка ошибки S3 (MinIO)
-   * @param {S3Error} e Объект ошибки S3
+   * @param {S3APIError} e Объект ошибки S3
+   * @return {APIError} Преобразованная ошибка
    */
-  private handleS3Error(e: S3Error) {
-    throw new InternalServerErrorException(e)
+  private handleS3Error(e: S3Error): APIError {
+    return new APIError(HttpStatus.INTERNAL_SERVER_ERROR, e.message)
+  }
+
+  /**
+   * Проверка на существование загрузки в базед анных
+   * @param {string} id Идентификатор загрузки
+   * @returns {Upload | APIError} Загрузка в базе данных
+   */
+  private async uploadIsExists(id: string): Promise<Upload | APIError> {
+    const upload = await this.upload.findOne({
+      where: {
+        id,
+      },
+    })
+
+    if (!upload) {
+      return new APIError(HttpStatus.NOT_FOUND, 'Загрузка не найдена')
+    }
+
+    return upload
   }
 }

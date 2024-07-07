@@ -1,36 +1,60 @@
-import { Injectable } from '@nestjs/common'
+import { Injectable, HttpStatus } from '@nestjs/common'
+import { Account } from '@prisma/client'
 import { JwtService } from '@nestjs/jwt'
 
-import { AccountRepository } from '@/account/account.repository'
-
+// Сервисы
+import { AccountService } from '@/account/account.service'
 import { ConfigService } from '@core/config'
 
-import { TokenPayload, TokensResponse } from '@interfaces/tokens'
+// Интерфейсы
+import { TokenPayload, Tokens } from '@interfaces/tokens'
+import { APIError } from '@interfaces/api-error'
 
+/**
+ * Сервис работы с токенами
+ */
 @Injectable()
 export class TokenService {
+  /**
+   * Максимальное количество токенов обновления
+   */
   private max_refresh_tokens: number
 
+  /**
+   * Конструктор сервиса работы с токенами
+   * @param {AccountService} account Сервис аккаунтов
+   * @param {ConfigService} config Сервис конфигурации
+   * @param {JwtService} jwt Сервис работы с JWT
+   */
   constructor(
-    private jwt: JwtService,
+    private account: AccountService,
     private config: ConfigService,
-    private account: AccountRepository,
+    private jwt: JwtService,
   ) {
     this.max_refresh_tokens = this.config.gett('MAX_REFRESH_TOKENS')
   }
 
+  /**
+   * Выдача авторизационных токенов
+   * @param {TokenPayload} payload Данные токенов
+   * @param {boolean} force Флаг проверки аккаунта на существование
+   * @returns {Tokens} Пара созданных токенов
+   */
   async grant(
     payload: TokenPayload,
     force: boolean = false,
-  ): Promise<TokensResponse | null> {
+  ): Promise<Tokens | APIError> {
     if (!force) {
-      const account = await this.account.findOne({
-        where: { id: payload.userid },
-      })
+      const isExist = await this.account.accountIsExists(payload.userid)
 
-      if (!account) {
-        return null
+      if (isExist instanceof APIError) {
+        return new APIError(
+          HttpStatus.INTERNAL_SERVER_ERROR,
+          'Аккаунт для выдачи токенов не найден',
+        )
       }
+
+      return await this.generate(payload, isExist.refresh_tokens)
     }
 
     return await this.generate(payload)
@@ -40,18 +64,16 @@ export class TokenService {
    * Обновление токена
    * @param {TokenPayload} payload Данные токена
    * @param {String} refresh_token Текущий токен обновления
-   * @returns {Tokens | null} Новая пара токенов
+   * @returns {Tokens} Новая пара токенов
    */
   async refresh(
     payload: TokenPayload,
     refresh_token: string,
-  ): Promise<TokensResponse | null> {
-    const account = await this.account.findOne({
-      where: { id: payload.userid },
-    })
+  ): Promise<Tokens | APIError> {
+    const account = await this.account.getById(payload.userid)
 
-    if (!account) {
-      return null
+    if (account instanceof APIError) {
+      return account
     }
 
     const token = account.refresh_tokens.find(
@@ -59,28 +81,29 @@ export class TokenService {
     )
 
     if (!token) {
-      return null
+      return new APIError(
+        HttpStatus.BAD_REQUEST,
+        'Токен для обновления не найден',
+      )
     }
 
     return await this.generate(payload)
   }
 
   /**
-   * Удаление токена обновления
+   * Удаление токена
    * @param {String} user_id Идентификатор аккаунта
    * @param {String} refresh_token Токен обновления
-   * @returns {Boolean} Результат очистки
+   * @returns {Account} Обновлённый аккаунт
    */
   async logout(
     user_id: string,
     refresh_token: string,
-  ): Promise<boolean | null> {
-    const account = await this.account.findOne({
-      where: { id: user_id },
-    })
+  ): Promise<Account | APIError> {
+    const account = await this.account.getById(user_id)
 
-    if (!account) {
-      return null
+    if (account instanceof APIError) {
+      return account
     }
 
     const tokens = account.refresh_tokens
@@ -89,24 +112,22 @@ export class TokenService {
 
     if (removeTokenIndex > -1) tokens.splice(removeTokenIndex, 1)
 
-    const updated = await this.account.update({
+    return (await this.account.update({
       where: { id: user_id },
       data: {
         refresh_tokens: {
           set: tokens,
         },
       },
-    })
-
-    return updated ? !!updated : null
+    }))!
   }
 
   /**
-   * Очистка токенов обновления
+   * Очистка токенов
    * @param {String} user_id Идентификатор аккаунта
-   * @returns {Boolean} Результат очистки
+   * @returns {boolean} Результат очистки
    */
-  async clear(user_id: string): Promise<boolean | null> {
+  async clear(user_id: string): Promise<boolean> {
     const updated = await this.account.update({
       where: {
         id: user_id,
@@ -118,7 +139,7 @@ export class TokenService {
       },
     })
 
-    return updated ? !!updated : null
+    return !(updated instanceof APIError)
   }
 
   /**
@@ -147,44 +168,54 @@ export class TokenService {
   /**
    * Генерация пары токенов
    * @param {TokenPayload} payload Данные токена
-   * @returns {Tokens | null} Новая пара токенов
+   * @param {string[]} alreadyTokens Текущие токены аккаунта
+   * @returns {Tokens} Созданная пара токенов
    */
   private async generate(
     payload: TokenPayload,
-  ): Promise<TokensResponse | null> {
-    const account = await this.account.findOne({
-      where: { id: payload.userid },
-    })
+    alreadyTokens?: string[],
+  ): Promise<Tokens | APIError> {
+    let refreshTokens = alreadyTokens ?? []
 
-    if (!account) {
-      return null
+    if (!alreadyTokens) {
+      const targetAccount = await this.account.accountIsExists(payload.userid)
+
+      if (targetAccount instanceof APIError) {
+        return new APIError(
+          HttpStatus.INTERNAL_SERVER_ERROR,
+          'Аккаунт для выдачи токенов не найден',
+        )
+      }
+      refreshTokens = targetAccount.refresh_tokens
     }
 
-    const tokens: TokensResponse = {
+    const tokens: Tokens = {
       access_token: await this.sign(payload, 'access'),
       refresh_token: await this.sign(payload, 'refresh'),
     }
 
-    const token_count = account.refresh_tokens.length
+    const token_count = refreshTokens.length
+    const isMaximumTokens = token_count + 1 >= this.max_refresh_tokens
 
-    if (token_count + 1 >= this.max_refresh_tokens) {
-      const slicedTokens = account.refresh_tokens.slice(
+    let slicedTokens: string[] = []
+
+    if (isMaximumTokens) {
+      slicedTokens = refreshTokens.slice(
         token_count - this.max_refresh_tokens + 1,
         token_count,
       )
 
       slicedTokens.push(tokens.refresh_token)
-
-      await this.account.update({
-        where: { id: payload.userid },
-        data: { refresh_tokens: { set: slicedTokens } },
-      })
-    } else {
-      await this.account.update({
-        where: { id: payload.userid },
-        data: { refresh_tokens: { push: [tokens.refresh_token] } },
-      })
     }
+
+    await this.account.update({
+      where: { id: payload.userid },
+      data: {
+        refresh_tokens: isMaximumTokens
+          ? { set: slicedTokens }
+          : { push: [tokens.refresh_token] },
+      },
+    })
 
     return tokens
   }

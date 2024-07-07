@@ -3,6 +3,7 @@ import {
   createParamDecorator,
   ExecutionContext,
 } from '@nestjs/common'
+
 import { Request } from 'express'
 
 export interface Pagination {
@@ -18,13 +19,11 @@ export const UsePagination = createParamDecorator(
 
     // check if page and size are valid
     if (isNaN(page) || page < 0 || isNaN(size) || size < 0) {
-      throw new BadRequestException('Invalid pagination params')
+      throw new BadRequestException('Некорректные параметры пагинации')
     }
     // do not allow to fetch large slices of the dataset
     if (size > 100) {
-      throw new BadRequestException(
-        'Invalid pagination params: Max size is 100',
-      )
+      throw new BadRequestException('Превышен размер страницы')
     }
 
     // calculate pagination parameters

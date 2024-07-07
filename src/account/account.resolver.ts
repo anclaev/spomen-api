@@ -1,9 +1,13 @@
 import { Resolver, Args, Query } from '@nestjs/graphql'
 import { Account } from '@graphql'
 
+// Декораторы
 import { UseGqlAuth } from '@decorators/gql-auth'
 
+// Сервисы
 import { AccountService } from './account.service'
+import { APIError } from '@interfaces/api-error'
+import { HttpException } from '@nestjs/common'
 
 /**
  * Ресольвер аккаунта
@@ -19,27 +23,31 @@ export class AccountResolver {
   /**
    * Запрос на получение аккаунта по ID
    * @param {String} id ID аккаунта
-   * @returns {Account | null} Аккаунт в системе
+   * @returns {Account} Аккаунт в системе
    */
   @UseGqlAuth()
   @Query(() => Account, { name: 'accountById' })
   async findOneById(
     @Args('id', { type: () => String }) id: string,
-  ): Promise<Account | null> {
-    return await this.account.findOne(id)
+  ): Promise<Account> {
+    const account = await this.account.getById(id)
+
+    return this.catchError<Account>(account)
   }
 
   /**
    * Запрос на получение аккаунта по имени пользователя
    * @param {String} username Имя аккаунта
-   * @returns {Account | null} Аккаунт в системе
+   * @returns {Account} Аккаунт в системе
    */
   @UseGqlAuth()
   @Query(() => Account, { name: 'account' })
-  async findOne(
+  async getByUsername(
     @Args('username', { type: () => String }) username: string,
-  ): Promise<Account | null> {
-    return await this.account.findByUsername(username)
+  ): Promise<Account> {
+    const account = await this.account.getByUsername(username)
+
+    return this.catchError<Account>(account)
   }
 
   // @Mutation(() => Account)
@@ -65,4 +73,17 @@ export class AccountResolver {
   // removeAccount(@Args('id', { type: () => Int }) id: number) {
   //   return this.accountService.remove(id)
   // }
+
+  /**
+   * Обработчик ошибок
+   * @param {unknown | APIError} data Результат запроса
+   * @returns {unknown} Обработанный запрос
+   */
+  private catchError<T>(data: T | APIError): T {
+    if (data instanceof APIError) {
+      throw new HttpException(data.message, data.status)
+    }
+
+    return data
+  }
 }

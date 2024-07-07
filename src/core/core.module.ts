@@ -13,16 +13,10 @@ import validationSchema from './config/config.schema'
 
 /**
  * Системный модуль приложения
- * @description Предоставляет ключевые модули и логгер.
- * @description Включает в себя:
- * @description модуль HTTP Axios;
- * @description модуль конфигурации;
- * @description модуль работы с файлами;
- * @description модуль работы с базой данных;
- * @description модуль работы с S3;
- * @description модуль сервера GraphQL;
- * @description модуль работы с JWT-токенами;
- * @description модуль healthcheck.
+ * @description Экспортирует:
+ * * Логгер приложения
+ * * Сервис конфигурации
+ * * Сервис работы с базой данных
  */
 @Global()
 @Module({
@@ -72,6 +66,19 @@ import validationSchema from './config/config.schema'
       useFactory: (config: ConfigService) => ({
         playground: !config.isProduction,
         autoSchemaFile: true,
+        fieldResolverEnhancers: ['interceptors', 'guards', 'filters'],
+        allowBatchedHttpRequests: true,
+        installSubscriptionHandlers: true,
+        includeStacktraceInErrorResponses: true,
+        nodeEnv: config.gett('NODE_ENV'),
+        formatError: (error) => {
+          const graphQLFormattedError = {
+            message: error.message,
+            description: error.extensions!.description,
+            code: error.extensions?.code || 'SERVER_ERROR',
+          }
+          return graphQLFormattedError
+        },
       }),
       inject: [ConfigService],
     }),

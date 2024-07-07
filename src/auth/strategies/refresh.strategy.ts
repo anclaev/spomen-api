@@ -1,30 +1,35 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common'
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common'
 import { PassportStrategy } from '@nestjs/passport'
 import { ExtractJwt, Strategy } from 'passport-jwt'
-import { Account } from '@graphql'
+import { Account } from '@prisma/client'
 import { Request } from 'express'
 
-import { AccountRepository } from '@/account/account.repository'
-import { serializeUser } from '@utils/serialize'
+// Сервисы
+import { AccountService } from '@/account/account.service'
 import { ConfigService } from '@core/config'
 
+// Утилиты
+import { serializeUser } from '@utils/serialize'
+
+// Интерфейсы
 import { AuthenticatedUser } from '@interfaces/user'
 import { TokenPayload } from '@interfaces/tokens'
+import { APIError } from '@interfaces/api-error'
 
 /**
  * Стратегия проверки токена обновления
- * @description Получает токен из авторизационной куки.
+ * @description Получает токен из авторизационной куки
  */
 @Injectable()
 export class RefreshStrategy extends PassportStrategy(Strategy, 'refresh') {
   /**
    * Конструктор стратегии
    * @param {ConfigService} config Сервис конфигурации
-   * @param {AccountRepository} account Репозиторий аккаунта
+   * @param {AccountService} account Репозиторий аккаунта
    */
   constructor(
     private readonly config: ConfigService,
-    private readonly account: AccountRepository,
+    private readonly account: AccountService,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
@@ -47,24 +52,24 @@ export class RefreshStrategy extends PassportStrategy(Strategy, 'refresh') {
     req: Request,
     payload: TokenPayload,
   ): Promise<AuthenticatedUser> {
-    const account = await this.account.findOne({
+    const account = await this.account.getOne({
       where: { id: payload.userid },
     })
 
-    if (!account) {
-      throw new UnauthorizedException()
+    if (account instanceof APIError) {
+      throw new HttpException('', HttpStatus.UNAUTHORIZED)
     }
 
-    const verified = !!account.refresh_tokens.find(
+    const verified = account!.refresh_tokens.find(
       (token) => token === req.cookies.Refresh,
     )
 
     if (!verified) {
-      throw new UnauthorizedException()
+      throw new HttpException('', HttpStatus.UNAUTHORIZED)
     }
 
     return {
-      ...serializeUser<Account, AuthenticatedUser>(account),
+      ...serializeUser<Account, AuthenticatedUser>(account!),
       refresh_token: req.cookies.Refresh,
     }
   }

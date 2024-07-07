@@ -9,7 +9,7 @@ import { WinstonModule } from 'nest-winston'
 import * as Sentry from '@sentry/node'
 
 import { winstonOptions } from '@common/utils/winston'
-import { SentryFilter } from '@common/filters'
+import { HandledExceptionFilter, SentryFilter } from '@common/filters'
 
 import { ConfigService } from '@core/config'
 
@@ -28,8 +28,6 @@ const bootstrap = async () => {
   const prisma = app.get(PrismaService)
   const config = app.get(ConfigService)
   const logger = app.get(Logger)
-
-  app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter))
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -57,6 +55,11 @@ const bootstrap = async () => {
   }
 
   Sentry.setupNestErrorHandler(app, new SentryFilter(httpAdapter))
+
+  app.useGlobalFilters(
+    new PrismaClientExceptionFilter(httpAdapter),
+    new HandledExceptionFilter(),
+  )
 
   await await app.listen(config.port).finally(() => {
     logger.log(

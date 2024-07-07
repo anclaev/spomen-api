@@ -20,10 +20,6 @@ const filterSentryEvents = (
     if (filtered.length > 0) return null
   }
 
-  if (process.env.NODE_ENV === 'local') {
-    console.log(event)
-  }
-
   return event
 }
 

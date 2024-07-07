@@ -1,9 +1,4 @@
-import {
-  BadRequestException,
-  ConflictException,
-  Injectable,
-} from '@nestjs/common'
-
+import { Injectable, HttpStatus } from '@nestjs/common'
 import generator from 'generate-password-ts'
 import { Role } from '@prisma/client'
 import { Account } from '@graphql'
@@ -11,16 +6,21 @@ import { Account } from '@graphql'
 import * as moment from 'moment'
 import * as argon2 from 'argon2'
 
-import { AccountRepository } from '@/account/account.repository'
+// Сервисы
+import { AccountService } from '@/account/account.service'
 import { TokenService } from './token.service'
 import { ConfigService } from '@core/config'
 
+// Утилиты
 import { Cookies } from '@utils/cookies'
 
+// Интерфейсы
 import { AuthenticatedUser } from '@interfaces/user'
+import { APIError } from '@interfaces/api-error'
 import { VKIDUser } from '@interfaces/vk-id'
 import { Tokens } from '@interfaces/tokens'
 
+// DTO
 import { SignUpDto } from './dto/sign-up.dto'
 import { LogoutDto } from './dto/logout.dto'
 
@@ -33,14 +33,14 @@ export class AuthService {
 
   /**
    * Конструктор сервиса авторизации
-   * @param {AccountRepository} account Репозиторий аккаунта
-   * @param {JwtService} jwt Сервис работы с JWT-токенами
    * @param {ConfigService} config Сервис работы с конфигурацией
+   * @param {JwtService} jwt Сервис работы с JWT-токенами
+   * @param {AccountService} account Сервис аккаунта
    */
   constructor(
-    private readonly account: AccountRepository,
     private readonly config: ConfigService,
     private readonly token: TokenService,
+    private readonly account: AccountService,
   ) {
     this.cookieDomain =
       process.env.NODE_ENV !== 'local'
@@ -51,9 +51,9 @@ export class AuthService {
   /**
    * Регистрация в приложении
    * @param {SignUpDto} dto Данные для авторизации
-   * @returns {Account | null} Созданный аккаунт
+   * @returns {AuthenticatedUser} Созданный аккаунт
    */
-  async signUp(dto: SignUpDto): Promise<AuthenticatedUser> {
+  async signUp(dto: SignUpDto): Promise<AuthenticatedUser | APIError> {
     const password = await argon2.hash(dto.password)
 
     const createdAccount = await this.account.create({
@@ -69,8 +69,8 @@ export class AuthService {
       },
     })
 
-    if (!createdAccount) {
-      throw new ConflictException('Not unique login')
+    if (createdAccount instanceof APIError) {
+      return new APIError(HttpStatus.CONFLICT, 'Логин уже зарегистрирован')
     }
 
     const tokens = await this.token.grant(
@@ -85,6 +85,10 @@ export class AuthService {
       true,
     )
 
+    if (tokens instanceof APIError) {
+      return new APIError(HttpStatus.INTERNAL_SERVER_ERROR)
+    }
+
     return { ...createdAccount, ...tokens! }
   }
 
@@ -97,10 +101,17 @@ export class AuthService {
   async getAuthenticatedUserByLogin(
     username: string,
     password: string,
-  ): Promise<AuthenticatedUser> {
-    const account = await this.account.findOne({
+  ): Promise<AuthenticatedUser | APIError> {
+    const account = await this.account.getOne({
       where: { username: username.trim() },
+      include: {
+        avatar: true,
+      },
     })
+
+    if (account instanceof APIError) {
+      return account
+    }
 
     return await this.verifyAccount(account, password)
   }
@@ -114,10 +125,14 @@ export class AuthService {
   async getAuthenticatedUserByEmail(
     email: string,
     password: string,
-  ): Promise<AuthenticatedUser> {
-    const account = await this.account.findOne({
+  ): Promise<AuthenticatedUser | APIError> {
+    const account = await this.account.getOne({
       where: { email: email.trim() },
     })
+
+    if (account instanceof APIError) {
+      return account
+    }
 
     return await this.verifyAccount(account, password)
   }
@@ -129,17 +144,13 @@ export class AuthService {
    * @returns {AuthenticatedUser} Аккаунт пользователя с токеном доступа
    */
   async verifyAccount(
-    account: Account | null,
+    account: Account,
     password: string,
-  ): Promise<AuthenticatedUser> {
-    if (!account) {
-      throw new BadRequestException('Wrong credentials')
-    }
-
+  ): Promise<AuthenticatedUser | APIError> {
     const verifed = await argon2.verify(account.password, password)
 
     if (!verifed) {
-      throw new BadRequestException('Wrong credentials')
+      return new APIError(HttpStatus.BAD_REQUEST, 'Некорректные данные')
     }
 
     account.password = undefined!
@@ -153,8 +164,8 @@ export class AuthService {
       vk_access_token: null,
     })
 
-    if (!tokens) {
-      throw new BadRequestException()
+    if (tokens instanceof APIError) {
+      return new APIError(HttpStatus.BAD_REQUEST, 'Некорректные данные')
     }
 
     return { ...account, ...tokens }
@@ -162,13 +173,16 @@ export class AuthService {
 
   /**
    * Проверка пользователя VKID
-   * @description Обновляет пользователя в случае наличия в базе;
-   * @description Создаёт в случае отсутствия.
+   * @description
+   * * Обновляет пользователя в случае наличия в базе
+   * * Создаёт в случае отсутствия
    * @param {VKIDUser} vkIdUser Пользователь VKID
    * @returns {AuthenticatedUser} Авторизованный пользователь
    */
-  async verifyVKIDUser(vkIdUser: VKIDUser): Promise<AuthenticatedUser> {
-    const isAlreadyExistsUser = await this.account.findOne({
+  async verifyVKIDUser(
+    vkIdUser: VKIDUser,
+  ): Promise<AuthenticatedUser | APIError> {
+    const isExistUser = await this.account.getOne({
       where: {
         vk_id: String(vkIdUser.id),
       },
@@ -177,7 +191,7 @@ export class AuthService {
       },
     })
 
-    if (!isAlreadyExistsUser) {
+    if (isExistUser instanceof APIError) {
       const username = `id${vkIdUser.id}`
 
       const password = generator.generate({
@@ -206,25 +220,28 @@ export class AuthService {
         },
       })
 
-      const tokens = await this.token.grant({
-        userid: user!.id,
-        username: user!.username,
-        email: null,
-        vk_access_token: vkIdUser.access_token ?? null,
-        vk_id: String(user!.vk_id),
-        vk_avatar: user!.vk_avatar,
-      })
-
-      if (!tokens) {
-        throw new BadRequestException()
+      if (user instanceof APIError) {
+        return user
       }
 
-      return { ...user!, ...tokens }
+      const tokens = await this.token.grant(
+        {
+          userid: user!.id,
+          username: user!.username,
+          email: null,
+          vk_access_token: vkIdUser.access_token ?? null,
+          vk_id: String(user!.vk_id),
+          vk_avatar: user!.vk_avatar,
+        },
+        true,
+      )
+
+      return { ...user!, ...tokens! }
     }
 
     const user = await this.account.update({
       where: {
-        id: isAlreadyExistsUser.id,
+        id: isExistUser.id,
       },
       data: {
         vk_avatar: {
@@ -233,20 +250,23 @@ export class AuthService {
       },
     })
 
-    const tokens = await this.token.grant({
-      email: null,
-      username: user!.username,
-      userid: user!.id,
-      vk_access_token: vkIdUser.access_token!,
-      vk_avatar: vkIdUser.photo_200!,
-      vk_id: String(vkIdUser.id),
-    })
-
-    if (!tokens) {
-      throw new BadRequestException()
+    if (user instanceof APIError) {
+      return user
     }
 
-    return { ...user!, ...tokens }
+    const tokens = await this.token.grant(
+      {
+        email: null,
+        username: user!.username,
+        userid: user!.id,
+        vk_access_token: vkIdUser.access_token!,
+        vk_avatar: vkIdUser.photo_200!,
+        vk_id: String(vkIdUser.id),
+      },
+      true,
+    )
+
+    return { ...user!, ...tokens! }
   }
 
   /**
@@ -254,18 +274,30 @@ export class AuthService {
    * @param {LogoutDto} dto Данные пользователя
    * @returns {Boolean} Результат логаута
    */
-  async logout({ user_id, refresh_token }: LogoutDto): Promise<Boolean> {
-    const completed = await this.token.logout(user_id, refresh_token)
+  async logout({
+    user_id,
+    refresh_token,
+  }: LogoutDto): Promise<Boolean | APIError> {
+    const result = await this.token.logout(user_id, refresh_token)
 
-    if (completed === null) {
-      throw new BadRequestException()
+    if (result instanceof APIError) {
+      return new APIError(HttpStatus.BAD_REQUEST, result.message)
     }
 
-    return completed
+    return Boolean(result)
   }
 
-  async refreshTokens(user: AuthenticatedUser): Promise<Tokens> {
-    await this.token.logout(user.id, user.refresh_token)
+  /**
+   * Обновление токена аккаунта
+   * @param {AuthenticatedUser} user Текущий пользователь системы
+   * @returns {Tokens} Обновлённые токены
+   */
+  async refreshToken(user: AuthenticatedUser): Promise<Tokens | APIError> {
+    const result = await this.token.logout(user.id, user.refresh_token)
+
+    if (result instanceof APIError) {
+      return result
+    }
 
     const tokens = await this.token.grant(
       {
@@ -279,13 +311,23 @@ export class AuthService {
       true,
     )
 
-    return tokens!
+    return tokens
   }
 
-  async refreshClear(user_id: string): Promise<boolean | null> {
+  /**
+   * Очистка токенов аккаунта
+   * @param {string} user_id Идентификатор аккаунта
+   * @returns {boolean} Результат очистки
+   */
+  async clearRefreshTokens(user_id: string): Promise<boolean> {
     return await this.token.clear(user_id)
   }
 
+  /**
+   * Создание авторизационных кук
+   * @param {Tokens} tokens Пара авторизационных токенов
+   * @returns {Cookies[]} Массив созданных кук
+   */
   cookiesWithTokens(tokens: Tokens): Cookies[] {
     const accessTokenExp = this.decodeTokenExpiration(
       this.config.gett('ACCESS_TOKEN_EXPIRATION'),
@@ -331,6 +373,10 @@ export class AuthService {
     ]
   }
 
+  /**
+   * Получение кук для выхода из системы
+   * @returns {Cookies[]} Массив кук для выхода из системы
+   */
   logoutCookies(): Cookies[] {
     return [
       new Cookies({
@@ -354,6 +400,11 @@ export class AuthService {
     ]
   }
 
+  /**
+   * Декодирование срока просрочки токена
+   * @param {string} exp Срок просрочки
+   * @returns Декодированный срок
+   */
   private decodeTokenExpiration(exp: string): {
     t: string
     v: number

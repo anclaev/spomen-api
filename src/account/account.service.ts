@@ -1,22 +1,23 @@
-import {
-  BadRequestException,
-  ConflictException,
-  Injectable,
-  InternalServerErrorException,
-  NotFoundException,
-} from '@nestjs/common'
-
+import { HttpStatus, Injectable } from '@nestjs/common'
 import { Permission, Upload } from '@prisma/client'
-import { Account } from '@graphql'
+import { Account, CreateOneAccountArgs } from '@graphql'
 
+// Сервисы
 import { UploadService } from '@/upload/upload.service'
+
+// Репозитории
 import { AccountRepository } from './account.repository'
 
+// Утилиты
 import { toS3Path } from '@utils/funcs'
 
+// Интерфейсы
+import { AccountFindUniqueDto, AccountUpdateDto } from '@interfaces/account'
 import { AuthenticatedUser } from '@interfaces/user'
+import { APIError } from '@interfaces/api-error'
 import { File } from '@interfaces/upload'
 
+// Перечисления
 import { STORAGE } from '@enums/storage'
 
 /**
@@ -27,33 +28,85 @@ export class AccountService {
   /**
    * Конструктор сервиса аккаунта
    * @param {AccountRepository} account Репозиторий аккаунта
+   * @param {UploadService} upload Сервис загрузок
    */
   constructor(
     private readonly account: AccountRepository,
     private readonly upload: UploadService,
   ) {}
 
+  async getOne(dto: AccountFindUniqueDto): Promise<Account | APIError> {
+    const account = await this.account.findOne(dto)
+
+    if (!account) return new APIError(HttpStatus.NOT_FOUND, 'Аккаунт не найден')
+
+    return account
+  }
+
   /**
    * Получение аккаунта по ID
    * @param {String} id ID аккаунта
-   * @returns {Account | null} Аккаунт в базе данных
+   * @returns {Account} Аккаунт в базе данных
    */
-  async findOne(id: string): Promise<Account | null> {
-    return await this.account.findOne({ where: { id } })
+  async getById(id: string): Promise<Account | APIError> {
+    const account = await this.account.findOne({
+      where: {
+        id,
+      },
+      include: {
+        avatar: true,
+      },
+    })
+
+    if (!account) return new APIError(HttpStatus.NOT_FOUND, 'Аккаунт не найден')
+
+    return account
   }
 
   /**
    * Получение аккаунта по имени пользователя
    * @param {String} username Имя аккаунта
-   * @returns {Account | null} Аккаунт в базе данных
+   * @returns {Account} Аккаунт в базе данных
    */
-  async findByUsername(username: string): Promise<Account | null> {
-    return await this.account.findOne({
-      where: { username },
+  async getByUsername(username: string): Promise<Account | APIError> {
+    const account = await this.account.findOne({
+      where: {
+        username,
+      },
       include: {
         avatar: true,
       },
     })
+
+    if (!account) return new APIError(HttpStatus.NOT_FOUND, 'Аккаунт не найден')
+
+    return account
+  }
+
+  /**
+   * Создание аккаунта
+   * @param {CreateOneAccountArgs} dto Данные нового аккаунта
+   * @returns {Account} Созданный аккаунт
+   */
+  async create(dto: CreateOneAccountArgs): Promise<Account | APIError> {
+    try {
+      return await this.account.create(dto)
+    } catch (e) {
+      return new APIError(HttpStatus.BAD_REQUEST, e.message)
+    }
+  }
+
+  /**
+   * Изменение аккаунта
+   * @param {AccountUpdateDto} dto
+   * @returns {Account} Изменённый аккаунт
+   */
+  async update(dto: AccountUpdateDto): Promise<Account | APIError> {
+    try {
+      return await this.account.update(dto)
+    } catch (e) {
+      return new APIError(HttpStatus.INTERNAL_SERVER_ERROR, e.message)
+    }
   }
 
   /**
@@ -61,37 +114,38 @@ export class AccountService {
    * @param {File} file Изображение для аватара
    * @param {AuthenticatedUser} user Текущий пользователь системы
    * @param {string} targetId ID аккаунта для загрузки (опционально)
-   * @returns {Upload | null} Загруженный аватар
+   * @returns {Upload} Загруженный аватар
    */
   async uploadAvatar(
     file: File,
     user: AuthenticatedUser,
     targetId?: string,
-  ): Promise<Upload | null> {
+  ): Promise<Upload | APIError> {
     if (targetId) {
       const targetAccount = await this.accountIsExists(targetId)
 
+      if (targetAccount instanceof APIError) {
+        return targetAccount
+      }
+
       // Если аватар уже существует
       if (targetAccount && targetAccount.avatar) {
-        throw new ConflictException('Avatar is exists')
+        return new APIError(HttpStatus.CONFLICT, 'Аватар уже существует')
       }
     } else if (user.avatar) {
-      throw new ConflictException('Avatar is exists')
+      return new APIError(HttpStatus.CONFLICT, 'Аватар уже существует')
     }
 
-    let uploadedFile: Upload | null = null
+    let uploadedFile = await this.upload.putFile({
+      file,
+      owner: user.username,
+      path: toS3Path(STORAGE.AVATARS),
+      compress: true,
+      acl: Permission.Public,
+    })
 
-    try {
-      // Загрузка файла в хранилище
-      uploadedFile = await this.upload.putFile({
-        file,
-        owner: user.username,
-        path: toS3Path(STORAGE.AVATARS),
-        compress: true,
-        acl: Permission.Public,
-      })
-    } catch (e) {
-      throw new InternalServerErrorException(e.message)
+    if (uploadedFile instanceof APIError) {
+      return uploadedFile
     }
 
     try {
@@ -111,7 +165,7 @@ export class AccountService {
       // Компенсирующая транзакция на удаление аватара из хранилища, если он не обновился в аккаунте
       await this.upload.deleteFile(uploadedFile!.id)
 
-      throw new InternalServerErrorException(e.message)
+      return new APIError(HttpStatus.INTERNAL_SERVER_ERROR, e.message)
     }
 
     return uploadedFile
@@ -121,24 +175,28 @@ export class AccountService {
    * Удаление аватара аккаунта
    * @param {AuthenticatedUser} user Текущий пользователь системы
    * @param {string} targetId Идентификатор аккаунта (опционально)
-   * @returns {Upload | null} Удалённый файл
+   * @returns {Upload} Удалённый файл
    */
   async removeAvatar(
     user: AuthenticatedUser,
     targetId?: string,
-  ): Promise<Upload | null> {
+  ): Promise<Upload | APIError> {
     let targetAvatar: Upload | null = user.avatar || null
 
     if (targetId) {
-      const { avatar } = await this.accountIsExists(targetId)
+      const targetAccount = await this.accountIsExists(targetId)
 
-      if (avatar) {
-        targetAvatar = avatar
+      if (targetAccount instanceof APIError) {
+        return targetAccount
+      }
+
+      if (targetAccount.avatar) {
+        targetAvatar = targetAccount.avatar
       }
     }
 
     if (!targetAvatar) {
-      throw new BadRequestException('Avatar not found')
+      return new APIError(HttpStatus.BAD_REQUEST, 'Аватар не найден')
     }
 
     return await this.upload.deleteFile(targetAvatar.id)
@@ -149,19 +207,19 @@ export class AccountService {
    * @param {string} id Идентификатор аккаунта
    * @returns {Account} Аккаунт в базе данных
    */
-  private async accountIsExists(id: string): Promise<Account> {
+  async accountIsExists(id: string): Promise<Account | APIError> {
     const account = await this.account.findOne({
       where: {
         id,
       },
-      select: {
+      include: {
         avatar: true,
       },
     })
 
     // Если целевой аккаунт не найден
     if (!account) {
-      throw new NotFoundException('Account not found')
+      return new APIError(HttpStatus.NOT_FOUND, 'Аккаунт не найден')
     }
 
     return account

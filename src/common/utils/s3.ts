@@ -1,3 +1,6 @@
+/**
+ * Политика публичного бакета
+ */
 export const publicBucketPolicy = `
 {
     "Version": "2012-10-17",

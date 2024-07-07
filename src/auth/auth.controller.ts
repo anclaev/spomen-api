@@ -6,29 +6,36 @@ import {
   Post,
   Res,
   UseGuards,
+  HttpException,
 } from '@nestjs/common'
 
 import { Response } from 'express'
 
-import { AuthenticatedUser } from '@interfaces/user'
-import { VKIDUser } from '@interfaces/vk-id'
-
+// Декораторы
 import { UseAuth } from '@decorators/auth'
 import { UseUser } from '@decorators/user'
 
-import { AuthService } from './auth.service'
-
+// Гарды
 import { RefreshGuard } from './guards/refresh.guard'
 import { LocalGuard } from './guards/local.guard'
-import { VKIDGuard } from './guards/vkid.guard'
 
+// Сервисы
+import { AuthService } from './auth.service'
+
+// Утилиты
 import { serializeUser } from '@utils/serialize'
 import { injectCookies } from '@utils/cookies'
 
+// Интерфейсы
+import { AuthenticatedUser } from '@interfaces/user'
+import { APIError } from '@interfaces/api-error'
+import { Tokens } from '@interfaces/tokens'
+
+// DTO
 import { SignUpDto } from './dto/sign-up.dto'
 
 /**
- * HTTP-контроллер авторизации
+ * Контроллер авторизации
  */
 @Controller('auth')
 export class AuthController {
@@ -52,7 +59,7 @@ export class AuthController {
   /**
    * Регистрация аккаунта
    * @param {SignUpDto} dto Регистрационные данные
-   * @param {Response} res Объект ответа
+   * @param {Response} res Объект ответа запроса
    * @returns {AuthenticatedUser} Созданный аккаунт
    */
   @Post('sign-up')
@@ -61,7 +68,11 @@ export class AuthController {
     @Body() dto: SignUpDto,
     @Res() res: Response,
   ): Promise<Response<AuthenticatedUser>> {
-    const account = await this.auth.signUp(dto)
+    const result = await this.auth.signUp(dto)
+
+    this.catchError(result)
+
+    const account: AuthenticatedUser = result as AuthenticatedUser
 
     const cookies = this.auth.cookiesWithTokens({
       access_token: account.access_token,
@@ -100,7 +111,7 @@ export class AuthController {
    * Логаут из приложения
    * @param {AuthenticatedUser} user Авторизованный пользователь
    * @param {Response} res Объект ответа
-   * @returns {Boolean} Результат логаута
+   * @returns {boolean} Результат логаута
    */
   @Post('logout')
   @HttpCode(200)
@@ -108,22 +119,37 @@ export class AuthController {
   async logout(
     @UseUser() user: AuthenticatedUser,
     @Res() res: Response,
-  ): Promise<Response<Boolean>> {
-    const completed = await this.auth.logout({
+  ): Promise<Response<boolean>> {
+    const result = await this.auth.logout({
       user_id: user.id,
       refresh_token: user.refresh_token,
     })
 
+    this.catchError(result)
+
     const cookies = this.auth.logoutCookies()
 
-    return injectCookies(res, cookies).send(completed)
+    return injectCookies(res, cookies).send(result)
   }
 
+  /**
+   * Обновление токенов аккаунта
+   * @param {AuthenticatdUser} user Текущий пользователь
+   * @param {Response} res Объект ответа запроса
+   * @returns {Tokens} Новая пара токенов
+   */
   @Post('refresh')
   @HttpCode(200)
   @UseGuards(RefreshGuard)
-  async refresh(@UseUser() user: AuthenticatedUser, @Res() res: Response) {
-    const refreshedTokens = await this.auth.refreshTokens(user)
+  async refresh(
+    @UseUser() user: AuthenticatedUser,
+    @Res() res: Response,
+  ): Promise<Response<Tokens>> {
+    const result = await this.auth.refreshToken(user)
+
+    this.catchError(result)
+
+    const refreshedTokens = result as Tokens
 
     const cookies = this.auth.cookiesWithTokens(refreshedTokens)
 
@@ -139,6 +165,19 @@ export class AuthController {
   @HttpCode(200)
   @UseAuth()
   async clearMe(@UseUser() user: AuthenticatedUser): Promise<boolean | null> {
-    return await this.auth.refreshClear(user.id)
+    return await this.auth.clearRefreshTokens(user.id)
+  }
+
+  /**
+   * Обработчик ошибок
+   * @param {unknown | APIError} data Результат запроса
+   * @returns {unknown} Обработанный запрос
+   */
+  private catchError<T>(data: T | APIError): T {
+    if (data instanceof APIError) {
+      throw new HttpException(data.message, data.status)
+    }
+
+    return data
   }
 }
