@@ -19,3 +19,16 @@ export class APIError extends Error {
     this.status = status ?? HttpStatus.INTERNAL_SERVER_ERROR
   }
 }
+
+export interface GraphqlError {
+  message: string
+  description: string
+  code: number
+}
+
+export interface HttpError {
+  path: string
+  status: string
+  message: string
+  description?: string
+}
