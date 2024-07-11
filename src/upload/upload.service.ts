@@ -1,4 +1,10 @@
-import { StreamableFile, Injectable, HttpStatus } from '@nestjs/common'
+import {
+  StreamableFile,
+  Injectable,
+  HttpStatus,
+  OnModuleInit,
+  Logger,
+} from '@nestjs/common'
 import { BucketItemStat, Client, S3Error } from 'minio'
 import { Permission, Upload } from '@prisma/client'
 import { InjectMinio } from 'nestjs-minio'
@@ -15,6 +21,7 @@ import { UploadRepository } from './upload.repository'
 
 // Утилиты
 import { publicBucketPolicy } from '@utils/s3'
+import { colorize } from '@utils/funcs'
 import { toWebp } from '@utils/sharp'
 
 // Интерфейсы
@@ -29,6 +36,9 @@ import { PaginatedResult } from '@interfaces/pagination'
 import { AuthenticatedUser } from '@interfaces/user'
 import { APIError } from '@interfaces/api-error'
 
+// Enums
+import { CONSOLE_COLOR } from '@enums/console-color'
+
 // DTO
 import { GetUploadsDto } from './dto/get-uploads.dto'
 
@@ -36,7 +46,7 @@ import { GetUploadsDto } from './dto/get-uploads.dto'
  * Сервис загрузок
  */
 @Injectable()
-export class UploadService {
+export class UploadService implements OnModuleInit {
   /**
    * Эндпойнт S3-хранилища
    */
@@ -70,17 +80,43 @@ export class UploadService {
    * @param {Client} s3 Клиент MinIO
    * @param {ConfigService} config Сервис конфигурации
    * @param {UploadRepository} upload Репозиторий загрузок
+   * @param {Logger} logger Логгер приложения
    */
   constructor(
     @InjectMinio() private readonly s3: Client,
     private readonly config: ConfigService,
     private readonly upload: UploadRepository,
+    private readonly logger: Logger,
   ) {
     this.publicBucket = config.gett<string>('MINIO_BUCKET_PUBLIC')
     this.defaultACL = config.gett<Permission>('MINIO_DEFAULT_ACL')
     this.endpoint = config.gett<string>('MINIO_ENDPOINT')
     this.bucket = config.gett<string>('MINIO_BUCKET')
     this.translit = translit()
+  }
+
+  /**
+   * Проверка на существование бакетов при инициализации модуля
+   */
+  async onModuleInit() {
+    const privateIsExist = await this.s3.bucketExists(this.bucket)
+    const publicIsExist = await this.s3.bucketExists(this.publicBucket)
+
+    if (!privateIsExist) {
+      this.logger.warn(
+        `Bucket ${colorize(this.bucket, CONSOLE_COLOR.PRIMARY)} ${colorize('not found!', CONSOLE_COLOR.WARN)}`,
+        'UploadService',
+      )
+      await this.createBucket(this.bucket)
+    }
+
+    if (!publicIsExist) {
+      this.logger.warn(
+        `Bucket ${colorize(this.publicBucket, CONSOLE_COLOR.PRIMARY)} ${colorize('not found!', CONSOLE_COLOR.WARN)}`,
+        'UploadService',
+      )
+      await this.createBucket(this.publicBucket, publicBucketPolicy)
+    }
   }
 
   /**
@@ -210,7 +246,7 @@ export class UploadService {
     }
 
     // Проверка существования бакета
-    s3File.bucket = await this.checkBucket(acl)
+    s3File.bucket = this.setBucket(acl)
 
     // Загрузка файла в хранилище
     try {
@@ -332,24 +368,12 @@ export class UploadService {
   /**
    * Назначение бакета для файла
    * @description
-   * * Проверяет бакет на существование и создаёт его при отсутствии
-   * * Назначает публичную политику бакета на основе доступа к файлу
+   * * Назначает бакет на основе политики доступа к фалйу
    * @param {string} acl Права доступа к файлу
    * @returns {string} Бакет для файла
    */
-  private async checkBucket(acl: string = this.defaultACL): Promise<string> {
-    const targetBucket = acl !== 'Public' ? this.bucket : this.publicBucket
-
-    const isExist = await this.s3.bucketExists(targetBucket)
-
-    if (!isExist) {
-      await this.s3.makeBucket(targetBucket)
-
-      if (acl === 'Public') {
-        await this.s3.setBucketPolicy(targetBucket, publicBucketPolicy)
-      }
-    }
-    return targetBucket
+  private setBucket(acl: string = this.defaultACL): string {
+    return acl !== 'Public' ? this.bucket : this.publicBucket
   }
 
   /**
@@ -416,5 +440,26 @@ export class UploadService {
     }
 
     return upload
+  }
+
+  /**
+   * Создание бакета в S3
+   * @param {string} bucketName Название бакета
+   * @param {string} bucketPolicy Политика доступа к бакету
+   */
+  private async createBucket(
+    bucketName: string,
+    bucketPolicy?: string,
+  ): Promise<void> {
+    await this.s3.makeBucket(bucketName)
+
+    if (bucketPolicy) {
+      await this.s3.setBucketPolicy(bucketName, bucketPolicy)
+    }
+
+    this.logger.log(
+      `Bucket ${colorize(bucketName, CONSOLE_COLOR.PRIMARY)} ${colorize('successfully created')}`,
+      'UploadService',
+    )
   }
 }

@@ -8,12 +8,20 @@ import * as cookieParser from 'cookie-parser'
 import { WinstonModule } from 'nest-winston'
 import * as Sentry from '@sentry/node'
 
-import { winstonOptions } from '@common/utils/winston'
-import { HandledExceptionFilter, SentryFilter } from '@common/filters'
+import { AppModule } from './app.module'
 
+// Сервисы
 import { ConfigService } from '@core/config'
 
-import { AppModule } from './app.module'
+// Фильтры
+import { HandledExceptionFilter, SentryFilter } from '@common/filters'
+
+// Утилиты
+import { winstonOptions } from '@utils/winston'
+import { colorize } from '@utils/funcs'
+
+// Enums
+import { CONSOLE_COLOR } from '@enums/console-color'
 
 /**
  * Точка входа в приложение
@@ -47,7 +55,7 @@ const bootstrap = async () => {
   try {
     await prismaHealthIndicator.pingCheck('Prisma', prisma)
     logger.log(
-      `Connection to database \x1b[36m${'successful'}\x1b[0m!`,
+      `Connection to database ${colorize('successfull', CONSOLE_COLOR.PRIMARY)}!`,
       'PrismaClient',
     )
   } catch (e) {
@@ -63,7 +71,7 @@ const bootstrap = async () => {
 
   await await app.listen(config.port).finally(() => {
     logger.log(
-      `Environment: \x1b[36m${config.environment.toUpperCase()}\x1b[0m | Port: \x1b[36m${config.port}\x1b[0m`,
+      `Environment: ${colorize(config.environment.toUpperCase(), CONSOLE_COLOR.PRIMARY)} | ${colorize('Port:')} ${colorize(config.port.toString(), CONSOLE_COLOR.PRIMARY)}`,
       'NestApplication',
     )
   })
