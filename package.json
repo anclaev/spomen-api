@@ -25,7 +25,8 @@
     "docs:serve": "compodoc -c .compodocrc -s",
     "prepare": "husky",
     "sentry:sourcemaps": "sentry-cli sourcemaps inject --org anclaev-ti --project spomen-api ./dist/src && sentry-cli sourcemaps upload --org anclaev-ti --project spomen-api ./dist/src",
-    "sentry:sourcemaps:production": "sentry-cli sourcemaps inject --org anclaev-ti --project spomen-api ./dist && sentry-cli sourcemaps upload --org anclaev-ti --project spomen-api ./dist"
+    "sentry:sourcemaps:production": "sentry-cli sourcemaps inject --org anclaev-ti --project spomen-api ./dist && sentry-cli sourcemaps upload --org anclaev-ti --project spomen-api ./dist",
+    "push": "./scripts/push.sh"
   },
   "dependencies": {
     "@apollo/server": "^4.10.4",
