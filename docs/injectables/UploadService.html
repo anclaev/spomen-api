@@ -1,0 +1,2050 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>Spomen API</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="icon" type="image/x-icon" href="../images/favicon.ico">
+	   <link rel="stylesheet" href="../styles/style.css">
+        <link rel="stylesheet" href="../styles/dark.css">
+    </head>
+    <body>
+          <script>
+               // Blocking script to avaoid flickering dark mode
+               // Dark mode toggle button
+               var useDark = window.matchMedia('(prefers-color-scheme: dark)');
+               var darkModeState = useDark.matches;
+               var $darkModeToggleSwitchers = document.querySelectorAll('.dark-mode-switch input');
+               var $darkModeToggles = document.querySelectorAll('.dark-mode-switch');
+               var darkModeStateLocal = localStorage.getItem('compodoc_darkmode-state');
+
+               function checkToggle(check) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].checked = check;
+                    }
+               }
+
+               function toggleDarkMode(state) {
+                    if (window.localStorage) {
+                         localStorage.setItem('compodoc_darkmode-state', state);
+                    }
+
+                    checkToggle(state);
+
+                    const hasClass = document.body.classList.contains('dark');
+
+                    if (state) {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.add('dark');
+                         }
+                         if (!hasClass) {
+                              document.body.classList.add('dark');
+                         }
+                    } else {
+                         for (var i = 0; i < $darkModeToggles.length; i++) {
+                              $darkModeToggles[i].classList.remove('dark');
+                         }
+                         if (hasClass) {
+                              document.body.classList.remove('dark');
+                         }
+                    }
+               }
+
+               useDark.addEventListener('change', function (evt) {
+                    toggleDarkMode(evt.matches);
+               });
+               if (darkModeStateLocal) {
+                    darkModeState = darkModeStateLocal === 'true';
+               }
+               toggleDarkMode(darkModeState);
+
+               if ($darkModeToggles.length > 0) {
+                    for (var i = 0; i < $darkModeToggleSwitchers.length; i++) {
+                         $darkModeToggleSwitchers[i].addEventListener('change', function (event) {
+                              darkModeState = !darkModeState;
+                              toggleDarkMode(darkModeState);
+                         });
+                    }
+               }
+          </script>
+
+        <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
+            <a href="../" class="navbar-brand">Spomen API</a>
+            <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
+        </div>
+
+        <div class="xs-menu menu" id="mobile-menu">
+                <div id="book-search-input" role="search"><input type="text" placeholder="Type to search"></div>            <compodoc-menu></compodoc-menu>
+        </div>
+
+        <div class="container-fluid main">
+           <div class="row main">
+               <div class="hidden-xs menu">
+                   <compodoc-menu mode="normal"></compodoc-menu>
+               </div>
+               <!-- START CONTENT -->
+               <div class="content injectable">
+                   <div class="content-data">
+
+
+
+
+
+
+
+
+<ol class="breadcrumb">
+  <li class="breadcrumb-item">Injectables</li>
+  <li class="breadcrumb-item" >UploadService</li>
+</ol>
+
+<ul class="nav nav-tabs" role="tablist">
+        <li class="nav-item">
+            <a href="#info" 
+                class="nav-link"
+                class="nav-link active"
+                role="tab" id="info-tab" data-bs-toggle="tab" data-link="info">Info</a>
+        </li>
+        <li class="nav-item">
+            <a href="#source" 
+                class="nav-link"
+                
+                role="tab" id="source-tab" data-bs-toggle="tab" data-link="source">Source</a>
+        </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane fade active in" id="info">
+        <p class="comment">
+            <h3>File</h3>
+        </p>
+        <p class="comment">
+            <code>src/upload/upload.service.ts</code>
+        </p>
+
+
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>Сервис загрузок</p>
+
+            </p>
+
+
+
+            <section data-compodoc="block-index">
+    <h3 id="index">Index</h3>
+    <table class="table table-sm table-bordered index-table">
+        <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Properties</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#bucket" >bucket</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#defaultACL" >defaultACL</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#endpoint" >endpoint</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#publicBucket" >publicBucket</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#translit" >translit</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <h6><b>Methods</b></h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <ul class="index-list">
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#checkObject" >checkObject</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#createBucket" >createBucket</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#deleteFile" >deleteFile</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getFile" >getFile</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getUploads" >getUploads</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#handleS3Error" >handleS3Error</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#onModuleInit" >onModuleInit</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#putFile" >putFile</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#saveUpload" >saveUpload</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                <a href="#setBucket" >setBucket</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#uploadIsExists" >uploadIsExists</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Private</span>
+                                    <span class="modifier">Async</span>
+                                <a href="#verifyUploadPermissions" >verifyUploadPermissions</a>
+                            </li>
+                        </ul>
+                    </td>
+                </tr>
+
+
+
+
+
+        </tbody>
+    </table>
+</section>
+
+            <section data-compodoc="block-constructor">
+    <h3 id="constructor">Constructor</h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+<code>constructor(s3: Client, config: <a href="../injectables/ConfigService.html" target="_self">ConfigService</a>, upload: <a href="../injectables/UploadRepository.html" target="_self">UploadRepository</a>, logger: Logger)</code>
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="73" class="link-to-prism">src/upload/upload.service.ts:73</a></div>
+                            </td>
+                        </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                            <div class="io-description"><p>Конструктор сервиса</p>
+<ul>
+<li>Устанавливает текущий бакет приложения из конфигурации</li>
+<li>Инициализирует сервис транслита</li>
+</ul>
+</div>
+                            <div>
+                                    <b>Parameters :</b>
+                                    <table class="params">
+                                        <thead>
+                                            <tr>
+                                                <td>Name</td>
+                                                    <td>Type</td>
+                                                <td>Optional</td>
+                                                    <td>Description</td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                                <tr>
+                                                        <td>s3</td>
+                                                  
+                                                        <td>
+                                                                    <code>Client</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                        <td>
+                                                                <p>Клиент MinIO</p>
+
+                                                        </td>
+                                                </tr>
+                                                <tr>
+                                                        <td>config</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/ConfigService.html" target="_self" >ConfigService</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                        <td>
+                                                                <p>Сервис конфигурации</p>
+
+                                                        </td>
+                                                </tr>
+                                                <tr>
+                                                        <td>upload</td>
+                                                  
+                                                        <td>
+                                                                        <code><a href="../injectables/UploadRepository.html" target="_self" >UploadRepository</a></code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                        <td>
+                                                                <p>Репозиторий загрузок</p>
+
+                                                        </td>
+                                                </tr>
+                                                <tr>
+                                                        <td>logger</td>
+                                                  
+                                                        <td>
+                                                                    <code>Logger</code>
+                                                        </td>
+                                                  
+                                                    <td>
+                                                            No
+                                                    </td>
+                                                    
+                                                        <td>
+                                                                <p>Логгер приложения</p>
+
+                                                        </td>
+                                                </tr>
+                                        </tbody>
+                                    </table>
+                            </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+</section>
+
+            <section data-compodoc="block-methods">
+    
+    <h3 id="methods">
+        Methods
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="checkObject"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>checkObject</b></span>
+                        <a href="#checkObject"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>checkObject(bucket: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, path: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="385"
+                                    class="link-to-prism">src/upload/upload.service.ts:385</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Проверка существования файла в хранилище</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>bucket</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Бакет файла</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>path</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Путь к файлу в хранилище</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/APIError.html" target="_self" >Promise&lt;BucketItemStat | APIError&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>Результат проверки</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="createBucket"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>createBucket</b></span>
+                        <a href="#createBucket"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>createBucket(bucketName: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, bucketPolicy?: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="450"
+                                    class="link-to-prism">src/upload/upload.service.ts:450</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Создание бакета в S3</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>bucketName</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Название бакета</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>bucketPolicy</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Политика доступа к бакету</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;void&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="deleteFile"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>deleteFile</b></span>
+                        <a href="#deleteFile"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>deleteFile(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="284"
+                                    class="link-to-prism">src/upload/upload.service.ts:284</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Удаление файла по идентификатору</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>id</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Идентификатор файла</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/APIError.html" target="_self" >Promise&lt;Upload | APIError&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>Удалённый файл</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getFile"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getFile</b></span>
+                        <a href="#getFile"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getFile(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>, user: <a href="../interfaces/AuthenticatedUser.html" target="_self">AuthenticatedUser</a>, res: Response)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="154"
+                                    class="link-to-prism">src/upload/upload.service.ts:154</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Получение файла по ID</p>
+<ul>
+<li>Возвращает ошибку 404, если загрузка не найдена</li>
+<li>Возвращает ошибку 403, если к загрузке нет доступа</li>
+</ul>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>id</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Идентификатор загрузки</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>user</td>
+                                            <td>
+                                                            <code><a href="../interfaces/AuthenticatedUser.html" target="_self" >AuthenticatedUser</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Текущий пользователь системы</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>res</td>
+                                            <td>
+                                                        <code>Response</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Объект запроса</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../interfaces/File.html" target="_self" >Promise&lt;StreamableFile | APIError&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>Стрим файла из хранилища</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getUploads"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getUploads</b></span>
+                        <a href="#getUploads"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getUploads(undefined: <a href="../classes/GetUploadsDto.html" target="_self">GetUploadsDto</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="127"
+                                    class="link-to-prism">src/upload/upload.service.ts:127</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Получение списка загрузок</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                            <code><a href="../classes/GetUploadsDto.html" target="_self" >GetUploadsDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../interfaces/PaginatedResult.html" target="_self" >Promise&lt;PaginatedResult&lt;Upload[]&gt;&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>Список загрузок</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="handleS3Error"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>handleS3Error</b></span>
+                        <a href="#handleS3Error"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>handleS3Error(e: S3Error)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="422"
+                                    class="link-to-prism">src/upload/upload.service.ts:422</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Обработка ошибки S3 (MinIO)</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>e</td>
+                                            <td>
+                                                        <code>S3Error</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Объект ошибки S3</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/APIError.html" target="_self" >APIError</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>Преобразованная ошибка</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="onModuleInit"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>onModuleInit</b></span>
+                        <a href="#onModuleInit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>onModuleInit()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="101"
+                                    class="link-to-prism">src/upload/upload.service.ts:101</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Проверка на существование бакетов при инициализации модуля</p>
+</div>
+
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="putFile"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>putFile</b></span>
+                        <a href="#putFile"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>putFile(undefined: <a href="../undefineds/PutFileOptions.html" target="_self">PutFileOptions</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="211"
+                                    class="link-to-prism">src/upload/upload.service.ts:211</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Загрузка файла в систему</p>
+<ul>
+<li>Преобразовывает изображение в webp</li>
+<li>Преобразовывает имя файла в транслит (для кириллицы)</li>
+<li>Загружает файл в S3-хранилище (MinIO)</li>
+<li>Сохраняет данные о файле в базе данных</li>
+<li>Удаляет файл из хранилища в случае ошибки БД</li>
+</ul>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#PutFileOptions" target="_self" >PutFileOptions</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/APIError.html" target="_self" >Promise&lt;Upload | APIError&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>Данные о загрузке в БД</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="saveUpload"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>saveUpload</b></span>
+                        <a href="#saveUpload"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>saveUpload(undefined: <a href="../undefineds/SaveUploadOptions.html" target="_self">SaveUploadOptions</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="332"
+                                    class="link-to-prism">src/upload/upload.service.ts:332</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Сохранение загруженного файла в базе данных</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#SaveUploadOptions" target="_self" >SaveUploadOptions</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/APIError.html" target="_self" >Promise&lt;Upload | APIError&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>Запись в базе данных</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="setBucket"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>setBucket</b></span>
+                        <a href="#setBucket"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>setBucket(acl: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="375"
+                                    class="link-to-prism">src/upload/upload.service.ts:375</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Назначение бакета для файла</p>
+<ul>
+<li>Назначает бакет на основе политики доступа к фалйу</li>
+</ul>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Default value</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>acl</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+                                            <td>
+                                                    <code>this.defaultACL</code>
+                                            </td>
+
+                                            <td>
+                                                    <p>Права доступа к файлу</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>Бакет для файла</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="uploadIsExists"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>uploadIsExists</b></span>
+                        <a href="#uploadIsExists"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>uploadIsExists(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="431"
+                                    class="link-to-prism">src/upload/upload.service.ts:431</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Проверка на существование загрузки в базед анных</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>id</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Идентификатор загрузки</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/APIError.html" target="_self" >Promise&lt;Upload | APIError&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>Загрузка в базе данных</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="verifyUploadPermissions"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                            <span class="modifier">Async</span>
+                        <span ><b>verifyUploadPermissions</b></span>
+                        <a href="#verifyUploadPermissions"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>verifyUploadPermissions(upload: Upload, user: <a href="../interfaces/AuthenticatedUser.html" target="_self">AuthenticatedUser</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="402"
+                                    class="link-to-prism">src/upload/upload.service.ts:402</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Проверка доступа к файлу</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>upload</td>
+                                            <td>
+                                                        <code>Upload</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Загрузка в базе данных</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>user</td>
+                                            <td>
+                                                            <code><a href="../interfaces/AuthenticatedUser.html" target="_self" >AuthenticatedUser</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Пользователь системы</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;boolean&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>Флаг доступа</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+            <section data-compodoc="block-properties">
+    
+    <h3 id="inputs">
+        Properties
+    </h3>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="bucket"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>bucket</b></span>
+                        <a href="#bucket"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="58" class="link-to-prism">src/upload/upload.service.ts:58</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Бакет приложения</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="defaultACL"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>defaultACL</b></span>
+                        <a href="#defaultACL"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>Permission</code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="73" class="link-to-prism">src/upload/upload.service.ts:73</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Базовые права доступа к файлу</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="endpoint"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>endpoint</b></span>
+                        <a href="#endpoint"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="53" class="link-to-prism">src/upload/upload.service.ts:53</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Эндпойнт S3-хранилища</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="publicBucket"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>publicBucket</b></span>
+                        <a href="#publicBucket"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="63" class="link-to-prism">src/upload/upload.service.ts:63</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Публичный бакет приложения</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="translit"></a>
+                    <span class="name">
+                            <span class="modifier">Private</span>
+                        <span ><b>translit</b></span>
+                        <a href="#translit"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://www.typescriptlang.org/docs/handbook/basic-types.html" target="_blank" >any</a></code>
+
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="68" class="link-to-prism">src/upload/upload.service.ts:68</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Сервис работы с транслитом</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</section>
+
+    </div>
+
+
+    <div class="tab-pane fade  tab-source-code" id="source">
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
+  StreamableFile,
+  Injectable,
+  HttpStatus,
+  OnModuleInit,
+  Logger,
+} from &#x27;@nestjs/common&#x27;
+import { BucketItemStat, Client, S3Error } from &#x27;minio&#x27;
+import { Permission, Upload } from &#x27;@prisma/client&#x27;
+import { InjectMinio } from &#x27;nestjs-minio&#x27;
+import { Response } from &#x27;express&#x27;
+import { v4 as uuid } from &#x27;uuid&#x27;
+
+const translit &#x3D; require(&#x27;cyrillic-to-translit-js&#x27;)
+
+// Сервисы
+import { ConfigService } from &#x27;@core/config&#x27;
+
+// Репозитории
+import { UploadRepository } from &#x27;./upload.repository&#x27;
+
+// Утилиты
+import { publicBucketPolicy } from &#x27;@utils/s3&#x27;
+import { colorize } from &#x27;@utils/funcs&#x27;
+import { toWebp } from &#x27;@utils/sharp&#x27;
+
+// Интерфейсы
+import {
+  Metadata,
+  PutFileOptions,
+  SaveUploadOptions,
+  S3File,
+} from &#x27;@interfaces/upload&#x27;
+
+import { PaginatedResult } from &#x27;@interfaces/pagination&#x27;
+import { AuthenticatedUser } from &#x27;@interfaces/user&#x27;
+import { APIError } from &#x27;@interfaces/api-error&#x27;
+
+// Enums
+import { CONSOLE_COLOR } from &#x27;@enums/console-color&#x27;
+
+// DTO
+import { GetUploadsDto } from &#x27;./dto/get-uploads.dto&#x27;
+
+/**
+ * Сервис загрузок
+ */
+@Injectable()
+export class UploadService implements OnModuleInit {
+  /**
+   * Эндпойнт S3-хранилища
+   */
+  private endpoint: string
+
+  /**
+   * Бакет приложения
+   */
+  private bucket: string
+
+  /**
+   * Публичный бакет приложения
+   */
+  private publicBucket: string
+
+  /**
+   * Сервис работы с транслитом
+   */
+  private translit: any
+
+  /**
+   * Базовые права доступа к файлу
+   */
+  private defaultACL: Permission
+
+  /**
+   * Конструктор сервиса
+   * @description
+   * * Устанавливает текущий бакет приложения из конфигурации
+   * * Инициализирует сервис транслита
+   * @param {Client} s3 Клиент MinIO
+   * @param {ConfigService} config Сервис конфигурации
+   * @param {UploadRepository} upload Репозиторий загрузок
+   * @param {Logger} logger Логгер приложения
+   */
+  constructor(
+    @InjectMinio() private readonly s3: Client,
+    private readonly config: ConfigService,
+    private readonly upload: UploadRepository,
+    private readonly logger: Logger,
+  ) {
+    this.publicBucket &#x3D; config.gett&lt;string&gt;(&#x27;MINIO_BUCKET_PUBLIC&#x27;)
+    this.defaultACL &#x3D; config.gett&lt;Permission&gt;(&#x27;MINIO_DEFAULT_ACL&#x27;)
+    this.endpoint &#x3D; config.gett&lt;string&gt;(&#x27;MINIO_ENDPOINT&#x27;)
+    this.bucket &#x3D; config.gett&lt;string&gt;(&#x27;MINIO_BUCKET&#x27;)
+    this.translit &#x3D; translit()
+  }
+
+  /**
+   * Проверка на существование бакетов при инициализации модуля
+   */
+  async onModuleInit() {
+    const privateIsExist &#x3D; await this.s3.bucketExists(this.bucket)
+    const publicIsExist &#x3D; await this.s3.bucketExists(this.publicBucket)
+
+    if (!privateIsExist) {
+      this.logger.warn(
+        &#x60;Bucket ${colorize(this.bucket, CONSOLE_COLOR.PRIMARY)} ${colorize(&#x27;not found!&#x27;, CONSOLE_COLOR.WARN)}&#x60;,
+        &#x27;UploadService&#x27;,
+      )
+      await this.createBucket(this.bucket)
+    }
+
+    if (!publicIsExist) {
+      this.logger.warn(
+        &#x60;Bucket ${colorize(this.publicBucket, CONSOLE_COLOR.PRIMARY)} ${colorize(&#x27;not found!&#x27;, CONSOLE_COLOR.WARN)}&#x60;,
+        &#x27;UploadService&#x27;,
+      )
+      await this.createBucket(this.publicBucket, publicBucketPolicy)
+    }
+  }
+
+  /**
+   * Получение списка загрузок
+   * @param {GetUploadsDto} Параметры поиска
+   * @returns {PaginatedResult&lt;Upload[]&gt;} Список загрузок
+   */
+  async getUploads({
+    pagination,
+    user,
+  }: GetUploadsDto): Promise&lt;PaginatedResult&lt;Upload[]&gt;&gt; {
+    const { page, size } &#x3D; pagination
+
+    return await this.upload.findMany({
+      page,
+      size,
+      where: {
+        owner_id: {
+          equals: user.id,
+        },
+      },
+    })
+  }
+
+  /**
+   * Получение файла по ID
+   * @description
+   * * Возвращает ошибку 404, если загрузка не найдена
+   * * Возвращает ошибку 403, если к загрузке нет доступа
+   * @param {String} id Идентификатор загрузки
+   * @param {AuthenticatedUser} user Текущий пользователь системы
+   * @param {Response} res Объект запроса
+   * @returns {StreamableFile | APIError} Стрим файла из хранилища
+   */
+  async getFile(
+    id: string,
+    user: AuthenticatedUser,
+    res: Response,
+  ): Promise&lt;StreamableFile | APIError&gt; {
+    const upload &#x3D; await this.uploadIsExists(id)
+
+    if (upload instanceof APIError) {
+      return upload
+    }
+
+    // Проверка доступа к файлу
+    const isAccessed &#x3D; await this.verifyUploadPermissions(upload, user)
+
+    if (!isAccessed) {
+      return new APIError(HttpStatus.FORBIDDEN)
+    }
+
+    // Проверка существования файла в хранилище
+    const result &#x3D; await this.checkObject(upload.bucket, upload.path)
+
+    if (result instanceof APIError) {
+      // Удаление данных о загрузке при отсутствии в хранилище
+      try {
+        await this.upload.delete({
+          where: {
+            id: upload.id,
+          },
+        })
+      } catch (e) {
+        return new APIError(HttpStatus.NOT_FOUND, &#x27;Загрузка не найдена&#x27;)
+      }
+    }
+
+    // Прикрепление типа файла к запросу
+    res.set({
+      &#x27;Content-Type&#x27;:
+        (result as BucketItemStat).metaData[&#x27;content-type&#x27;] ??
+        &#x27;multipart/form-data&#x27;,
+    })
+
+    return new StreamableFile(
+      await this.s3.getObject(upload!.bucket, upload!.path),
+    )
+  }
+
+  /**
+   * Загрузка файла в систему
+   * @description
+   * * Преобразовывает изображение в webp
+   * * Преобразовывает имя файла в транслит (для кириллицы)
+   * * Загружает файл в S3-хранилище (MinIO)
+   * * Сохраняет данные о файле в базе данных
+   * * Удаляет файл из хранилища в случае ошибки БД
+   * @param {PutFileOptions} options Данные загружаемого файла
+   * @returns {Upload | APIError} Данные о загрузке в БД
+   */
+  async putFile({
+    file,
+    path,
+    owner,
+    acl,
+    compress &#x3D; false,
+  }: PutFileOptions): Promise&lt;Upload | APIError&gt; {
+    // Преобразование изображения в webp
+    if (file.mime &amp;&amp; file.mime.match(/^image\/(.*)/)) {
+      try {
+        file.buffer &#x3D; await toWebp(file.buffer, compress)
+      } catch (e) {
+        return new APIError(
+          HttpStatus.INTERNAL_SERVER_ERROR,
+          &#x27;Ошибка преобразования изображения&#x27;,
+        )
+      }
+      file.ext &#x3D; &#x27;webp&#x27;
+    }
+
+    const s3File &#x3D; new S3File()
+
+    // Преобразование имени файла в транслит (для кириллицы)
+    s3File.name &#x3D; this.translit.transform(file.name.replace(&#x27; &#x27;, &#x27;_&#x27;))
+
+    // Путь к файлу в хранилище
+    s3File.path &#x3D; &#x60;${path}/${s3File.name}-${uuid()}.${file.ext}&#x60;
+
+    // Метаданные загрузки, по-умолчанию - публичная
+    const metadata: Metadata &#x3D; {
+      owner,
+      name: s3File.name,
+      ext: file.ext,
+      acl: acl ?? &#x27;Public&#x27;,
+      &#x27;Content-Type&#x27;: file.mime ?? &#x27;multipart/form-data&#x27;,
+    }
+
+    // Проверка существования бакета
+    s3File.bucket &#x3D; this.setBucket(acl)
+
+    // Загрузка файла в хранилище
+    try {
+      await this.s3.putObject(
+        s3File.bucket,
+        s3File.path,
+        file.buffer,
+        undefined,
+        metadata,
+      )
+    } catch (e: unknown) {
+      return this.handleS3Error(e as S3Error)
+    }
+
+    const result &#x3D; await this.saveUpload({
+      owner,
+      file,
+      s3File,
+      permissions: [acl ?? this.defaultACL],
+    })
+
+    if (result instanceof APIError) {
+      // Компенсирующая транзакция, если файл не сохранился в БД
+      await this.s3.removeObject(this.bucket, s3File.path)
+    }
+
+    return result
+  }
+
+  /**
+   * Удаление файла по идентификатору
+   * @param {string} id Идентификатор файла
+   * @returns {Upload} Удалённый файл
+   */
+  async deleteFile(id: string): Promise&lt;Upload | APIError&gt; {
+    const upload &#x3D; await this.uploadIsExists(id)
+
+    if (upload instanceof APIError) {
+      return upload
+    }
+
+    // Проверка на то, создан ли файл сторонним сервисом
+    if (upload.is_system) {
+      return new APIError(HttpStatus.FORBIDDEN)
+    }
+
+    // Удаление данных о загрузке из базы
+    await this.upload.delete({
+      where: {
+        id: upload.id,
+      },
+    })
+
+    try {
+      await this.s3.removeObject(upload.bucket, upload.path)
+    } catch (e: unknown) {
+      // Компенсирующая транзакция, если файл не был удалён из хранилища
+      await this.upload.create({
+        data: {
+          ...upload,
+          permissions: {
+            set: upload.permissions,
+          },
+          owner: {
+            connect: {
+              id: upload.owner_id,
+            },
+          },
+        },
+      })
+
+      return this.handleS3Error(e as S3Error)
+    }
+
+    return upload
+  }
+
+  /**
+   * Сохранение загруженного файла в базе данных
+   * @param {SaveUploadOptions} options Данные файла
+   * @returns {Upload | APIError} Запись в базе данных
+   */
+  private async saveUpload({
+    file,
+    s3File,
+    owner,
+    permissions,
+  }: SaveUploadOptions): Promise&lt;Upload | APIError&gt; {
+    const id &#x3D; uuid()
+    const url &#x3D; permissions.find((item) &#x3D;&gt; item &#x3D;&#x3D;&#x3D; &#x27;Public&#x27;)
+      ? &#x60;${this.endpoint}/${s3File.bucket}/${s3File.path}&#x60;
+      : &#x60;${this.config.apiEndpoint}/upload/file/${id}&#x60;
+
+    try {
+      return await this.upload.create({
+        data: {
+          id,
+          name: file.name,
+          ext: file.ext,
+          url,
+          file_name: s3File.name,
+          bucket: s3File.bucket,
+          path: s3File.path,
+          permissions: {
+            set: permissions,
+          },
+          owner: {
+            connect: {
+              username: owner,
+            },
+          },
+        },
+      })
+    } catch (e) {
+      return new APIError(HttpStatus.BAD_REQUEST, e.message)
+    }
+  }
+
+  /**
+   * Назначение бакета для файла
+   * @description
+   * * Назначает бакет на основе политики доступа к фалйу
+   * @param {string} acl Права доступа к файлу
+   * @returns {string} Бакет для файла
+   */
+  private setBucket(acl: string &#x3D; this.defaultACL): string {
+    return acl !&#x3D;&#x3D; &#x27;Public&#x27; ? this.bucket : this.publicBucket
+  }
+
+  /**
+   * Проверка существования файла в хранилище
+   * @param {string} bucket Бакет файла
+   * @param {string} path Путь к файлу в хранилище
+   * @returns {BucketItemStat | APIError} Результат проверки
+   */
+  private async checkObject(
+    bucket: string,
+    path: string,
+  ): Promise&lt;BucketItemStat | APIError&gt; {
+    try {
+      return await this.s3.statObject(bucket, path)
+    } catch (e) {
+      return this.handleS3Error(e as S3Error)
+    }
+  }
+
+  /**
+   * Проверка доступа к файлу
+   * @param {Upload} upload Загрузка в базе данных
+   * @param {AuthenticatedUser} user Пользователь системы
+   * @returns {boolean} Флаг доступа
+   */
+  private async verifyUploadPermissions(
+    upload: Upload,
+    user: AuthenticatedUser,
+  ): Promise&lt;boolean&gt; {
+    if (user.roles.find((role) &#x3D;&gt; role &#x3D;&#x3D;&#x3D; &#x27;Administrator&#x27;)) {
+      return true
+    }
+
+    return !!upload.permissions.find(
+      (item) &#x3D;&gt; item &#x3D;&#x3D;&#x3D; Permission.Public || upload.owner_id &#x3D;&#x3D;&#x3D; user.id,
+    )
+
+    // TODO: Проверка доступа на уровне таймлайна, воспоминания, чата
+  }
+
+  /**
+   * Обработка ошибки S3 (MinIO)
+   * @param {S3APIError} e Объект ошибки S3
+   * @return {APIError} Преобразованная ошибка
+   */
+  private handleS3Error(e: S3Error): APIError {
+    return new APIError(HttpStatus.INTERNAL_SERVER_ERROR, e.message)
+  }
+
+  /**
+   * Проверка на существование загрузки в базед анных
+   * @param {string} id Идентификатор загрузки
+   * @returns {Upload | APIError} Загрузка в базе данных
+   */
+  private async uploadIsExists(id: string): Promise&lt;Upload | APIError&gt; {
+    const upload &#x3D; await this.upload.findOne({
+      where: {
+        id,
+      },
+    })
+
+    if (!upload) {
+      return new APIError(HttpStatus.NOT_FOUND, &#x27;Загрузка не найдена&#x27;)
+    }
+
+    return upload
+  }
+
+  /**
+   * Создание бакета в S3
+   * @param {string} bucketName Название бакета
+   * @param {string} bucketPolicy Политика доступа к бакету
+   */
+  private async createBucket(
+    bucketName: string,
+    bucketPolicy?: string,
+  ): Promise&lt;void&gt; {
+    await this.s3.makeBucket(bucketName)
+
+    if (bucketPolicy) {
+      await this.s3.setBucketPolicy(bucketName, bucketPolicy)
+    }
+
+    this.logger.log(
+      &#x60;Bucket ${colorize(bucketName, CONSOLE_COLOR.PRIMARY)} ${colorize(&#x27;successfully created&#x27;)}&#x60;,
+      &#x27;UploadService&#x27;,
+    )
+  }
+}
+</code></pre>
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                   </div><div class="search-results">
+    <div class="has-results">
+        <h1 class="search-results-title"><span class='search-results-count'></span> results matching "<span class='search-query'></span>"</h1>
+        <ul class="search-results-list"></ul>
+    </div>
+    <div class="no-results">
+        <h1 class="search-results-title">No results matching "<span class='search-query'></span>"</h1>
+    </div>
+</div>
+</div>
+               <!-- END CONTENT -->
+           </div>
+       </div>
+
+          <label class="dark-mode-switch">
+               <input type="checkbox">
+               <span class="slider">
+                    <svg class="slider-icon" viewBox="0 0 24 24" fill="none" height="20" stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" width="20" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+                    </svg>
+               </span>
+          </label>
+
+       <script>
+            var COMPODOC_CURRENT_PAGE_DEPTH = 1;
+            var COMPODOC_CURRENT_PAGE_CONTEXT = 'injectable';
+            var COMPODOC_CURRENT_PAGE_URL = 'UploadService.html';
+            var MAX_SEARCH_RESULTS = 15;
+       </script>
+
+       <script src="../js/libs/custom-elements.min.js"></script>
+       <script src="../js/libs/lit-html.js"></script>
+
+       <script src="../js/menu-wc.js" defer></script>
+       <script nomodule src="../js/menu-wc_es5.js" defer></script>
+
+       <script src="../js/libs/bootstrap-native.js"></script>
+
+       <script src="../js/libs/es6-shim.min.js"></script>
+       <script src="../js/libs/EventDispatcher.js"></script>
+       <script src="../js/libs/promise.min.js"></script>
+       <script src="../js/libs/zepto.min.js"></script>
+
+       <script src="../js/compodoc.js"></script>
+
+       <script src="../js/tabs.js"></script>
+       <script src="../js/menu.js"></script>
+       <script src="../js/libs/clipboard.min.js"></script>
+       <script src="../js/libs/prism.js"></script>
+       <script src="../js/sourceCode.js"></script>
+          <script src="../js/search/search.js"></script>
+          <script src="../js/search/lunr.min.js"></script>
+          <script src="../js/search/search-lunr.js"></script>
+          <script src="../js/search/search_index.js"></script>
+       <script src="../js/lazy-load-graphs.js"></script>
+
+
+    </body>
+</html>

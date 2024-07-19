@@ -1,14 +1,19 @@
 import { PrismaService } from 'nestjs-prisma'
 import { Injectable } from '@nestjs/common'
-
 import { Account } from '@prisma/client'
 
 import {
+  AccountOrderByWithRelationInput,
   CreateOneAccountArgs,
-  FindManyAccountArgs,
-  FindUniqueAccountArgs,
-  UpdateOneAccountArgs,
-} from '@common/graphql/index'
+  AccountWhereInput,
+} from '@graphql'
+
+// Интерфейсы
+import { AccountFindUniqueDto, AccountUpdateDto } from '@interfaces/account'
+import { PaginatedResult } from '@interfaces/pagination'
+
+// Утилиты
+import { paginator } from '@utils/paginator'
 
 /**
  * Репозиторий аккаунта
@@ -23,44 +28,59 @@ export class AccountRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   /**
-   * Создание аккаунта в базе данных
-   * @param {CreateOneAccountArgs} args Данные нового аккаунта
-   * @returns {Account | null} Созданный аккаунт
-   */
-  async create(args: CreateOneAccountArgs): Promise<Account | null> {
-    const alreadyExist = await this.findOne({
-      where: { username: args.data.username },
-    })
-
-    if (alreadyExist) return null
-
-    return await this.prisma.account.create(args)
-  }
-
-  /**
-   * Обновление аккаунта в базе данных
-   * @param {UpdateOneAccountArgs} args Данные для обновления
-   * @returns {Account | null} Обновлённый аккаунт
-   */
-  async update(args: UpdateOneAccountArgs): Promise<Account | null> {
-    return await this.prisma.account.update(args)
-  }
-
-  /**
    * Получение аккаунта по уникальному полю
-   * @param {FindUniqueAccountArgs} args Уникальные поля для отбора
-   * @returns {Account | null} Аккаунт в системе
+   * @param {AccountFindUniqueDto} args Уникальные поля для отбора
+   * @returns {Account} Загрузка в системе
    */
-  async findOne(args: FindUniqueAccountArgs): Promise<Account | null> {
-    return await this.prisma.account.findUnique(args)
+  async findOne(args: AccountFindUniqueDto): Promise<Account | null> {
+    return this.prisma.account.findUnique(args)
   }
 
   /**
    * Получение множества аккаунтов по полям отбора
    * @param {FindManyAccountArgs} args Поля для отбора
-   * @returns {Account[]} Аккаунты в системе
+   * @returns {Account[]} Загрузки в базе данных
    */
-  async findMany(args: FindManyAccountArgs): Promise<Account[]> {
-    return await this.prisma.account.findMany(args)
+  async findMany({
+    where,
+    orderBy,
+    page,
+    size = 10,
+  }: {
+    where?: AccountWhereInput
+    orderBy?: AccountOrderByWithRelationInput
+    page?: number
+    size?: number
+  }): Promise<PaginatedResult<Account[]>> {
+    return paginator({
+      page,
+      perPage: size,
+    })(
+      this.prisma.account,
+      {
+        where,
+        orderBy,
+      },
+      {
+        page,
+      },
+    )
+  }
+  /**
+   * Создание аккаунта в базе данных
+   * @param {CreateOneAccountArgs} args Данные нового аккаунта
+   * @returns {Account} Созданный аккаунт
+   */
+  async create(args: CreateOneAccountArgs): Promise<Account> {
+    return this.prisma.account.create(args)
+  }
+
+  /**
+   * Обновление аккаунта в базе данных
+   * @param {UpdateOneAccountArgs} args Данные для обновления
+   * @returns {Account} Обновлённый аккаунт
+   */
+  async update(args: AccountUpdateDto): Promise<Account> {
+    return this.prisma.account.update(args)
   }
 }

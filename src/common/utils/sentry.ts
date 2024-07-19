@@ -1,7 +1,13 @@
 import { nodeProfilingIntegration } from '@sentry/profiling-node'
 import * as Sentry from '@sentry/node'
 
-const filters = [/Unauthorized/i, /Forbidden/i, /BadRequest/i, /NotFound/i]
+const filters = [
+  /Unauthorized/i,
+  /Forbidden/i,
+  /BadRequest/i,
+  /NotFound/i,
+  /Conflict/i,
+]
 
 const filterSentryEvents = (
   event: Sentry.ErrorEvent,
@@ -12,10 +18,6 @@ const filterSentryEvents = (
     )
 
     if (filtered.length > 0) return null
-  }
-
-  if (process.env.NODE_ENV === 'local') {
-    console.log(event)
   }
 
   return event

@@ -1,7 +1,8 @@
-import { Sex } from '@enums/sex'
-import { Account } from '@graphql/index'
+import { Account } from '@graphql'
 
 import { AuthenticatedUser, User } from '@interfaces/user'
+
+import { Sex } from '@enums/sex'
 
 export const mockAccount: Account = {
   id: '1',
@@ -20,6 +21,7 @@ export const mockAccount: Account = {
   passkey: null,
   sex: Sex.None,
   refresh_tokens: [],
+  avatarId: null,
 }
 
 export const mockUser: User = {
@@ -36,6 +38,8 @@ export const mockUser: User = {
   username: 'test',
   passkey: null,
   sex: Sex.None,
+  avatar: null,
+  avatarId: null,
 }
 
 export const mockAuthenticatedUser: AuthenticatedUser = {

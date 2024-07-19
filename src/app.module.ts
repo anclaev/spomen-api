@@ -11,6 +11,5 @@ import { CoreModule } from '@/core/core.module'
  */
 @Module({
   imports: [CoreModule, AccountModule, AuthModule, VKIDModule, UploadModule],
-  providers: [],
 })
 export class AppModule {}

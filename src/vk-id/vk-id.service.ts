@@ -1,11 +1,11 @@
-import { BadRequestException, Injectable } from '@nestjs/common'
+import { BadRequestException, Injectable, HttpStatus } from '@nestjs/common'
 import { HttpService } from '@nestjs/axios'
 import { firstValueFrom } from 'rxjs'
 
+// Сервисы
 import { ConfigService } from '@core/config'
 
-import { VK_API } from '@enums/vk-api'
-
+// Интерфейсы
 import {
   VK_API_RESPONSE,
   VKIDUser,
@@ -16,13 +16,29 @@ import {
   VKID_USERS_GET_RESPONSE,
 } from '@interfaces/vk-id'
 
+import { APIError } from '@interfaces/api-error'
+
+// Перечисления
+import { VK_API } from '@enums/vk-api'
+
+/**
+ * Сервис работы с VKID
+ */
 @Injectable()
 export class VKIDService {
+  /**
+   * Параметры VKID
+   */
   private options: VKID_OPTIONS
 
+  /**
+   * Конструктор сервиса работы с VKID
+   * @param {ConfigService} config Сервис конфигурации
+   * @param {HttpService} http Сервис работы с HTTP
+   */
   constructor(
-    private readonly http: HttpService,
     private readonly config: ConfigService,
+    private readonly http: HttpService,
   ) {
     this.options = {
       url: this.config.gett('VK_API_URL'),
@@ -40,15 +56,17 @@ export class VKIDService {
   async exchangeToken({
     token,
     uuid,
-  }: VKID_EXCHANGE_TOKEN_PAYLOAD): Promise<VKID_EXCHANGE_TOKEN_RESPONSE> {
-    let url = `${this.options.url}${VK_API.EXCHANGE_SILENT_AUTH_TOKEN}?v=${this.options.version}&token=${token}&access_token=${this.options.service}&uuid=${uuid}`
+  }: VKID_EXCHANGE_TOKEN_PAYLOAD): Promise<
+    VKID_EXCHANGE_TOKEN_RESPONSE | APIError
+  > {
+    const url = `${this.options.url}${VK_API.EXCHANGE_SILENT_AUTH_TOKEN}?v=${this.options.version}&token=${token}&access_token=${this.options.service}&uuid=${uuid}`
 
     const res = await firstValueFrom(
       this.http.get<VK_API_RESPONSE<VKID_EXCHANGE_TOKEN_RESPONSE>>(url),
     ).then(({ data }) => data)
 
     if (res.error) {
-      throw new BadRequestException(res.error)
+      return new APIError(HttpStatus.BAD_REQUEST, res.error.message)
     } else {
       return res.response
     }
@@ -59,7 +77,9 @@ export class VKIDService {
    * @param {VKID_USERS_GET_PAYLOAD} payload Идентификаторы и поля пользователей
    * @returns {VKIDUser[]} Найденные пользователи VKID
    */
-  async getVKIDUsers(payload: VKID_USERS_GET_PAYLOAD): Promise<VKIDUser[]> {
+  async getVKIDUsers(
+    payload: VKID_USERS_GET_PAYLOAD,
+  ): Promise<VKIDUser[] | APIError> {
     const query = `user_ids=${payload.user_ids.join(',')}&fields=${payload.fields.join(',')}&access_token=${payload.access_token}`
 
     const res = await firstValueFrom(
@@ -69,7 +89,7 @@ export class VKIDService {
     ).then(({ data }) => data)
 
     if (res.error) {
-      throw new BadRequestException(res.error)
+      return new APIError(HttpStatus.BAD_REQUEST, res.error.message)
     } else {
       return res.response
     }

@@ -1,4 +1,9 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common'
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common'
 import { PassportStrategy } from '@nestjs/passport'
 import { Strategy } from 'passport-local'
 
@@ -8,6 +13,7 @@ import { VKIDService } from '@/vk-id/vk-id.service'
 import { AuthService } from '@/auth/auth.service'
 
 import { serializeUser } from '@utils/serialize'
+import { APIError } from '@interfaces/api-error'
 
 @Injectable()
 export class VKIDStrategy extends PassportStrategy(Strategy, 'vkid') {
@@ -22,33 +28,34 @@ export class VKIDStrategy extends PassportStrategy(Strategy, 'vkid') {
   }
 
   async validate(uuid: string, token: string): Promise<AuthenticatedUser> {
-    try {
-      const VKID_ACCESS_TOKEN = await this.vkid.exchangeToken({
-        uuid,
-        token,
-      })
+    const VKID_ACCESS_TOKEN = await this.vkid.exchangeToken({
+      uuid,
+      token,
+    })
 
-      const res = await this.vkid.getVKIDUsers({
-        access_token: VKID_ACCESS_TOKEN.access_token,
-        fields: [
-          'id',
-          'first_name',
-          'last_name',
-          'domain',
-          'bdate',
-          'photo_200',
-        ],
-        user_ids: [String(VKID_ACCESS_TOKEN.user_id)],
-      })
-
-      const user = await this.auth.verifyVKIDUser({
-        ...res[0],
-        access_token: VKID_ACCESS_TOKEN.access_token,
-      })
-
-      return serializeUser<AuthenticatedUser, AuthenticatedUser>(user)
-    } catch (e) {
-      throw new UnauthorizedException()
+    if (VKID_ACCESS_TOKEN instanceof APIError) {
+      throw new HttpException('', HttpStatus.UNAUTHORIZED)
     }
+
+    const res = await this.vkid.getVKIDUsers({
+      access_token: VKID_ACCESS_TOKEN.access_token,
+      fields: ['id', 'first_name', 'last_name', 'domain', 'bdate', 'photo_200'],
+      user_ids: [String(VKID_ACCESS_TOKEN.user_id)],
+    })
+
+    if (res instanceof APIError) {
+      throw new HttpException('', HttpStatus.UNAUTHORIZED)
+    }
+
+    const user = await this.auth.verifyVKIDUser({
+      ...res[0],
+      access_token: VKID_ACCESS_TOKEN.access_token,
+    })
+
+    if (user instanceof APIError) {
+      throw new HttpException('', HttpStatus.UNAUTHORIZED)
+    }
+
+    return serializeUser<AuthenticatedUser, AuthenticatedUser>(user)
   }
 }

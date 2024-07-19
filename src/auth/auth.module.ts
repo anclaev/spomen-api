@@ -1,13 +1,18 @@
 import { Global, Module } from '@nestjs/common'
 import { HttpModule } from '@nestjs/axios'
 
-import { AccountRepository } from '@/account/account.repository'
-import { VKIDService } from '@/vk-id/vk-id.service'
+// Модули
+import { AccountModule } from '@/account/account.module'
 
-import { AuthController } from './auth.controller'
+// Сервисы
+import { VKIDService } from '@/vk-id/vk-id.service'
 import { TokenService } from './token.service'
 import { AuthService } from './auth.service'
 
+// Контроллеры
+import { AuthController } from './auth.controller'
+
+// Стратегии
 import { RefreshStrategy } from './strategies/refresh.strategy'
 import { LocalStrategy } from './strategies/local.strategy'
 import { VKIDStrategy } from './strategies/vk-id.strategy'
@@ -15,24 +20,21 @@ import { JwtStrategy } from './strategies/jwt.strategy'
 
 /**
  * Модуль авторизации в приложении
- * @description Включает в себя:
- * @description HTTP-контроллер авторизации;
- * @description Сервис авторизации;
- * @description Стратегии авторизации.
+ * @description Экспортирует:
+ * * Сервис авторизации
  */
 
 @Global()
 @Module({
-  imports: [HttpModule],
+  imports: [HttpModule, AccountModule],
   providers: [
     AuthService,
     TokenService,
-    AccountRepository,
     VKIDService,
     LocalStrategy,
     JwtStrategy,
-    VKIDStrategy,
     RefreshStrategy,
+    VKIDStrategy,
   ],
   controllers: [AuthController],
   exports: [AuthService],
