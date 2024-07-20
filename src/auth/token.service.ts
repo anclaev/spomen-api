@@ -70,7 +70,7 @@ export class TokenService {
     payload: TokenPayload,
     refresh_token: string,
   ): Promise<Tokens | APIError> {
-    const account = await this.account.getById(payload.userid)
+    const account = await this.account.getAccount({ id: payload.userid })
 
     if (account instanceof APIError) {
       return account
@@ -100,7 +100,7 @@ export class TokenService {
     user_id: string,
     refresh_token: string,
   ): Promise<Account | APIError> {
-    const account = await this.account.getById(user_id)
+    const account = await this.account.getAccount({ id: user_id })
 
     if (account instanceof APIError) {
       return account
@@ -112,14 +112,14 @@ export class TokenService {
 
     if (removeTokenIndex > -1) tokens.splice(removeTokenIndex, 1)
 
-    return (await this.account.update({
-      where: { id: user_id },
-      data: {
+    return (await this.account.updateAccount(
+      {
         refresh_tokens: {
           set: tokens,
         },
       },
-    }))!
+      { id: user_id },
+    ))!
   }
 
   /**
@@ -128,16 +128,16 @@ export class TokenService {
    * @returns {boolean} Результат очистки
    */
   async clear(user_id: string): Promise<boolean> {
-    const updated = await this.account.update({
-      where: {
-        id: user_id,
-      },
-      data: {
+    const updated = await this.account.updateAccount(
+      {
         refresh_tokens: {
           set: [],
         },
       },
-    })
+      {
+        id: user_id,
+      },
+    )
 
     return !(updated instanceof APIError)
   }
@@ -208,14 +208,14 @@ export class TokenService {
       slicedTokens.push(tokens.refresh_token)
     }
 
-    await this.account.update({
-      where: { id: payload.userid },
-      data: {
+    await this.account.updateAccount(
+      {
         refresh_tokens: isMaximumTokens
           ? { set: slicedTokens }
           : { push: [tokens.refresh_token] },
       },
-    })
+      { id: payload.userid },
+    )
 
     return tokens
   }

@@ -182,9 +182,6 @@
                             <a href="#mockVKIDUsers" title="src/common/mocks/vk-id.mock.ts" ><b>mockVKIDUsers</b>&nbsp;&nbsp;&nbsp;(src/.../vk-id.mock.ts)</a>
                         </li>
                         <li>
-                            <a href="#paginator" title="src/common/utils/paginator.ts" ><b>paginator</b>&nbsp;&nbsp;&nbsp;(src/.../paginator.ts)</a>
-                        </li>
-                        <li>
                             <a href="#publicBucketPolicy" title="src/common/utils/s3.ts" ><b>publicBucketPolicy</b>&nbsp;&nbsp;&nbsp;(src/.../s3.ts)</a>
                         </li>
                         <li>
@@ -1131,59 +1128,6 @@
                         <i>Default value : </i><code>new Promise(() &#x3D;&gt; {
   return [mockVKIDUser]
 })</code>
-                    </td>
-                </tr>
-
-
-        </tbody>
-    </table>
-</section>
-    <h3>src/common/utils/paginator.ts</h3>
-    <section data-compodoc="block-properties">
-    <h3></h3>    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="paginator"></a>
-                    <span class="name">
-                        <span ><b>paginator</b></span>
-                        <a href="#paginator"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Default value : </i><code>(
-  defaultOptions: PaginateOptions,
-): PaginateFunction &#x3D;&gt; {
-  return async (model, args: any &#x3D; { where: undefined }, options) &#x3D;&gt; {
-    const page &#x3D; Number(options?.page || defaultOptions?.page) || 1
-    const perPage &#x3D; Number(options?.perPage || defaultOptions?.perPage) || 10
-
-    const skip &#x3D; page &gt; 0 ? perPage * (page - 1) : 0
-    const [total, data] &#x3D; await Promise.all([
-      model.count({ where: args.where }),
-      model.findMany({
-        ...args,
-        take: perPage,
-        skip,
-      }),
-    ])
-    const lastPage &#x3D; Math.ceil(total / perPage)
-
-    return {
-      data,
-      meta: {
-        total,
-        lastPage,
-        currentPage: page,
-        perPage,
-        prev: page &gt; 1 ? page - 1 : null,
-        next: page &lt; lastPage ? page + 1 : null,
-      },
-    }
-  }
-}</code>
                     </td>
                 </tr>
 

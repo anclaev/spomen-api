@@ -159,15 +159,15 @@
                             </li>
                             <li>
                                     <span class="modifier">Async</span>
-                                <a href="#getById" >getById</a>
+                                <a href="#deleteAccount" >deleteAccount</a>
                             </li>
                             <li>
                                     <span class="modifier">Async</span>
-                                <a href="#getByUsername" >getByUsername</a>
+                                <a href="#getAccount" >getAccount</a>
                             </li>
                             <li>
                                     <span class="modifier">Async</span>
-                                <a href="#getOne" >getOne</a>
+                                <a href="#getAccounts" >getAccounts</a>
                             </li>
                             <li>
                                     <span class="modifier">Async</span>
@@ -175,7 +175,7 @@
                             </li>
                             <li>
                                     <span class="modifier">Async</span>
-                                <a href="#update" >update</a>
+                                <a href="#updateAccount" >updateAccount</a>
                             </li>
                             <li>
                                     <span class="modifier">Async</span>
@@ -204,7 +204,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">src/account/account.service.ts:27</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/account/account.service.ts:36</a></div>
                             </td>
                         </tr>
 
@@ -292,8 +292,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="210"
-                                    class="link-to-prism">src/account/account.service.ts:210</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="276"
+                                    class="link-to-prism">src/account/account.service.ts:276</a></div>
                         </td>
                     </tr>
 
@@ -369,8 +369,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="91"
-                                    class="link-to-prism">src/account/account.service.ts:91</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="113"
+                                    class="link-to-prism">src/account/account.service.ts:113</a></div>
                         </td>
                     </tr>
 
@@ -428,33 +428,33 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="getById"></a>
+                    <a name="deleteAccount"></a>
                     <span class="name">
                             <span class="modifier">Async</span>
-                        <span ><b>getById</b></span>
-                        <a href="#getById"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>deleteAccount</b></span>
+                        <a href="#deleteAccount"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>getById(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                    <code>deleteAccount(where: AccountWhereUniqueInput, user: <a href="../interfaces/AuthenticatedUser.html" target="_self">AuthenticatedUser</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="51"
-                                    class="link-to-prism">src/account/account.service.ts:51</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="159"
+                                    class="link-to-prism">src/account/account.service.ts:159</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                        <div class="io-description"><p>Получение аккаунта по ID</p>
+                        <div class="io-description"><p>Удаление аккаунта</p>
 </div>
 
                             <div class="io-description">
@@ -471,9 +471,9 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                                <td>id</td>
+                                                <td>where</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                        <code>AccountWhereUniqueInput</code>
                                             </td>
 
                                             <td>
@@ -482,7 +482,23 @@
 
 
                                             <td>
-                                                    <p>ID аккаунта</p>
+                                                    <p>Поля отбора аккаунта</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>user</td>
+                                            <td>
+                                                            <code><a href="../interfaces/AuthenticatedUser.html" target="_self" >AuthenticatedUser</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Текущий пользователь системы</p>
 
                                             </td>
                                         </tr>
@@ -494,7 +510,7 @@
 
                         </div>
                             <div class="io-description">
-                                <p>Аккаунт в базе данных</p>
+                                <p>Удалённый аккаунт</p>
 
                             </div>
                 </td>
@@ -505,33 +521,33 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="getByUsername"></a>
+                    <a name="getAccount"></a>
                     <span class="name">
                             <span class="modifier">Async</span>
-                        <span ><b>getByUsername</b></span>
-                        <a href="#getByUsername"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>getAccount</b></span>
+                        <a href="#getAccount"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>getByUsername(username: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                    <code>getAccount(where: AccountWhereUniqueInput)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="71"
-                                    class="link-to-prism">src/account/account.service.ts:71</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="52"
+                                    class="link-to-prism">src/account/account.service.ts:52</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                        <div class="io-description"><p>Получение аккаунта по имени пользователя</p>
+                        <div class="io-description"><p>Получение уникального аккаунта</p>
 </div>
 
                             <div class="io-description">
@@ -548,9 +564,9 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                                <td>username</td>
+                                                <td>where</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                        <code>AccountWhereUniqueInput</code>
                                             </td>
 
                                             <td>
@@ -559,7 +575,7 @@
 
 
                                             <td>
-                                                    <p>Имя аккаунта</p>
+                                                    <p>Поля отбора</p>
 
                                             </td>
                                         </tr>
@@ -571,7 +587,7 @@
 
                         </div>
                             <div class="io-description">
-                                <p>Аккаунт в базе данных</p>
+                                <p>Аккаунт</p>
 
                             </div>
                 </td>
@@ -582,32 +598,34 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="getOne"></a>
+                    <a name="getAccounts"></a>
                     <span class="name">
                             <span class="modifier">Async</span>
-                        <span ><b>getOne</b></span>
-                        <a href="#getOne"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>getAccounts</b></span>
+                        <a href="#getAccounts"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>getOne(dto: <a href="../interfaces/AccountFindUniqueDto.html" target="_self">AccountFindUniqueDto</a>)</code>
+                    <code>getAccounts(undefined: <a href="../classes/GetAccountsDto.html" target="_self">GetAccountsDto</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="38"
-                                    class="link-to-prism">src/account/account.service.ts:38</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="83"
+                                    class="link-to-prism">src/account/account.service.ts:83</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
+                        <div class="io-description"><p>Получение списка аккаунтов</p>
+</div>
 
                             <div class="io-description">
                                 <b>Parameters :</b>
@@ -622,9 +640,8 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                                <td>dto</td>
                                             <td>
-                                                            <code><a href="../interfaces/AccountFindUniqueDto.html" target="_self" >AccountFindUniqueDto</a></code>
+                                                            <code><a href="../classes/GetAccountsDto.html" target="_self" >GetAccountsDto</a></code>
                                             </td>
 
                                             <td>
@@ -637,11 +654,12 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../classes/APIError.html" target="_self" >Promise&lt;Account | APIError&gt;</a></code>
+                            <b>Returns : </b>    <code>Promise&lt;Account[]&gt;</code>
 
                         </div>
                             <div class="io-description">
-                                
+                                <p>Список аккаунтов</p>
+
                             </div>
                 </td>
             </tr>
@@ -669,8 +687,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="180"
-                                    class="link-to-prism">src/account/account.service.ts:180</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="246"
+                                    class="link-to-prism">src/account/account.service.ts:246</a></div>
                         </td>
                     </tr>
 
@@ -744,26 +762,26 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="update"></a>
+                    <a name="updateAccount"></a>
                     <span class="name">
                             <span class="modifier">Async</span>
-                        <span ><b>update</b></span>
-                        <a href="#update"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>updateAccount</b></span>
+                        <a href="#updateAccount"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>update(dto: <a href="../interfaces/AccountUpdateDto.html" target="_self">AccountUpdateDto</a>)</code>
+                    <code>updateAccount(data: AccountUpdateInput, where: AccountWhereUniqueInput, user?: <a href="../interfaces/AuthenticatedUser.html" target="_self">AuthenticatedUser</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="104"
-                                    class="link-to-prism">src/account/account.service.ts:104</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="128"
+                                    class="link-to-prism">src/account/account.service.ts:128</a></div>
                         </td>
                     </tr>
 
@@ -782,13 +800,14 @@
                                             <td>Name</td>
                                                 <td>Type</td>
                                             <td>Optional</td>
+                                                <td>Description</td>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
-                                                <td>dto</td>
+                                                <td>data</td>
                                             <td>
-                                                            <code><a href="../interfaces/AccountUpdateDto.html" target="_self" >AccountUpdateDto</a></code>
+                                                        <code>AccountUpdateInput</code>
                                             </td>
 
                                             <td>
@@ -796,6 +815,42 @@
                                             </td>
 
 
+                                            <td>
+                                                    <p>Данные для изменения</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>where</td>
+                                            <td>
+                                                        <code>AccountWhereUniqueInput</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Поля отбора</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>user</td>
+                                            <td>
+                                                            <code><a href="../interfaces/AuthenticatedUser.html" target="_self" >AuthenticatedUser</a></code>
+                                            </td>
+
+                                            <td>
+                                                    Yes
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Текущий пользователь системы</p>
+
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -834,8 +889,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="119"
-                                    class="link-to-prism">src/account/account.service.ts:119</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="185"
+                                    class="link-to-prism">src/account/account.service.ts:185</a></div>
                         </td>
                     </tr>
 
@@ -927,9 +982,16 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { HttpStatus, Injectable } from &#x27;@nestjs/common&#x27;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
+  Account,
+  AccountUpdateInput,
+  AccountWhereUniqueInput,
+  CreateOneAccountArgs,
+  FindUniqueAccountArgs,
+} from &#x27;@graphql&#x27;
+
+import { HttpStatus, Injectable } from &#x27;@nestjs/common&#x27;
 import { Permission, Upload } from &#x27;@prisma/client&#x27;
-import { Account, CreateOneAccountArgs } from &#x27;@graphql&#x27;
 
 // Сервисы
 import { UploadService } from &#x27;@/upload/upload.service&#x27;
@@ -941,13 +1003,15 @@ import { AccountRepository } from &#x27;./account.repository&#x27;
 import { toS3Path } from &#x27;@utils/funcs&#x27;
 
 // Интерфейсы
-import { AccountFindUniqueDto, AccountUpdateDto } from &#x27;@interfaces/account&#x27;
 import { AuthenticatedUser } from &#x27;@interfaces/user&#x27;
 import { APIError } from &#x27;@interfaces/api-error&#x27;
 import { File } from &#x27;@interfaces/upload&#x27;
 
-// Перечисления
+// Enums
 import { STORAGE } from &#x27;@enums/storage&#x27;
+
+// DTO
+import { GetAccountsDto } from &#x27;./dto/get-accounts.dto&#x27;
 
 /**
  * Сервис аккаунта
@@ -964,52 +1028,65 @@ export class AccountService {
     private readonly upload: UploadService,
   ) {}
 
-  async getOne(dto: AccountFindUniqueDto): Promise&lt;Account | APIError&gt; {
-    const account &#x3D; await this.account.findOne(dto)
-
-    if (!account) return new APIError(HttpStatus.NOT_FOUND, &#x27;Аккаунт не найден&#x27;)
-
-    return account
-  }
-
   /**
-   * Получение аккаунта по ID
-   * @param {String} id ID аккаунта
-   * @returns {Account} Аккаунт в базе данных
+   * Получение уникального аккаунта
+   * @param {AccountWhereUniqueInput} where Поля отбора
+   * @returns {Account | APIError} Аккаунт
    */
-  async getById(id: string): Promise&lt;Account | APIError&gt; {
-    const account &#x3D; await this.account.findOne({
-      where: {
-        id,
-      },
+  async getAccount(
+    where: AccountWhereUniqueInput,
+  ): Promise&lt;Account | APIError&gt; {
+    const account &#x3D; await this.account.model.findMany({
+      where: where as Required&lt;AccountWhereUniqueInput&gt;,
+      take: 1,
       include: {
+        _count: true,
         avatar: true,
+        actors: true,
+        chats: true,
+        messages: true,
+        owned_chats: true,
+        owned_comments: true,
+        owned_memories: true,
+        owned_messages: true,
+        uploaded_files: true,
       },
     })
 
-    if (!account) return new APIError(HttpStatus.NOT_FOUND, &#x27;Аккаунт не найден&#x27;)
+    if (account.length &#x3D;&#x3D;&#x3D; 0)
+      return new APIError(HttpStatus.NOT_FOUND, &#x27;Аккаунт не найден&#x27;)
 
-    return account
+    return account[0]
   }
 
   /**
-   * Получение аккаунта по имени пользователя
-   * @param {String} username Имя аккаунта
-   * @returns {Account} Аккаунт в базе данных
+   * Получение списка аккаунтов
+   * @param {GetAccountsDto} dto Параметры поиска
+   * @returns {Account[]} Список аккаунтов
    */
-  async getByUsername(username: string): Promise&lt;Account | APIError&gt; {
-    const account &#x3D; await this.account.findOne({
-      where: {
-        username,
-      },
+  async getAccounts({
+    page,
+    size,
+    filter,
+  }: GetAccountsDto): Promise&lt;Account[]&gt; {
+    return await this.account.model.findMany({
+      where: filter,
+      take: size,
+      skip: size * (page - 1),
+      orderBy: { created_at: &#x27;desc&#x27; },
       include: {
         avatar: true,
+        chats: true,
+        uploaded_files: true,
+        messages: true,
+        owned_chats: true,
+        owned_comments: true,
+        owned_memories: true,
+        owned_messages: true,
+        actors: true,
+        _count: true,
       },
     })
-
-    if (!account) return new APIError(HttpStatus.NOT_FOUND, &#x27;Аккаунт не найден&#x27;)
-
-    return account
   }
 
   /**
@@ -1027,12 +1104,56 @@ export class AccountService {
 
   /**
    * Изменение аккаунта
-   * @param {AccountUpdateDto} dto
-   * @returns {Account} Изменённый аккаунт
+   * @param {AccountUpdateInput} data Данные для изменения
+   * @param {AccountWhereUniqueInput} where Поля отбора
+   * @param {AuthenticatedUser} user Текущий пользователь системы
+   * @returns {Account | APIError} Изменённый аккаунт
    */
-  async update(dto: AccountUpdateDto): Promise&lt;Account | APIError&gt; {
+  async updateAccount(
+    data: AccountUpdateInput,
+    where: AccountWhereUniqueInput,
+    user?: AuthenticatedUser,
+  ): Promise&lt;Account | APIError&gt; {
+    if (user &amp;&amp; !user.roles.includes(&#x27;Administrator&#x27;)) {
+      if (where.id &amp;&amp; where.id !&#x3D;&#x3D; user.id) {
+        return new APIError(HttpStatus.FORBIDDEN)
+      }
+
+      if (where.username &amp;&amp; where.username !&#x3D;&#x3D; user.username) {
+        return new APIError(HttpStatus.FORBIDDEN)
+      }
+    }
+
     try {
-      return await this.account.update(dto)
+      return await this.account.update({
+        data,
+        where: where as Required&lt;AccountWhereUniqueInput&gt;,
+      })
+    } catch (e) {
+      return new APIError(HttpStatus.INTERNAL_SERVER_ERROR, e.message)
+    }
+  }
+
+  /**
+   * Удаление аккаунта
+   * @param {AccountWhereUniqueInput} where Поля отбора аккаунта
+   * @param {AuthenticatedUser} user Текущий пользователь системы
+   * @returns {Account | APIError} Удалённый аккаунт
+   */
+  async deleteAccount(
+    where: AccountWhereUniqueInput,
+    user: AuthenticatedUser,
+  ): Promise&lt;Account | APIError&gt; {
+    if (!user.roles.includes(&#x27;Administrator&#x27;)) {
+      if (where.id &amp;&amp; where.id !&#x3D;&#x3D; user.id) {
+        return new APIError(HttpStatus.FORBIDDEN)
+      }
+    }
+
+    try {
+      return await this.account.model.delete({
+        where: where as Required&lt;AccountWhereUniqueInput&gt;,
+      })
     } catch (e) {
       return new APIError(HttpStatus.INTERNAL_SERVER_ERROR, e.message)
     }

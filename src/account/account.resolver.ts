@@ -1,13 +1,23 @@
-import { Resolver, Args, Query } from '@nestjs/graphql'
-import { Account } from '@graphql'
+import {
+  Account,
+  AccountWhereInput,
+  AccountUpdateInput,
+  AccountWhereUniqueInput,
+} from '@graphql'
+
+import { Resolver, Args, Query, Mutation } from '@nestjs/graphql'
+import { HttpException } from '@nestjs/common'
 
 // Декораторы
 import { UseGqlAuth } from '@decorators/gql-auth'
+import { UseGqlUser } from '@decorators/gql-user'
 
 // Сервисы
 import { AccountService } from './account.service'
+
+// Интерфейсы
+import { AuthenticatedUser } from '@interfaces/user'
 import { APIError } from '@interfaces/api-error'
-import { HttpException } from '@nestjs/common'
 
 /**
  * Ресольвер аккаунта
@@ -21,58 +31,79 @@ export class AccountResolver {
   constructor(private readonly account: AccountService) {}
 
   /**
-   * Запрос на получение аккаунта по ID
-   * @param {String} id ID аккаунта
+   * Получение аккаунта по полям отбора
+   * @param {AccountWhereUniqueInput} query Поля отбора
    * @returns {Account} Аккаунт в системе
    */
   @UseGqlAuth()
-  @Query(() => Account, { name: 'accountById' })
-  async findOneById(
-    @Args('id', { type: () => String }) id: string,
+  @Query(() => Account, { name: 'account' })
+  async getAccount(
+    @Args('args', { type: () => AccountWhereUniqueInput })
+    where: AccountWhereUniqueInput,
   ): Promise<Account> {
-    const account = await this.account.getById(id)
+    const account = await this.account.getAccount(where)
 
     return this.catchError<Account>(account)
   }
 
   /**
-   * Запрос на получение аккаунта по имени пользователя
-   * @param {String} username Имя аккаунта
-   * @returns {Account} Аккаунт в системе
+   * Получение списка аккаунтов
+   * @param {number} page Текущая страница
+   * @param {number} size Размер страницы
+   * @returns {Account[]} Список аккаунтов
    */
   @UseGqlAuth()
-  @Query(() => Account, { name: 'account' })
-  async getByUsername(
-    @Args('username', { type: () => String }) username: string,
-  ): Promise<Account> {
-    const account = await this.account.getByUsername(username)
-
-    return this.catchError<Account>(account)
+  @Query(() => [Account], { name: 'accounts' })
+  async accounts(
+    @Args('size', { type: () => Number, defaultValue: 10 }) size: number,
+    @Args('page', { type: () => Number, defaultValue: 1 }) page: number,
+    @Args('filter', {
+      type: () => AccountWhereInput,
+      nullable: true,
+    })
+    filter: AccountWhereInput,
+  ): Promise<Account[]> {
+    return await this.account.getAccounts({ size, page, filter })
   }
 
-  // @Mutation(() => Account)
-  // createAccount(
-  //   @Args('accountCreateInput') AccountCreateInput: AccountCreateInput,
-  // ) {
-  //   return this.account.create(AccountCreateInput)
-  // }
+  /**
+   * Изменение аккаунта
+   * @param {AccountUpdateInput} data Данные для изменения
+   * @param {AccountWhereUniqueInput} where Поля отбора
+   * @param {AuthenticatedUser} user Текущий пользователь системы
+   * @returns {Account} Изменённый аккаунт
+   */
+  @UseGqlAuth()
+  @Mutation(() => Account, { name: 'updateAccount' })
+  async updateAccount(
+    @Args('data', { type: () => AccountUpdateInput })
+    data: AccountUpdateInput,
+    @Args('where', { type: () => AccountWhereUniqueInput })
+    where: AccountWhereUniqueInput,
+    @UseGqlUser() user: AuthenticatedUser,
+  ): Promise<Account> {
+    const updatedAccount = await this.account.updateAccount(data, where, user)
 
-  // @Query(() => [Account], { name: 'account' })
-  // findAll() {
-  //   return this.account.findAll()
-  // }
+    return this.catchError<Account>(updatedAccount)
+  }
 
-  // @Mutation(() => Account)
-  // updateAccount(
-  //   @Args('updateAccountInput') updateAccountInput: UpdateAccountInput,
-  // ) {
-  //   return this.accountService.update(updateAccountInput.id, updateAccountInput)
-  // }
+  /**
+   * Удаление аккаунта
+   * @param {AccountWhereUniqueInput} where Поля отбора аккаунта
+   * @param {AuthenticatedUser} user Текущий пользователь системы
+   * @returns {Account} Удалённый аккаунт
+   */
+  @UseGqlAuth()
+  @Mutation(() => Account, { name: 'deleteAccount' })
+  async deleteAccount(
+    @Args('where', { type: () => AccountWhereUniqueInput })
+    where: AccountWhereUniqueInput,
+    @UseGqlUser() user: AuthenticatedUser,
+  ): Promise<Account> {
+    const deletedAccount = await this.account.deleteAccount(where, user)
 
-  // @Mutation(() => Account)
-  // removeAccount(@Args('id', { type: () => Int }) id: number) {
-  //   return this.accountService.remove(id)
-  // }
+    return this.catchError<Account>(deletedAccount)
+  }
 
   /**
    * Обработчик ошибок

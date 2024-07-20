@@ -399,9 +399,7 @@ export class RefreshStrategy extends PassportStrategy(Strategy, &#x27;refresh&#x
     req: Request,
     payload: TokenPayload,
   ): Promise&lt;AuthenticatedUser&gt; {
-    const account &#x3D; await this.account.getOne({
-      where: { id: payload.userid },
-    })
+    const account &#x3D; await this.account.getAccount({ id: payload.userid })
 
     if (account instanceof APIError) {
       throw new HttpException(&#x27;&#x27;, HttpStatus.UNAUTHORIZED)

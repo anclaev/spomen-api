@@ -13,12 +13,8 @@ import {
 } from '@graphql'
 
 // Интерфейсы
-import { PaginatedResult } from '@interfaces/pagination'
 import { DeleteManyResult } from '@interfaces/prisma'
 import { ToPrisma } from '@interfaces/prisma'
-
-// Утилиты
-import { paginator } from '@utils/paginator'
 
 /**
  * Репозиторий загрузок
@@ -33,6 +29,13 @@ export class UploadRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   /**
+   * Доступ к модели загрузок Prisma
+   */
+  get model() {
+    return this.prisma.upload
+  }
+
+  /**
    * Получение загрузки по уникальному полю
    * @param {FindUniqueUploadArgs} args Уникальные поля для отбора
    * @returns {Upload} Загрузка в базе данных
@@ -45,37 +48,6 @@ export class UploadRepository {
     >,
   ): Promise<Upload | null> {
     return await this.prisma.upload.findUnique(args)
-  }
-
-  /**
-   * Получение множества загрузок по полям отбора
-   * @param {FindManyUploadArgs} args Поля для отбора
-   * @returns {Account[]} Загрузки в базе данных
-   */
-  async findMany({
-    where,
-    orderBy,
-    page,
-    size = 10,
-  }: {
-    where?: UploadWhereInput
-    orderBy?: UploadOrderByWithRelationInput
-    page?: number
-    size?: number
-  }): Promise<PaginatedResult<Upload[]>> {
-    return paginator({
-      page,
-      perPage: size,
-    })(
-      this.prisma.upload,
-      {
-        where,
-        orderBy,
-      },
-      {
-        page,
-      },
-    )
   }
 
   /**

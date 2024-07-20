@@ -1,6 +1,13 @@
+import {
+  Account,
+  AccountUpdateInput,
+  AccountWhereUniqueInput,
+  CreateOneAccountArgs,
+  FindUniqueAccountArgs,
+} from '@graphql'
+
 import { HttpStatus, Injectable } from '@nestjs/common'
 import { Permission, Upload } from '@prisma/client'
-import { Account, CreateOneAccountArgs } from '@graphql'
 
 // Сервисы
 import { UploadService } from '@/upload/upload.service'
@@ -12,13 +19,15 @@ import { AccountRepository } from './account.repository'
 import { toS3Path } from '@utils/funcs'
 
 // Интерфейсы
-import { AccountFindUniqueDto, AccountUpdateDto } from '@interfaces/account'
 import { AuthenticatedUser } from '@interfaces/user'
 import { APIError } from '@interfaces/api-error'
 import { File } from '@interfaces/upload'
 
-// Перечисления
+// Enums
 import { STORAGE } from '@enums/storage'
+
+// DTO
+import { GetAccountsDto } from './dto/get-accounts.dto'
 
 /**
  * Сервис аккаунта
@@ -35,52 +44,65 @@ export class AccountService {
     private readonly upload: UploadService,
   ) {}
 
-  async getOne(dto: AccountFindUniqueDto): Promise<Account | APIError> {
-    const account = await this.account.findOne(dto)
-
-    if (!account) return new APIError(HttpStatus.NOT_FOUND, 'Аккаунт не найден')
-
-    return account
-  }
-
   /**
-   * Получение аккаунта по ID
-   * @param {String} id ID аккаунта
-   * @returns {Account} Аккаунт в базе данных
+   * Получение уникального аккаунта
+   * @param {AccountWhereUniqueInput} where Поля отбора
+   * @returns {Account | APIError} Аккаунт
    */
-  async getById(id: string): Promise<Account | APIError> {
-    const account = await this.account.findOne({
-      where: {
-        id,
-      },
+  async getAccount(
+    where: AccountWhereUniqueInput,
+  ): Promise<Account | APIError> {
+    const account = await this.account.model.findMany({
+      where: where as Required<AccountWhereUniqueInput>,
+      take: 1,
       include: {
+        _count: true,
         avatar: true,
+        actors: true,
+        chats: true,
+        messages: true,
+        owned_chats: true,
+        owned_comments: true,
+        owned_memories: true,
+        owned_messages: true,
+        uploaded_files: true,
       },
     })
 
-    if (!account) return new APIError(HttpStatus.NOT_FOUND, 'Аккаунт не найден')
+    if (account.length === 0)
+      return new APIError(HttpStatus.NOT_FOUND, 'Аккаунт не найден')
 
-    return account
+    return account[0]
   }
 
   /**
-   * Получение аккаунта по имени пользователя
-   * @param {String} username Имя аккаунта
-   * @returns {Account} Аккаунт в базе данных
+   * Получение списка аккаунтов
+   * @param {GetAccountsDto} dto Параметры поиска
+   * @returns {Account[]} Список аккаунтов
    */
-  async getByUsername(username: string): Promise<Account | APIError> {
-    const account = await this.account.findOne({
-      where: {
-        username,
-      },
+  async getAccounts({
+    page,
+    size,
+    filter,
+  }: GetAccountsDto): Promise<Account[]> {
+    return await this.account.model.findMany({
+      where: filter,
+      take: size,
+      skip: size * (page - 1),
+      orderBy: { created_at: 'desc' },
       include: {
         avatar: true,
+        chats: true,
+        uploaded_files: true,
+        messages: true,
+        owned_chats: true,
+        owned_comments: true,
+        owned_memories: true,
+        owned_messages: true,
+        actors: true,
+        _count: true,
       },
     })
-
-    if (!account) return new APIError(HttpStatus.NOT_FOUND, 'Аккаунт не найден')
-
-    return account
   }
 
   /**
@@ -98,12 +120,56 @@ export class AccountService {
 
   /**
    * Изменение аккаунта
-   * @param {AccountUpdateDto} dto
-   * @returns {Account} Изменённый аккаунт
+   * @param {AccountUpdateInput} data Данные для изменения
+   * @param {AccountWhereUniqueInput} where Поля отбора
+   * @param {AuthenticatedUser} user Текущий пользователь системы
+   * @returns {Account | APIError} Изменённый аккаунт
    */
-  async update(dto: AccountUpdateDto): Promise<Account | APIError> {
+  async updateAccount(
+    data: AccountUpdateInput,
+    where: AccountWhereUniqueInput,
+    user?: AuthenticatedUser,
+  ): Promise<Account | APIError> {
+    if (user && !user.roles.includes('Administrator')) {
+      if (where.id && where.id !== user.id) {
+        return new APIError(HttpStatus.FORBIDDEN)
+      }
+
+      if (where.username && where.username !== user.username) {
+        return new APIError(HttpStatus.FORBIDDEN)
+      }
+    }
+
     try {
-      return await this.account.update(dto)
+      return await this.account.update({
+        data,
+        where: where as Required<AccountWhereUniqueInput>,
+      })
+    } catch (e) {
+      return new APIError(HttpStatus.INTERNAL_SERVER_ERROR, e.message)
+    }
+  }
+
+  /**
+   * Удаление аккаунта
+   * @param {AccountWhereUniqueInput} where Поля отбора аккаунта
+   * @param {AuthenticatedUser} user Текущий пользователь системы
+   * @returns {Account | APIError} Удалённый аккаунт
+   */
+  async deleteAccount(
+    where: AccountWhereUniqueInput,
+    user: AuthenticatedUser,
+  ): Promise<Account | APIError> {
+    if (!user.roles.includes('Administrator')) {
+      if (where.id && where.id !== user.id) {
+        return new APIError(HttpStatus.FORBIDDEN)
+      }
+    }
+
+    try {
+      return await this.account.model.delete({
+        where: where as Required<AccountWhereUniqueInput>,
+      })
     } catch (e) {
       return new APIError(HttpStatus.INTERNAL_SERVER_ERROR, e.message)
     }

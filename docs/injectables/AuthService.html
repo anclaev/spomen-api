@@ -331,8 +331,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="322"
-                                    class="link-to-prism">src/auth/auth.service.ts:322</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="312"
+                                    class="link-to-prism">src/auth/auth.service.ts:312</a></div>
                         </td>
                     </tr>
 
@@ -406,8 +406,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="331"
-                                    class="link-to-prism">src/auth/auth.service.ts:331</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="321"
+                                    class="link-to-prism">src/auth/auth.service.ts:321</a></div>
                         </td>
                     </tr>
 
@@ -483,8 +483,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="408"
-                                    class="link-to-prism">src/auth/auth.service.ts:408</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="398"
+                                    class="link-to-prism">src/auth/auth.service.ts:398</a></div>
                         </td>
                     </tr>
 
@@ -560,8 +560,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="125"
-                                    class="link-to-prism">src/auth/auth.service.ts:125</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="122"
+                                    class="link-to-prism">src/auth/auth.service.ts:122</a></div>
                         </td>
                     </tr>
 
@@ -746,8 +746,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="277"
-                                    class="link-to-prism">src/auth/auth.service.ts:277</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="267"
+                                    class="link-to-prism">src/auth/auth.service.ts:267</a></div>
                         </td>
                     </tr>
 
@@ -815,8 +815,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="380"
-                                    class="link-to-prism">src/auth/auth.service.ts:380</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="370"
+                                    class="link-to-prism">src/auth/auth.service.ts:370</a></div>
                         </td>
                     </tr>
 
@@ -860,8 +860,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="295"
-                                    class="link-to-prism">src/auth/auth.service.ts:295</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="285"
+                                    class="link-to-prism">src/auth/auth.service.ts:285</a></div>
                         </td>
                     </tr>
 
@@ -1014,8 +1014,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="146"
-                                    class="link-to-prism">src/auth/auth.service.ts:146</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="141"
+                                    class="link-to-prism">src/auth/auth.service.ts:141</a></div>
                         </td>
                     </tr>
 
@@ -1107,8 +1107,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="182"
-                                    class="link-to-prism">src/auth/auth.service.ts:182</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="177"
+                                    class="link-to-prism">src/auth/auth.service.ts:177</a></div>
                         </td>
                     </tr>
 
@@ -1309,11 +1309,8 @@ export class AuthService {
     username: string,
     password: string,
   ): Promise&lt;AuthenticatedUser | APIError&gt; {
-    const account &#x3D; await this.account.getOne({
-      where: { username: username.trim() },
-      include: {
-        avatar: true,
-      },
+    const account &#x3D; await this.account.getAccount({
+      username: username.trim(),
     })
 
     if (account instanceof APIError) {
@@ -1333,9 +1330,7 @@ export class AuthService {
     email: string,
     password: string,
   ): Promise&lt;AuthenticatedUser | APIError&gt; {
-    const account &#x3D; await this.account.getOne({
-      where: { email: email.trim() },
-    })
+    const account &#x3D; await this.account.getAccount({ email: email.trim() })
 
     if (account instanceof APIError) {
       return account
@@ -1389,13 +1384,8 @@ export class AuthService {
   async verifyVKIDUser(
     vkIdUser: VKIDUser,
   ): Promise&lt;AuthenticatedUser | APIError&gt; {
-    const isExistUser &#x3D; await this.account.getOne({
-      where: {
-        vk_id: String(vkIdUser.id),
-      },
-      include: {
-        avatar: true,
-      },
+    const isExistUser &#x3D; await this.account.getAccount({
+      vk_id: String(vkIdUser.id),
     })
 
     if (isExistUser instanceof APIError) {
@@ -1446,16 +1436,16 @@ export class AuthService {
       return { ...user!, ...tokens! }
     }
 
-    const user &#x3D; await this.account.update({
-      where: {
-        id: isExistUser.id,
-      },
-      data: {
+    const user &#x3D; await this.account.updateAccount(
+      {
         vk_avatar: {
           set: vkIdUser.photo_200,
         },
       },
-    })
+      {
+        id: isExistUser.id,
+      },
+    )
 
     if (user instanceof APIError) {
       return user

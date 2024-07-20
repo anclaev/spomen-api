@@ -196,7 +196,15 @@
                             </li>
                             <li>
                                     <span class="modifier">Async</span>
+                                <a href="#deleteUpload" >deleteUpload</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
                                 <a href="#getFile" >getFile</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getUpload" >getUpload</a>
                             </li>
                             <li>
                                     <span class="modifier">Async</span>
@@ -222,6 +230,10 @@
                             <li>
                                     <span class="modifier">Private</span>
                                 <a href="#setBucket" >setBucket</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#updateUpload" >updateUpload</a>
                             </li>
                             <li>
                                     <span class="modifier">Private</span>
@@ -256,7 +268,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="73" class="link-to-prism">src/upload/upload.service.ts:73</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="74" class="link-to-prism">src/upload/upload.service.ts:74</a></div>
                             </td>
                         </tr>
 
@@ -381,8 +393,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="385"
-                                    class="link-to-prism">src/upload/upload.service.ts:385</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="480"
+                                    class="link-to-prism">src/upload/upload.service.ts:480</a></div>
                         </td>
                     </tr>
 
@@ -475,8 +487,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="450"
-                                    class="link-to-prism">src/upload/upload.service.ts:450</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="545"
+                                    class="link-to-prism">src/upload/upload.service.ts:545</a></div>
                         </td>
                     </tr>
 
@@ -567,8 +579,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="284"
-                                    class="link-to-prism">src/upload/upload.service.ts:284</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="379"
+                                    class="link-to-prism">src/upload/upload.service.ts:379</a></div>
                         </td>
                     </tr>
 
@@ -626,6 +638,99 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="deleteUpload"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>deleteUpload</b></span>
+                        <a href="#deleteUpload"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>deleteUpload(where: UploadWhereUniqueInput, user: <a href="../interfaces/AuthenticatedUser.html" target="_self">AuthenticatedUser</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="214"
+                                    class="link-to-prism">src/upload/upload.service.ts:214</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Удаление загрузки</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>where</td>
+                                            <td>
+                                                        <code>UploadWhereUniqueInput</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Поля отбора загрузки</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>user</td>
+                                            <td>
+                                                            <code><a href="../interfaces/AuthenticatedUser.html" target="_self" >AuthenticatedUser</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Текущий пользователь системы</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/APIError.html" target="_self" >Promise&lt;Upload | APIError&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>Удалённая загрузка</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="getFile"></a>
                     <span class="name">
                             <span class="modifier">Async</span>
@@ -644,8 +749,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="154"
-                                    class="link-to-prism">src/upload/upload.service.ts:154</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="249"
+                                    class="link-to-prism">src/upload/upload.service.ts:249</a></div>
                         </td>
                     </tr>
 
@@ -739,6 +844,83 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="getUpload"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getUpload</b></span>
+                        <a href="#getUpload"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getUpload(where: UploadWhereUniqueInput)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="128"
+                                    class="link-to-prism">src/upload/upload.service.ts:128</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Получение уникальной загрузки</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>where</td>
+                                            <td>
+                                                        <code>UploadWhereUniqueInput</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Данные для поиска</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/APIError.html" target="_self" >Promise&lt;Upload | APIError&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>Загрузка</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="getUploads"></a>
                     <span class="name">
                             <span class="modifier">Async</span>
@@ -757,8 +939,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="127"
-                                    class="link-to-prism">src/upload/upload.service.ts:127</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="149"
+                                    class="link-to-prism">src/upload/upload.service.ts:149</a></div>
                         </td>
                     </tr>
 
@@ -795,7 +977,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../interfaces/PaginatedResult.html" target="_self" >Promise&lt;PaginatedResult&lt;Upload[]&gt;&gt;</a></code>
+                            <b>Returns : </b>    <code>Promise&lt;Upload[]&gt;</code>
 
                         </div>
                             <div class="io-description">
@@ -828,8 +1010,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="422"
-                                    class="link-to-prism">src/upload/upload.service.ts:422</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="517"
+                                    class="link-to-prism">src/upload/upload.service.ts:517</a></div>
                         </td>
                     </tr>
 
@@ -905,8 +1087,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="101"
-                                    class="link-to-prism">src/upload/upload.service.ts:101</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="102"
+                                    class="link-to-prism">src/upload/upload.service.ts:102</a></div>
                         </td>
                     </tr>
 
@@ -946,8 +1128,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="211"
-                                    class="link-to-prism">src/upload/upload.service.ts:211</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="306"
+                                    class="link-to-prism">src/upload/upload.service.ts:306</a></div>
                         </td>
                     </tr>
 
@@ -1025,8 +1207,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="332"
-                                    class="link-to-prism">src/upload/upload.service.ts:332</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="427"
+                                    class="link-to-prism">src/upload/upload.service.ts:427</a></div>
                         </td>
                     </tr>
 
@@ -1096,8 +1278,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="375"
-                                    class="link-to-prism">src/upload/upload.service.ts:375</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="470"
+                                    class="link-to-prism">src/upload/upload.service.ts:470</a></div>
                         </td>
                     </tr>
 
@@ -1162,6 +1344,115 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="updateUpload"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>updateUpload</b></span>
+                        <a href="#updateUpload"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>updateUpload(data: UploadUpdateInput, where: UploadWhereUniqueInput, user: <a href="../interfaces/AuthenticatedUser.html" target="_self">AuthenticatedUser</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="187"
+                                    class="link-to-prism">src/upload/upload.service.ts:187</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Изменение загрузки</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>data</td>
+                                            <td>
+                                                        <code>UploadUpdateInput</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Данные для изменения</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>where</td>
+                                            <td>
+                                                        <code>UploadWhereUniqueInput</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Условие поиска</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>user</td>
+                                            <td>
+                                                            <code><a href="../interfaces/AuthenticatedUser.html" target="_self" >AuthenticatedUser</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Текущий пользователь системы</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/APIError.html" target="_self" >Promise&lt;Upload | APIError&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>Изменённая загрузка</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="uploadIsExists"></a>
                     <span class="name">
                             <span class="modifier">Private</span>
@@ -1181,15 +1472,15 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="431"
-                                    class="link-to-prism">src/upload/upload.service.ts:431</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="526"
+                                    class="link-to-prism">src/upload/upload.service.ts:526</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                        <div class="io-description"><p>Проверка на существование загрузки в базед анных</p>
+                        <div class="io-description"><p>Проверка на существование загрузки в базе данных</p>
 </div>
 
                             <div class="io-description">
@@ -1259,8 +1550,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="402"
-                                    class="link-to-prism">src/upload/upload.service.ts:402</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="497"
+                                    class="link-to-prism">src/upload/upload.service.ts:497</a></div>
                         </td>
                     </tr>
 
@@ -1356,7 +1647,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="58" class="link-to-prism">src/upload/upload.service.ts:58</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="59" class="link-to-prism">src/upload/upload.service.ts:59</a></div>
                         </td>
                     </tr>
 
@@ -1389,7 +1680,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="73" class="link-to-prism">src/upload/upload.service.ts:73</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="74" class="link-to-prism">src/upload/upload.service.ts:74</a></div>
                         </td>
                     </tr>
 
@@ -1422,7 +1713,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="53" class="link-to-prism">src/upload/upload.service.ts:53</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="54" class="link-to-prism">src/upload/upload.service.ts:54</a></div>
                         </td>
                     </tr>
 
@@ -1455,7 +1746,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="63" class="link-to-prism">src/upload/upload.service.ts:63</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="64" class="link-to-prism">src/upload/upload.service.ts:64</a></div>
                         </td>
                     </tr>
 
@@ -1488,7 +1779,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="68" class="link-to-prism">src/upload/upload.service.ts:68</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="69" class="link-to-prism">src/upload/upload.service.ts:69</a></div>
                         </td>
                     </tr>
 
@@ -1514,6 +1805,8 @@
   OnModuleInit,
   Logger,
 } from &#x27;@nestjs/common&#x27;
+
+import { UploadUpdateInput, UploadWhereUniqueInput } from &#x27;@graphql&#x27;
 import { BucketItemStat, Client, S3Error } from &#x27;minio&#x27;
 import { Permission, Upload } from &#x27;@prisma/client&#x27;
 import { InjectMinio } from &#x27;nestjs-minio&#x27;
@@ -1541,7 +1834,6 @@ import {
   S3File,
 } from &#x27;@interfaces/upload&#x27;
 
-import { PaginatedResult } from &#x27;@interfaces/pagination&#x27;
 import { AuthenticatedUser } from &#x27;@interfaces/user&#x27;
 import { APIError } from &#x27;@interfaces/api-error&#x27;
 
@@ -1629,25 +1921,119 @@ export class UploadService implements OnModuleInit {
   }
 
   /**
-   * Получение списка загрузок
-   * @param {GetUploadsDto} Параметры поиска
-   * @returns {PaginatedResult&lt;Upload[]&gt;} Список загрузок
+   * Получение уникальной загрузки
+   * @param {UploadWhereUniqueInput} where Данные для поиска
+   * @returns {Upload | APIError} Загрузка
    */
-  async getUploads({
-    pagination,
-    user,
-  }: GetUploadsDto): Promise&lt;PaginatedResult&lt;Upload[]&gt;&gt; {
-    const { page, size } &#x3D; pagination
-
-    return await this.upload.findMany({
-      page,
-      size,
-      where: {
-        owner_id: {
-          equals: user.id,
-        },
+  async getUpload(where: UploadWhereUniqueInput): Promise&lt;Upload | APIError&gt; {
+    const upload &#x3D; await this.upload.model.findMany({
+      where: where as Required&lt;UploadWhereUniqueInput&gt;,
+      take: 1,
+      include: {
+        owner: true,
+        _count: true,
       },
     })
+
+    if (upload.length &#x3D;&#x3D;&#x3D; 0)
+      return new APIError(HttpStatus.NOT_FOUND, &#x27;Загрузка не найдена&#x27;)
+
+    return upload[0]
+  }
+
+  /**
+   * Получение списка загрузок
+   * @param {GetUploadsDto} Параметры поиска
+   * @returns {Upload[]} Список загрузок
+   */
+  async getUploads({
+    size,
+    page,
+    user,
+    filter,
+  }: GetUploadsDto): Promise&lt;Upload[]&gt; {
+    if (filter) {
+      if (
+        filter.owner ||
+        filter.owner_id ||
+        !user.roles.includes(&#x27;Administrator&#x27;)
+      ) {
+        filter.owner &#x3D;&#x3D;&#x3D; undefined
+        filter.owner_id &#x3D; {
+          equals: user.id,
+        }
+      }
+    }
+
+    return await this.upload.model.findMany({
+      where: filter,
+      take: size,
+      skip: size * (page - 1),
+      orderBy: { created_at: &#x27;desc&#x27; },
+      include: {
+        owner: true,
+        _count: true,
+      },
+    })
+  }
+
+  /**
+   * Изменение загрузки
+   * @param {UploadUpdateInput} data Данные для изменения
+   * @param {UploadWhereUniqueInput} where Условие поиска
+   * @param {AuthenticatedUser} user Текущий пользователь системы
+   * @returns {Upload | APIError} Изменённая загрузка
+   */
+  async updateUpload(
+    data: UploadUpdateInput,
+    where: UploadWhereUniqueInput,
+    user: AuthenticatedUser,
+  ): Promise&lt;Upload | APIError&gt; {
+    if (!user.roles.includes(&#x27;Administrator&#x27;)) {
+      if (where.owner_id &amp;&amp; where.owner_id.equals !&#x3D;&#x3D; user.id) {
+        return new APIError(HttpStatus.FORBIDDEN)
+      }
+    }
+
+    try {
+      return await this.upload.update({
+        data,
+        where: where as Required&lt;UploadWhereUniqueInput&gt;,
+      })
+    } catch (e) {
+      return new APIError(HttpStatus.INTERNAL_SERVER_ERROR, e.message)
+    }
+  }
+
+  /**
+   * Удаление загрузки
+   * @param {UploadWhereUniqueInput} where Поля отбора загрузки
+   * @param {AuthenticatedUser} user Текущий пользователь системы
+   * @returns {Upload | APIError} Удалённая загрузка
+   */
+  async deleteUpload(
+    where: UploadWhereUniqueInput,
+    user: AuthenticatedUser,
+  ): Promise&lt;Upload | APIError&gt; {
+    if (!where.id) {
+      return new APIError(HttpStatus.BAD_REQUEST)
+    }
+
+    const upload &#x3D; await this.uploadIsExists(where!.id!)
+
+    if (upload instanceof APIError) return upload
+
+    if (!user.roles.includes(&#x27;Administrator&#x27;) &amp;&amp; upload.owner_id !&#x3D;&#x3D; user.id) {
+      return new APIError(HttpStatus.FORBIDDEN)
+    }
+
+    try {
+      return await this.upload.delete({
+        where: where as Required&lt;UploadWhereUniqueInput&gt;,
+      })
+    } catch (e) {
+      return new APIError(HttpStatus.INTERNAL_SERVER_ERROR, e.message)
+    }
   }
 
   /**
@@ -1933,7 +2319,7 @@ export class UploadService implements OnModuleInit {
   }
 
   /**
-   * Проверка на существование загрузки в базед анных
+   * Проверка на существование загрузки в базе данных
    * @param {string} id Идентификатор загрузки
    * @returns {Upload | APIError} Загрузка в базе данных
    */

@@ -5,6 +5,8 @@ import {
   OnModuleInit,
   Logger,
 } from '@nestjs/common'
+
+import { UploadUpdateInput, UploadWhereUniqueInput } from '@graphql'
 import { BucketItemStat, Client, S3Error } from 'minio'
 import { Permission, Upload } from '@prisma/client'
 import { InjectMinio } from 'nestjs-minio'
@@ -32,7 +34,6 @@ import {
   S3File,
 } from '@interfaces/upload'
 
-import { PaginatedResult } from '@interfaces/pagination'
 import { AuthenticatedUser } from '@interfaces/user'
 import { APIError } from '@interfaces/api-error'
 
@@ -120,25 +121,119 @@ export class UploadService implements OnModuleInit {
   }
 
   /**
-   * Получение списка загрузок
-   * @param {GetUploadsDto} Параметры поиска
-   * @returns {PaginatedResult<Upload[]>} Список загрузок
+   * Получение уникальной загрузки
+   * @param {UploadWhereUniqueInput} where Данные для поиска
+   * @returns {Upload | APIError} Загрузка
    */
-  async getUploads({
-    pagination,
-    user,
-  }: GetUploadsDto): Promise<PaginatedResult<Upload[]>> {
-    const { page, size } = pagination
-
-    return await this.upload.findMany({
-      page,
-      size,
-      where: {
-        owner_id: {
-          equals: user.id,
-        },
+  async getUpload(where: UploadWhereUniqueInput): Promise<Upload | APIError> {
+    const upload = await this.upload.model.findMany({
+      where: where as Required<UploadWhereUniqueInput>,
+      take: 1,
+      include: {
+        owner: true,
+        _count: true,
       },
     })
+
+    if (upload.length === 0)
+      return new APIError(HttpStatus.NOT_FOUND, 'Загрузка не найдена')
+
+    return upload[0]
+  }
+
+  /**
+   * Получение списка загрузок
+   * @param {GetUploadsDto} Параметры поиска
+   * @returns {Upload[]} Список загрузок
+   */
+  async getUploads({
+    size,
+    page,
+    user,
+    filter,
+  }: GetUploadsDto): Promise<Upload[]> {
+    if (filter) {
+      if (
+        filter.owner ||
+        filter.owner_id ||
+        !user.roles.includes('Administrator')
+      ) {
+        filter.owner === undefined
+        filter.owner_id = {
+          equals: user.id,
+        }
+      }
+    }
+
+    return await this.upload.model.findMany({
+      where: filter,
+      take: size,
+      skip: size * (page - 1),
+      orderBy: { created_at: 'desc' },
+      include: {
+        owner: true,
+        _count: true,
+      },
+    })
+  }
+
+  /**
+   * Изменение загрузки
+   * @param {UploadUpdateInput} data Данные для изменения
+   * @param {UploadWhereUniqueInput} where Условие поиска
+   * @param {AuthenticatedUser} user Текущий пользователь системы
+   * @returns {Upload | APIError} Изменённая загрузка
+   */
+  async updateUpload(
+    data: UploadUpdateInput,
+    where: UploadWhereUniqueInput,
+    user: AuthenticatedUser,
+  ): Promise<Upload | APIError> {
+    if (!user.roles.includes('Administrator')) {
+      if (where.owner_id && where.owner_id.equals !== user.id) {
+        return new APIError(HttpStatus.FORBIDDEN)
+      }
+    }
+
+    try {
+      return await this.upload.update({
+        data,
+        where: where as Required<UploadWhereUniqueInput>,
+      })
+    } catch (e) {
+      return new APIError(HttpStatus.INTERNAL_SERVER_ERROR, e.message)
+    }
+  }
+
+  /**
+   * Удаление загрузки
+   * @param {UploadWhereUniqueInput} where Поля отбора загрузки
+   * @param {AuthenticatedUser} user Текущий пользователь системы
+   * @returns {Upload | APIError} Удалённая загрузка
+   */
+  async deleteUpload(
+    where: UploadWhereUniqueInput,
+    user: AuthenticatedUser,
+  ): Promise<Upload | APIError> {
+    if (!where.id) {
+      return new APIError(HttpStatus.BAD_REQUEST)
+    }
+
+    const upload = await this.uploadIsExists(where!.id!)
+
+    if (upload instanceof APIError) return upload
+
+    if (!user.roles.includes('Administrator') && upload.owner_id !== user.id) {
+      return new APIError(HttpStatus.FORBIDDEN)
+    }
+
+    try {
+      return await this.upload.delete({
+        where: where as Required<UploadWhereUniqueInput>,
+      })
+    } catch (e) {
+      return new APIError(HttpStatus.INTERNAL_SERVER_ERROR, e.message)
+    }
   }
 
   /**
@@ -424,7 +519,7 @@ export class UploadService implements OnModuleInit {
   }
 
   /**
-   * Проверка на существование загрузки в базед анных
+   * Проверка на существование загрузки в базе данных
    * @param {string} id Идентификатор загрузки
    * @returns {Upload | APIError} Загрузка в базе данных
    */

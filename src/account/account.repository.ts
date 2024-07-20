@@ -1,19 +1,14 @@
-import { PrismaService } from 'nestjs-prisma'
-import { Injectable } from '@nestjs/common'
-import { Account } from '@prisma/client'
-
 import {
-  AccountOrderByWithRelationInput,
   CreateOneAccountArgs,
-  AccountWhereInput,
+  FindUniqueAccountArgs,
+  UpdateOneAccountArgs,
 } from '@graphql'
 
-// Интерфейсы
-import { AccountFindUniqueDto, AccountUpdateDto } from '@interfaces/account'
-import { PaginatedResult } from '@interfaces/pagination'
+import { Account, Prisma } from '@prisma/client'
+import { PrismaService } from 'nestjs-prisma'
+import { Injectable } from '@nestjs/common'
 
-// Утилиты
-import { paginator } from '@utils/paginator'
+import { ToPrisma } from '@interfaces/prisma'
 
 /**
  * Репозиторий аккаунта
@@ -28,44 +23,27 @@ export class AccountRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   /**
+   * Получение модели аккаунта Prisma
+   */
+  get model() {
+    return this.prisma.account
+  }
+
+  /**
    * Получение аккаунта по уникальному полю
    * @param {AccountFindUniqueDto} args Уникальные поля для отбора
    * @returns {Account} Загрузка в системе
    */
-  async findOne(args: AccountFindUniqueDto): Promise<Account | null> {
+  async findOne(
+    args: ToPrisma<
+      FindUniqueAccountArgs,
+      Prisma.AccountSelect,
+      Prisma.AccountInclude
+    >,
+  ): Promise<Account | null> {
     return this.prisma.account.findUnique(args)
   }
 
-  /**
-   * Получение множества аккаунтов по полям отбора
-   * @param {FindManyAccountArgs} args Поля для отбора
-   * @returns {Account[]} Загрузки в базе данных
-   */
-  async findMany({
-    where,
-    orderBy,
-    page,
-    size = 10,
-  }: {
-    where?: AccountWhereInput
-    orderBy?: AccountOrderByWithRelationInput
-    page?: number
-    size?: number
-  }): Promise<PaginatedResult<Account[]>> {
-    return paginator({
-      page,
-      perPage: size,
-    })(
-      this.prisma.account,
-      {
-        where,
-        orderBy,
-      },
-      {
-        page,
-      },
-    )
-  }
   /**
    * Создание аккаунта в базе данных
    * @param {CreateOneAccountArgs} args Данные нового аккаунта
@@ -80,7 +58,7 @@ export class AccountRepository {
    * @param {UpdateOneAccountArgs} args Данные для обновления
    * @returns {Account} Обновлённый аккаунт
    */
-  async update(args: AccountUpdateDto): Promise<Account> {
+  async update(args: UpdateOneAccountArgs): Promise<Account> {
     return this.prisma.account.update(args)
   }
 }

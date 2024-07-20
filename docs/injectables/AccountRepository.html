@@ -155,10 +155,6 @@
                             </li>
                             <li>
                                     <span class="modifier">Async</span>
-                                <a href="#findMany" >findMany</a>
-                            </li>
-                            <li>
-                                    <span class="modifier">Async</span>
                                 <a href="#findOne" >findOne</a>
                             </li>
                             <li>
@@ -173,6 +169,20 @@
 
 
 
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Accessors</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                    <a href="#model" >model</a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
         </tbody>
     </table>
 </section>
@@ -188,7 +198,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="23" class="link-to-prism">src/account/account.repository.ts:23</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="18" class="link-to-prism">src/account/account.repository.ts:18</a></div>
                             </td>
                         </tr>
 
@@ -260,8 +270,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="74"
-                                    class="link-to-prism">src/account/account.repository.ts:74</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="52"
+                                    class="link-to-prism">src/account/account.repository.ts:52</a></div>
                         </td>
                     </tr>
 
@@ -319,77 +329,6 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="findMany"></a>
-                    <span class="name">
-                            <span class="modifier">Async</span>
-                        <span ><b>findMany</b></span>
-                        <a href="#findMany"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>findMany(undefined: literal type)</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="44"
-                                    class="link-to-prism">src/account/account.repository.ts:44</a></div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                        <div class="io-description"><p>Получение множества аккаунтов по полям отбора</p>
-</div>
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                        <code>literal type</code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../interfaces/PaginatedResult.html" target="_self" >Promise&lt;PaginatedResult&lt;Account[]&gt;&gt;</a></code>
-
-                        </div>
-                            <div class="io-description">
-                                <p>Загрузки в базе данных</p>
-
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
                     <a name="findOne"></a>
                     <span class="name">
                             <span class="modifier">Async</span>
@@ -401,15 +340,15 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>findOne(args: <a href="../interfaces/AccountFindUniqueDto.html" target="_self">AccountFindUniqueDto</a>)</code>
+                    <code>findOne(args: <a href="../undefineds/ToPrisma.html" target="_self">ToPrisma&lt;FindUniqueAccountArgs | Prisma.AccountSelect | Prisma.AccountInclude&gt;</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="35"
-                                    class="link-to-prism">src/account/account.repository.ts:35</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="37"
+                                    class="link-to-prism">src/account/account.repository.ts:37</a></div>
                         </td>
                     </tr>
 
@@ -435,7 +374,7 @@
                                         <tr>
                                                 <td>args</td>
                                             <td>
-                                                            <code><a href="../interfaces/AccountFindUniqueDto.html" target="_self" >AccountFindUniqueDto</a></code>
+                                                            <code><a href="../miscellaneous/typealiases.html#ToPrisma" target="_self" >ToPrisma&lt;FindUniqueAccountArgs | Prisma.AccountSelect | Prisma.AccountInclude&gt;</a></code>
                                             </td>
 
                                             <td>
@@ -478,15 +417,15 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>update(args: <a href="../interfaces/AccountUpdateDto.html" target="_self">AccountUpdateDto</a>)</code>
+                    <code>update(args: UpdateOneAccountArgs)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="83"
-                                    class="link-to-prism">src/account/account.repository.ts:83</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="61"
+                                    class="link-to-prism">src/account/account.repository.ts:61</a></div>
                         </td>
                     </tr>
 
@@ -512,7 +451,7 @@
                                         <tr>
                                                 <td>args</td>
                                             <td>
-                                                            <code><a href="../interfaces/AccountUpdateDto.html" target="_self" >AccountUpdateDto</a></code>
+                                                        <code>UpdateOneAccountArgs</code>
                                             </td>
 
                                             <td>
@@ -542,26 +481,55 @@
     </table>
 </section>
 
+            <section data-compodoc="block-accessors">
+    <h3 id="accessors">
+        Accessors
+    </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="model"></a>
+                        <span class="name"><b>model</b><a href="#model"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>model()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/account/account.repository.ts:28</a></div>
+                                </td>
+                            </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-description"><p>Получение модели аккаунта Prisma</p>
+</div>
+
+                        </td>
+                    </tr>
+
+            </tbody>
+        </table>
+</section>
     </div>
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { PrismaService } from &#x27;nestjs-prisma&#x27;
-import { Injectable } from &#x27;@nestjs/common&#x27;
-import { Account } from &#x27;@prisma/client&#x27;
-
-import {
-  AccountOrderByWithRelationInput,
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
   CreateOneAccountArgs,
-  AccountWhereInput,
+  FindUniqueAccountArgs,
+  UpdateOneAccountArgs,
 } from &#x27;@graphql&#x27;
 
-// Интерфейсы
-import { AccountFindUniqueDto, AccountUpdateDto } from &#x27;@interfaces/account&#x27;
-import { PaginatedResult } from &#x27;@interfaces/pagination&#x27;
+import { Account, Prisma } from &#x27;@prisma/client&#x27;
+import { PrismaService } from &#x27;nestjs-prisma&#x27;
+import { Injectable } from &#x27;@nestjs/common&#x27;
 
-// Утилиты
-import { paginator } from &#x27;@utils/paginator&#x27;
+import { ToPrisma } from &#x27;@interfaces/prisma&#x27;
 
 /**
  * Репозиторий аккаунта
@@ -576,44 +544,27 @@ export class AccountRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   /**
+   * Получение модели аккаунта Prisma
+   */
+  get model() {
+    return this.prisma.account
+  }
+
+  /**
    * Получение аккаунта по уникальному полю
    * @param {AccountFindUniqueDto} args Уникальные поля для отбора
    * @returns {Account} Загрузка в системе
    */
-  async findOne(args: AccountFindUniqueDto): Promise&lt;Account | null&gt; {
+  async findOne(
+    args: ToPrisma&lt;
+      FindUniqueAccountArgs,
+      Prisma.AccountSelect,
+      Prisma.AccountInclude
+    &gt;,
+  ): Promise&lt;Account | null&gt; {
     return this.prisma.account.findUnique(args)
   }
 
-  /**
-   * Получение множества аккаунтов по полям отбора
-   * @param {FindManyAccountArgs} args Поля для отбора
-   * @returns {Account[]} Загрузки в базе данных
-   */
-  async findMany({
-    where,
-    orderBy,
-    page,
-    size &#x3D; 10,
-  }: {
-    where?: AccountWhereInput
-    orderBy?: AccountOrderByWithRelationInput
-    page?: number
-    size?: number
-  }): Promise&lt;PaginatedResult&lt;Account[]&gt;&gt; {
-    return paginator({
-      page,
-      perPage: size,
-    })(
-      this.prisma.account,
-      {
-        where,
-        orderBy,
-      },
-      {
-        page,
-      },
-    )
-  }
   /**
    * Создание аккаунта в базе данных
    * @param {CreateOneAccountArgs} args Данные нового аккаунта
@@ -628,7 +579,7 @@ export class AccountRepository {
    * @param {UpdateOneAccountArgs} args Данные для обновления
    * @returns {Account} Обновлённый аккаунт
    */
-  async update(args: AccountUpdateDto): Promise&lt;Account&gt; {
+  async update(args: UpdateOneAccountArgs): Promise&lt;Account&gt; {
     return this.prisma.account.update(args)
   }
 }

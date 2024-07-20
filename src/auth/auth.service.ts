@@ -102,11 +102,8 @@ export class AuthService {
     username: string,
     password: string,
   ): Promise<AuthenticatedUser | APIError> {
-    const account = await this.account.getOne({
-      where: { username: username.trim() },
-      include: {
-        avatar: true,
-      },
+    const account = await this.account.getAccount({
+      username: username.trim(),
     })
 
     if (account instanceof APIError) {
@@ -126,9 +123,7 @@ export class AuthService {
     email: string,
     password: string,
   ): Promise<AuthenticatedUser | APIError> {
-    const account = await this.account.getOne({
-      where: { email: email.trim() },
-    })
+    const account = await this.account.getAccount({ email: email.trim() })
 
     if (account instanceof APIError) {
       return account
@@ -182,13 +177,8 @@ export class AuthService {
   async verifyVKIDUser(
     vkIdUser: VKIDUser,
   ): Promise<AuthenticatedUser | APIError> {
-    const isExistUser = await this.account.getOne({
-      where: {
-        vk_id: String(vkIdUser.id),
-      },
-      include: {
-        avatar: true,
-      },
+    const isExistUser = await this.account.getAccount({
+      vk_id: String(vkIdUser.id),
     })
 
     if (isExistUser instanceof APIError) {
@@ -239,16 +229,16 @@ export class AuthService {
       return { ...user!, ...tokens! }
     }
 
-    const user = await this.account.update({
-      where: {
-        id: isExistUser.id,
-      },
-      data: {
+    const user = await this.account.updateAccount(
+      {
         vk_avatar: {
           set: vkIdUser.photo_200,
         },
       },
-    })
+      {
+        id: isExistUser.id,
+      },
+    )
 
     if (user instanceof APIError) {
       return user

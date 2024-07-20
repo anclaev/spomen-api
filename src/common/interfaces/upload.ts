@@ -1,6 +1,5 @@
-import { StreamableFile } from '@nestjs/common'
 import { Permission } from '@prisma/client'
-import { Readable } from 'stream'
+
 export interface File {
   name: string
   ext: string

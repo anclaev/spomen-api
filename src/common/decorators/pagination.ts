@@ -6,8 +6,18 @@ import {
 
 import { Request } from 'express'
 
-export interface Pagination {
+/**
+ * Класс пагинации
+ */
+export class Pagination {
+  /**
+   * Текущая страница
+   */
   page: number
+
+  /**
+   * Размер страницы
+   */
   size: number
 }
 

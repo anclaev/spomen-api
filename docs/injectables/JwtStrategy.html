@@ -381,7 +381,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, &#x27;jwt&#x27;) {
    * @returns {User} Авторизованный пользователь
    */
   async validate(payload: TokenPayload): Promise&lt;User&gt; {
-    const account &#x3D; await this.account.getById(payload.userid)
+    const account &#x3D; await this.account.getAccount({ id: payload.userid })
 
     if (account instanceof APIError) {
       throw new HttpException(&#x27;&#x27;, HttpStatus.UNAUTHORIZED)

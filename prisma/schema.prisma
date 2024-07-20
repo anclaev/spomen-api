@@ -13,6 +13,7 @@ generator graphql {
     emitCompiled                          = true
     purgeOutput                           = true
     noTypeId                              = true
+    useInputType_WhereInput_ALL           = "WhereInput"
 }
 
 datasource db {
