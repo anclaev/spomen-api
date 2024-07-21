@@ -35,6 +35,7 @@ import {
 } from '@interfaces/upload'
 
 import { AuthenticatedUser } from '@interfaces/user'
+import { Pagination } from '@decorators/pagination'
 import { APIError } from '@interfaces/api-error'
 
 // Enums
@@ -417,6 +418,20 @@ export class UploadService implements OnModuleInit {
     }
 
     return upload
+  }
+
+  /**
+   * Получение списка расширений загрузок
+   * @param {Pagination} args Параметры пагинации
+   * @returns {string[]} Список расширений
+   */
+  async getExtenstionsList(args: Pagination): Promise<string[] | APIError> {
+    try {
+      const extenstions = await this.upload.getDistinctExt(args)
+      return extenstions.map((item) => item.ext)
+    } catch (e) {
+      return new APIError(HttpStatus.INTERNAL_SERVER_ERROR, e.message)
+    }
   }
 
   /**

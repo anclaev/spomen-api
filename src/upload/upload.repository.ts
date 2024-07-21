@@ -3,17 +3,16 @@ import { PrismaService } from 'nestjs-prisma'
 import { Injectable } from '@nestjs/common'
 
 import {
-  UploadOrderByWithRelationInput,
   CreateOneUploadArgs,
   DeleteManyUploadArgs,
   DeleteOneUploadArgs,
   FindUniqueUploadArgs,
   UpdateOneUploadArgs,
-  UploadWhereInput,
 } from '@graphql'
 
 // Интерфейсы
 import { DeleteManyResult } from '@interfaces/prisma'
+import { Pagination } from '@decorators/pagination'
 import { ToPrisma } from '@interfaces/prisma'
 
 /**
@@ -86,5 +85,27 @@ export class UploadRepository {
     args: Omit<DeleteManyUploadArgs, 'where'>,
   ): Promise<DeleteManyResult> {
     return this.prisma.upload.deleteMany(args)
+  }
+
+  /**
+   * Получение списка уникальных расширений
+   * @param {Pagination} args Параметры пагинации
+   * @returns {{ext: string}[]} Массив объектов с расширениями
+   */
+  async getDistinctExt({
+    page,
+    size,
+  }: Pagination): Promise<Pick<Upload, 'ext'>[]> {
+    return await this.prisma.upload.findMany({
+      select: {
+        ext: true,
+      },
+      distinct: ['ext'],
+      take: size,
+      skip: size * (page - 1),
+      orderBy: {
+        ext: 'asc',
+      },
+    })
   }
 }

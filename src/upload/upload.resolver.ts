@@ -80,6 +80,7 @@ export class UploadResolver {
    * @param {AuthenticatedUser} user Текущий пользователь системы
    * @returns {Upload} Изменённая загрузка
    */
+  @UseGqlAuth()
   @Mutation(() => Upload, { name: 'updateUpload' })
   async updateUpload(
     @Args('data', { type: () => UploadUpdateInput })
@@ -100,6 +101,7 @@ export class UploadResolver {
    * @param {AuthenticatedUser} user Текущий пользователь системы
    * @returns {Upload} Удалённая загрузка
    */
+  @UseGqlAuth()
   @Mutation(() => Upload, { name: 'deleteUpload' })
   async deleteUpload(
     @Args('where', { type: () => UploadWhereUniqueInput })
@@ -110,6 +112,23 @@ export class UploadResolver {
     const deletedUpload = await this.upload.deleteUpload(where, user)
 
     return this.catchError<Upload>(deletedUpload)
+  }
+
+  /**
+   * Получение списка расширений загрузок
+   * @param {number} size Количество элементов
+   * @param {number} page Текущая страница
+   * @returns {string[]} Список расширений
+   */
+  @UseGqlAuth()
+  @Query(() => [String], { name: 'getExtenstions' })
+  async getExtensions(
+    @Args('size', { type: () => Number, defaultValue: 10 }) size: number,
+    @Args('page', { type: () => Number, defaultValue: 1 }) page: number,
+  ): Promise<string[]> {
+    const extenstions = await this.upload.getExtenstionsList({ size, page })
+
+    return this.catchError<string[]>(extenstions)
   }
 
   /**
