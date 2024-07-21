@@ -52,7 +52,7 @@ export class UploadResolver {
    * @param {number} size Размер страницы
    * @param filters Фильтры отбора
    * @param {AuthenticatedUser} user Текущий пользователь системы
-   * @returns {Upload[]} Список загрузок
+   * @returns {Upload[]} Список  загрузок
    */
   @UseGqlAuth()
   @Query(() => [Upload], { name: 'uploads' })
