@@ -1395,7 +1395,7 @@
                 <tr>
                     <td class="col-md-4">
                         <i>Default value : </i><code>createParamDecorator(
-  (data, ctx: ExecutionContext): Pagination &#x3D;&gt; {
+  (_: unknown, ctx: ExecutionContext): Pagination &#x3D;&gt; {
     const req: Request &#x3D; ctx.switchToHttp().getRequest()
     const page &#x3D; parseInt(req.query.page as string)
     const size &#x3D; parseInt(req.query.size as string)

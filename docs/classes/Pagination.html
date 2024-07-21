@@ -126,7 +126,7 @@
             <h3>File</h3>
         </p>
         <p class="comment">
-            <code>src/common/decorators/pagination.ts</code>
+            <code>src/common/interfaces/pagination.ts</code>
         </p>
 
 
@@ -197,7 +197,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">src/common/decorators/pagination.ts:16</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="8" class="link-to-prism">src/common/interfaces/pagination.ts:8</a></div>
                         </td>
                     </tr>
 
@@ -229,7 +229,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="21" class="link-to-prism">src/common/decorators/pagination.ts:21</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="13" class="link-to-prism">src/common/interfaces/pagination.ts:13</a></div>
                         </td>
                     </tr>
 
@@ -254,18 +254,7 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
-  BadRequestException,
-  createParamDecorator,
-  ExecutionContext,
-} from &#x27;@nestjs/common&#x27;
-
-import { Request } from &#x27;express&#x27;
-
-/**
- * Класс пагинации
- */
-export class Pagination {
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">export class Pagination {
   /**
    * Текущая страница
    */
@@ -277,27 +266,15 @@ export class Pagination {
   size: number
 }
 
-export const UsePagination &#x3D; createParamDecorator(
-  (data, ctx: ExecutionContext): Pagination &#x3D;&gt; {
-    const req: Request &#x3D; ctx.switchToHttp().getRequest()
-    const page &#x3D; parseInt(req.query.page as string)
-    const size &#x3D; parseInt(req.query.size as string)
-
-    // check if page and size are valid
-    if (isNaN(page) || page &lt; 0 || isNaN(size) || size &lt; 0) {
-      throw new BadRequestException(&#x27;Некорректные параметры пагинации&#x27;)
-    }
-    // do not allow to fetch large slices of the dataset
-    if (size &gt; 100) {
-      throw new BadRequestException(&#x27;Превышен размер страницы&#x27;)
-    }
-
-    // calculate pagination parameters
-    // const limit &#x3D; size
-    // const offset &#x3D; page * limit
-    return { page, size }
-  },
-)
+/**
+ * Класс пагинации с фильтрами
+ */
+export class PaginationWithFilters&lt;T&gt; extends Pagination {
+  /**
+   * Поля отбора модели
+   */
+  filters?: T
+}
 </code></pre>
     </div>
 </div>

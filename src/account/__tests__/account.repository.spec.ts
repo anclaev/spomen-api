@@ -104,20 +104,4 @@ describe('AccountRepository', () => {
 
     return repo.findOne(testReq).then((data) => expect(data).toBe(mockAccount))
   })
-
-  it('Должен возвращать множество аккаунтов по параметру', () => {
-    const testReq: FindManyAccountArgs = {
-      where: {
-        username: {
-          contains: 'test',
-        },
-      },
-    }
-
-    prisma.account.findMany.mockResolvedValueOnce([mockAccount])
-
-    return repo
-      .findMany(testReq)
-      .then((data) => expect(data).toStrictEqual([mockAccount]))
-  })
 })

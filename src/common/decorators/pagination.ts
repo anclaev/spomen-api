@@ -6,23 +6,10 @@ import {
 
 import { Request } from 'express'
 
-/**
- * Класс пагинации
- */
-export class Pagination {
-  /**
-   * Текущая страница
-   */
-  page: number
-
-  /**
-   * Размер страницы
-   */
-  size: number
-}
+import { Pagination } from '@interfaces/pagination'
 
 export const UsePagination = createParamDecorator(
-  (data, ctx: ExecutionContext): Pagination => {
+  (_: unknown, ctx: ExecutionContext): Pagination => {
     const req: Request = ctx.switchToHttp().getRequest()
     const page = parseInt(req.query.page as string)
     const size = parseInt(req.query.size as string)

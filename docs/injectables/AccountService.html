@@ -199,12 +199,12 @@
             <tbody>
                 <tr>
                     <td class="col-md-4">
-<code>constructor(account: <a href="../injectables/AccountRepository.html" target="_self">AccountRepository</a>, upload: <a href="../injectables/UploadService.html" target="_self">UploadService</a>)</code>
+<code>constructor(repo: <a href="../injectables/AccountRepository.html" target="_self">AccountRepository</a>, upload: <a href="../injectables/UploadService.html" target="_self">UploadService</a>)</code>
                     </td>
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/account/account.service.ts:36</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/account/account.service.ts:35</a></div>
                             </td>
                         </tr>
 
@@ -225,7 +225,7 @@
                                         </thead>
                                         <tbody>
                                                 <tr>
-                                                        <td>account</td>
+                                                        <td>repo</td>
                                                   
                                                         <td>
                                                                         <code><a href="../injectables/AccountRepository.html" target="_self" >AccountRepository</a></code>
@@ -292,8 +292,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="276"
-                                    class="link-to-prism">src/account/account.service.ts:276</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="275"
+                                    class="link-to-prism">src/account/account.service.ts:275</a></div>
                         </td>
                     </tr>
 
@@ -369,8 +369,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="113"
-                                    class="link-to-prism">src/account/account.service.ts:113</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="112"
+                                    class="link-to-prism">src/account/account.service.ts:112</a></div>
                         </td>
                     </tr>
 
@@ -446,8 +446,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="159"
-                                    class="link-to-prism">src/account/account.service.ts:159</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="158"
+                                    class="link-to-prism">src/account/account.service.ts:158</a></div>
                         </td>
                     </tr>
 
@@ -539,8 +539,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="52"
-                                    class="link-to-prism">src/account/account.service.ts:52</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="51"
+                                    class="link-to-prism">src/account/account.service.ts:51</a></div>
                         </td>
                     </tr>
 
@@ -616,8 +616,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="83"
-                                    class="link-to-prism">src/account/account.service.ts:83</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="82"
+                                    class="link-to-prism">src/account/account.service.ts:82</a></div>
                         </td>
                     </tr>
 
@@ -687,8 +687,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="246"
-                                    class="link-to-prism">src/account/account.service.ts:246</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="245"
+                                    class="link-to-prism">src/account/account.service.ts:245</a></div>
                         </td>
                     </tr>
 
@@ -780,8 +780,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="128"
-                                    class="link-to-prism">src/account/account.service.ts:128</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="127"
+                                    class="link-to-prism">src/account/account.service.ts:127</a></div>
                         </td>
                     </tr>
 
@@ -889,8 +889,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="185"
-                                    class="link-to-prism">src/account/account.service.ts:185</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="184"
+                                    class="link-to-prism">src/account/account.service.ts:184</a></div>
                         </td>
                     </tr>
 
@@ -987,7 +987,6 @@
   AccountUpdateInput,
   AccountWhereUniqueInput,
   CreateOneAccountArgs,
-  FindUniqueAccountArgs,
 } from &#x27;@graphql&#x27;
 
 import { HttpStatus, Injectable } from &#x27;@nestjs/common&#x27;
@@ -1020,11 +1019,11 @@ import { GetAccountsDto } from &#x27;./dto/get-accounts.dto&#x27;
 export class AccountService {
   /**
    * Конструктор сервиса аккаунта
-   * @param {AccountRepository} account Репозиторий аккаунта
+   * @param {AccountRepository} repo Репозиторий аккаунта
    * @param {UploadService} upload Сервис загрузок
    */
   constructor(
-    private readonly account: AccountRepository,
+    private readonly repo: AccountRepository,
     private readonly upload: UploadService,
   ) {}
 
@@ -1036,7 +1035,7 @@ export class AccountService {
   async getAccount(
     where: AccountWhereUniqueInput,
   ): Promise&lt;Account | APIError&gt; {
-    const account &#x3D; await this.account.model.findMany({
+    const account &#x3D; await this.repo.model.findMany({
       where: where as Required&lt;AccountWhereUniqueInput&gt;,
       take: 1,
       include: {
@@ -1067,10 +1066,10 @@ export class AccountService {
   async getAccounts({
     page,
     size,
-    filter,
+    filters,
   }: GetAccountsDto): Promise&lt;Account[]&gt; {
-    return await this.account.model.findMany({
-      where: filter,
+    return this.repo.model.findMany({
+      where: filters,
       take: size,
       skip: size * (page - 1),
       orderBy: { created_at: &#x27;desc&#x27; },
@@ -1096,7 +1095,7 @@ export class AccountService {
    */
   async create(dto: CreateOneAccountArgs): Promise&lt;Account | APIError&gt; {
     try {
-      return await this.account.create(dto)
+      return await this.repo.create(dto)
     } catch (e) {
       return new APIError(HttpStatus.BAD_REQUEST, e.message)
     }
@@ -1125,7 +1124,7 @@ export class AccountService {
     }
 
     try {
-      return await this.account.update({
+      return await this.repo.update({
         data,
         where: where as Required&lt;AccountWhereUniqueInput&gt;,
       })
@@ -1151,7 +1150,7 @@ export class AccountService {
     }
 
     try {
-      return await this.account.model.delete({
+      return await this.repo.model.delete({
         where: where as Required&lt;AccountWhereUniqueInput&gt;,
       })
     } catch (e) {
@@ -1199,7 +1198,7 @@ export class AccountService {
     }
 
     try {
-      await this.account.update({
+      await this.repo.update({
         data: {
           avatar: {
             connect: {
@@ -1258,7 +1257,7 @@ export class AccountService {
    * @returns {Account} Аккаунт в базе данных
    */
   async accountIsExists(id: string): Promise&lt;Account | APIError&gt; {
-    const account &#x3D; await this.account.findOne({
+    const account &#x3D; await this.repo.findOne({
       where: {
         id,
       },

@@ -1,5 +1,12 @@
 import { Permission } from '@prisma/client'
 
+export type UploadFilters = {
+  name: any | null
+  ext: any | null
+  owner_id: any | null
+  is_system: any | null
+}
+
 export interface File {
   name: string
   ext: string

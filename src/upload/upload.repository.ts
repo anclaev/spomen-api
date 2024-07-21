@@ -12,7 +12,8 @@ import {
 
 // Интерфейсы
 import { DeleteManyResult } from '@interfaces/prisma'
-import { Pagination } from '@decorators/pagination'
+import { Pagination } from '@interfaces/pagination'
+import { UploadFilters } from '@interfaces/upload'
 import { ToPrisma } from '@interfaces/prisma'
 
 /**
@@ -35,6 +36,38 @@ export class UploadRepository {
   }
 
   /**
+   * Получение списка загрузок по фильтрам
+   * @param {Pagination} args Параметры пагинации
+   * @param {UploadFilters} filters Фильтры
+   * @returns {Upload[]} Список загрузок
+   */
+  async getPaginated(
+    args: Pagination,
+    filters: UploadFilters,
+  ): Promise<Upload[]> {
+    const { size, page } = args
+
+    return this.prisma.upload.findMany({
+      where: filters
+        ? {
+            ext: filters.ext ? filters.ext : undefined,
+            name: filters.name ? filters.name : undefined,
+            owner_id: filters.owner_id ? filters.owner_id : undefined,
+            is_system: filters.is_system ? filters.is_system : undefined,
+          }
+        : undefined,
+      include: {
+        owner: true,
+      },
+      orderBy: {
+        created_at: 'desc',
+      },
+      take: size,
+      skip: size * (page - 1),
+    })
+  }
+
+  /**
    * Получение загрузки по уникальному полю
    * @param {FindUniqueUploadArgs} args Уникальные поля для отбора
    * @returns {Upload} Загрузка в базе данных
@@ -46,7 +79,7 @@ export class UploadRepository {
       Prisma.UploadInclude
     >,
   ): Promise<Upload | null> {
-    return await this.prisma.upload.findUnique(args)
+    return this.prisma.upload.findUnique(args)
   }
 
   /**
@@ -96,7 +129,7 @@ export class UploadRepository {
     page,
     size,
   }: Pagination): Promise<Pick<Upload, 'ext'>[]> {
-    return await this.prisma.upload.findMany({
+    return this.prisma.upload.findMany({
       select: {
         ext: true,
       },

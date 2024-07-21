@@ -50,7 +50,7 @@ export class UploadResolver {
    * Получение списка загрузок
    * @param {number} page Текущая страница
    * @param {number} size Размер страницы
-   * @param filter
+   * @param filters Фильтры отбора
    * @param {AuthenticatedUser} user Текущий пользователь системы
    * @returns {Upload[]} Список загрузок
    */
@@ -59,19 +59,21 @@ export class UploadResolver {
   async uploads(
     @Args('size', { type: () => Number, defaultValue: 10 }) size: number,
     @Args('page', { type: () => Number, defaultValue: 1 }) page: number,
-    @Args('filter', {
+    @Args('filters', {
       type: () => UploadWhereInput,
       nullable: true,
     })
-    filter: UploadWhereInput,
+    filters: UploadWhereInput,
     @UseGqlUser() user: AuthenticatedUser,
   ): Promise<Upload[]> {
-    return await this.upload.getUploads({
+    const uploads = await this.upload.getUploads({
       user,
-      filter,
+      filters,
       page,
       size,
     })
+
+    return this.catchError<Upload[]>(uploads)
   }
 
   /**
@@ -127,7 +129,7 @@ export class UploadResolver {
     @Args('size', { type: () => Number, defaultValue: 10 }) size: number,
     @Args('page', { type: () => Number, defaultValue: 1 }) page: number,
   ): Promise<string[]> {
-    const extensions = await this.upload.getExtenstionsList({ size, page })
+    const extensions = await this.upload.getExtensionsList({ size, page })
 
     return this.catchError<string[]>(extensions)
   }

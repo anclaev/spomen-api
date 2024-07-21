@@ -50,6 +50,7 @@ export class AccountResolver {
    * Получение списка аккаунтов
    * @param {number} page Текущая страница
    * @param {number} size Размер страницы
+   * @param filters Фильтры отбора
    * @returns {Account[]} Список аккаунтов
    */
   @UseGqlAuth()
@@ -57,13 +58,13 @@ export class AccountResolver {
   async accounts(
     @Args('size', { type: () => Number, defaultValue: 10 }) size: number,
     @Args('page', { type: () => Number, defaultValue: 1 }) page: number,
-    @Args('filter', {
+    @Args('filters', {
       type: () => AccountWhereInput,
       nullable: true,
     })
-    filter: AccountWhereInput,
+    filters: AccountWhereInput,
   ): Promise<Account[]> {
-    return await this.account.getAccounts({ size, page, filter })
+    return await this.account.getAccounts({ size, page, filters })
   }
 
   /**

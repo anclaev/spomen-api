@@ -3,7 +3,6 @@ import {
   AccountUpdateInput,
   AccountWhereUniqueInput,
   CreateOneAccountArgs,
-  FindUniqueAccountArgs,
 } from '@graphql'
 
 import { HttpStatus, Injectable } from '@nestjs/common'
@@ -36,11 +35,11 @@ import { GetAccountsDto } from './dto/get-accounts.dto'
 export class AccountService {
   /**
    * Конструктор сервиса аккаунта
-   * @param {AccountRepository} account Репозиторий аккаунта
+   * @param {AccountRepository} repo Репозиторий аккаунта
    * @param {UploadService} upload Сервис загрузок
    */
   constructor(
-    private readonly account: AccountRepository,
+    private readonly repo: AccountRepository,
     private readonly upload: UploadService,
   ) {}
 
@@ -52,7 +51,7 @@ export class AccountService {
   async getAccount(
     where: AccountWhereUniqueInput,
   ): Promise<Account | APIError> {
-    const account = await this.account.model.findMany({
+    const account = await this.repo.model.findMany({
       where: where as Required<AccountWhereUniqueInput>,
       take: 1,
       include: {
@@ -83,10 +82,10 @@ export class AccountService {
   async getAccounts({
     page,
     size,
-    filter,
+    filters,
   }: GetAccountsDto): Promise<Account[]> {
-    return await this.account.model.findMany({
-      where: filter,
+    return this.repo.model.findMany({
+      where: filters,
       take: size,
       skip: size * (page - 1),
       orderBy: { created_at: 'desc' },
@@ -112,7 +111,7 @@ export class AccountService {
    */
   async create(dto: CreateOneAccountArgs): Promise<Account | APIError> {
     try {
-      return await this.account.create(dto)
+      return await this.repo.create(dto)
     } catch (e) {
       return new APIError(HttpStatus.BAD_REQUEST, e.message)
     }
@@ -141,7 +140,7 @@ export class AccountService {
     }
 
     try {
-      return await this.account.update({
+      return await this.repo.update({
         data,
         where: where as Required<AccountWhereUniqueInput>,
       })
@@ -167,7 +166,7 @@ export class AccountService {
     }
 
     try {
-      return await this.account.model.delete({
+      return await this.repo.model.delete({
         where: where as Required<AccountWhereUniqueInput>,
       })
     } catch (e) {
@@ -215,7 +214,7 @@ export class AccountService {
     }
 
     try {
-      await this.account.update({
+      await this.repo.update({
         data: {
           avatar: {
             connect: {
@@ -274,7 +273,7 @@ export class AccountService {
    * @returns {Account} Аккаунт в базе данных
    */
   async accountIsExists(id: string): Promise<Account | APIError> {
-    const account = await this.account.findOne({
+    const account = await this.repo.findOne({
       where: {
         id,
       },

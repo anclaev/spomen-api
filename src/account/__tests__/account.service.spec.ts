@@ -25,10 +25,4 @@ describe('AccountService', () => {
   it('Должен быть определён', () => {
     expect(service).toBeDefined()
   })
-
-  it('Должен возвращать найденный аккаунт', () => {
-    repo.findOne.mockResolvedValueOnce(mockAccount)
-
-    return service.findOne('1').then((data) => expect(data).toBe(mockAccount))
-  })
 })

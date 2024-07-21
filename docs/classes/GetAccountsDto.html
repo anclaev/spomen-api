@@ -142,7 +142,7 @@
                 <h3>Extends</h3>
             </p>
             <p class="comment">
-                            <code><a href="../classes/PaginationDto.html" target="_self" >PaginationDto</a></code>
+                            <code><a href="../classes/PaginationWithFilters.html" target="_self" >PaginationWithFilters</a></code>
             </p>
 
 
@@ -161,7 +161,7 @@
                         <ul class="index-list">
                             <li>
                                     <span class="modifier">Optional</span>
-                                <a href="#filter" >filter</a>
+                                <a href="#filters" >filters</a>
                             </li>
                             <li>
                                 <a href="#page" >page</a>
@@ -192,11 +192,11 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="filter"></a>
+                    <a name="filters"></a>
                     <span class="name">
                             <span class="modifier">Optional</span>
-                        <span ><b>filter</b></span>
-                        <a href="#filter"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>filters</b></span>
+                        <a href="#filters"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
@@ -208,13 +208,13 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Inherited from         <code><a href="../classes/PaginationDto.html" target="_self" >PaginationDto</a></code>
+                                <div class="io-line">Inherited from         <code><a href="../classes/PaginationWithFilters.html" target="_self" >PaginationWithFilters</a></code>
 </div>
                             </td>
                         </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/PaginationDto.html#source" target="_self" >PaginationDto:7</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/PaginationWithFilters.html#source" target="_self" >PaginationWithFilters:23</a></code>
 </div>
                         </td>
                     </tr>
@@ -253,7 +253,7 @@
                         </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/Pagination.html#source" target="_self" >Pagination:16</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/Pagination.html#source" target="_self" >Pagination:8</a></code>
 </div>
                         </td>
                     </tr>
@@ -292,7 +292,7 @@
                         </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in         <code><a href="../classes/Pagination.html#source" target="_self" >Pagination:21</a></code>
+                                <div class="io-line">Defined in         <code><a href="../classes/Pagination.html#source" target="_self" >Pagination:13</a></code>
 </div>
                         </td>
                     </tr>
@@ -320,12 +320,12 @@
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { AccountWhereInput } from &#x27;@graphql&#x27;
 
-import { PaginationDto } from &#x27;@interfaces/dto&#x27;
+import { PaginationWithFilters } from &#x27;@interfaces/pagination&#x27;
 
 /**
  * Параметры получения списка аккаунтов
  */
-export class GetAccountsDto extends PaginationDto&lt;AccountWhereInput&gt; {}
+export class GetAccountsDto extends PaginationWithFilters&lt;AccountWhereInput&gt; {}
 </code></pre>
     </div>
 </div>

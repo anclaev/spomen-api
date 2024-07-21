@@ -273,7 +273,7 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>accounts(size: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, page: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, filter: AccountWhereInput)</code>
+                    <code>accounts(size: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, page: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, filters: AccountWhereInput)</code>
                 </td>
             </tr>
 
@@ -287,8 +287,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="57"
-                                    class="link-to-prism">src/account/account.resolver.ts:57</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="58"
+                                    class="link-to-prism">src/account/account.resolver.ts:58</a></div>
                         </td>
                     </tr>
 
@@ -344,7 +344,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                                <td>filter</td>
+                                                <td>filters</td>
                                             <td>
                                                         <code>AccountWhereInput</code>
                                             </td>
@@ -355,6 +355,8 @@
 
 
                                             <td>
+                                                    <p>Фильтры отбора</p>
+
                                             </td>
                                         </tr>
                                     </tbody>
@@ -394,8 +396,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="113"
-                                    class="link-to-prism">src/account/account.resolver.ts:113</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="114"
+                                    class="link-to-prism">src/account/account.resolver.ts:114</a></div>
                         </td>
                     </tr>
 
@@ -488,8 +490,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="98"
-                                    class="link-to-prism">src/account/account.resolver.ts:98</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="99"
+                                    class="link-to-prism">src/account/account.resolver.ts:99</a></div>
                         </td>
                     </tr>
 
@@ -671,8 +673,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="78"
-                                    class="link-to-prism">src/account/account.resolver.ts:78</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="79"
+                                    class="link-to-prism">src/account/account.resolver.ts:79</a></div>
                         </td>
                     </tr>
 
@@ -820,6 +822,7 @@ export class AccountResolver {
    * Получение списка аккаунтов
    * @param {number} page Текущая страница
    * @param {number} size Размер страницы
+   * @param filters Фильтры отбора
    * @returns {Account[]} Список аккаунтов
    */
   @UseGqlAuth()
@@ -827,13 +830,13 @@ export class AccountResolver {
   async accounts(
     @Args(&#x27;size&#x27;, { type: () &#x3D;&gt; Number, defaultValue: 10 }) size: number,
     @Args(&#x27;page&#x27;, { type: () &#x3D;&gt; Number, defaultValue: 1 }) page: number,
-    @Args(&#x27;filter&#x27;, {
+    @Args(&#x27;filters&#x27;, {
       type: () &#x3D;&gt; AccountWhereInput,
       nullable: true,
     })
-    filter: AccountWhereInput,
+    filters: AccountWhereInput,
   ): Promise&lt;Account[]&gt; {
-    return await this.account.getAccounts({ size, page, filter })
+    return await this.account.getAccounts({ size, page, filters })
   }
 
   /**

@@ -1,8 +1,8 @@
 import { AccountWhereInput } from '@graphql'
 
-import { PaginationDto } from '@interfaces/dto'
+import { PaginationWithFilters } from '@interfaces/pagination'
 
 /**
  * Параметры получения списка аккаунтов
  */
-export class GetAccountsDto extends PaginationDto<AccountWhereInput> {}
+export class GetAccountsDto extends PaginationWithFilters<AccountWhereInput> {}

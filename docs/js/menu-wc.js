@@ -282,7 +282,7 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="classes/Pagination.html" data-type="entity-link" >Pagination</a>
                             </li>
                             <li class="link">
-                                <a href="classes/PaginationDto.html" data-type="entity-link" >PaginationDto</a>
+                                <a href="classes/PaginationWithFilters.html" data-type="entity-link" >PaginationWithFilters</a>
                             </li>
                             <li class="link">
                                 <a href="classes/PutFileDto.html" data-type="entity-link" >PutFileDto</a>

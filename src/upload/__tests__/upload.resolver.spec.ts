@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import { UploadResolver } from './upload.resolver'
+import { UploadResolver } from '../upload.resolver'
 
 describe('UploadResolver', () => {
   let resolver: UploadResolver
