@@ -66,6 +66,16 @@ export class UploadResolver {
     filters: UploadWhereInput,
     @UseGqlUser() user: AuthenticatedUser,
   ): Promise<Upload[]> {
+    if (filters.name && Object.keys(filters.name).length === 0)
+      delete filters.name
+    if (filters.ext && Object.keys(filters.ext).length === 0) delete filters.ext
+    if (
+      filters.owner &&
+      filters.owner.username &&
+      Object.keys(filters.owner.username).length === 0
+    )
+      delete filters.owner
+
     const uploads = await this.upload.getUploads({
       user,
       filters,

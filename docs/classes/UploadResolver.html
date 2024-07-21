@@ -284,8 +284,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="142"
-                                    class="link-to-prism">src/upload/upload.resolver.ts:142</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="152"
+                                    class="link-to-prism">src/upload/upload.resolver.ts:152</a></div>
                         </td>
                     </tr>
 
@@ -378,8 +378,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="109"
-                                    class="link-to-prism">src/upload/upload.resolver.ts:109</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="119"
+                                    class="link-to-prism">src/upload/upload.resolver.ts:119</a></div>
                         </td>
                     </tr>
 
@@ -480,8 +480,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="128"
-                                    class="link-to-prism">src/upload/upload.resolver.ts:128</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="138"
+                                    class="link-to-prism">src/upload/upload.resolver.ts:138</a></div>
                         </td>
                     </tr>
 
@@ -668,8 +668,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="88"
-                                    class="link-to-prism">src/upload/upload.resolver.ts:88</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="98"
+                                    class="link-to-prism">src/upload/upload.resolver.ts:98</a></div>
                         </td>
                     </tr>
 
@@ -967,6 +967,16 @@ export class UploadResolver {
     filters: UploadWhereInput,
     @UseGqlUser() user: AuthenticatedUser,
   ): Promise&lt;Upload[]&gt; {
+    if (filters.name &amp;&amp; Object.keys(filters.name).length &#x3D;&#x3D;&#x3D; 0)
+      delete filters.name
+    if (filters.ext &amp;&amp; Object.keys(filters.ext).length &#x3D;&#x3D;&#x3D; 0) delete filters.ext
+    if (
+      filters.owner &amp;&amp;
+      filters.owner.username &amp;&amp;
+      Object.keys(filters.owner.username).length &#x3D;&#x3D;&#x3D; 0
+    )
+      delete filters.owner
+
     const uploads &#x3D; await this.upload.getUploads({
       user,
       filters,
