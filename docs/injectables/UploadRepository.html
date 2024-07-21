@@ -286,8 +286,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="90"
-                                    class="link-to-prism">src/upload/upload.repository.ts:90</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="95"
+                                    class="link-to-prism">src/upload/upload.repository.ts:95</a></div>
                         </td>
                     </tr>
 
@@ -363,8 +363,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="108"
-                                    class="link-to-prism">src/upload/upload.repository.ts:108</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="113"
+                                    class="link-to-prism">src/upload/upload.repository.ts:113</a></div>
                         </td>
                     </tr>
 
@@ -440,8 +440,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="117"
-                                    class="link-to-prism">src/upload/upload.repository.ts:117</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="122"
+                                    class="link-to-prism">src/upload/upload.repository.ts:122</a></div>
                         </td>
                     </tr>
 
@@ -517,8 +517,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="75"
-                                    class="link-to-prism">src/upload/upload.repository.ts:75</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="80"
+                                    class="link-to-prism">src/upload/upload.repository.ts:80</a></div>
                         </td>
                     </tr>
 
@@ -594,8 +594,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="128"
-                                    class="link-to-prism">src/upload/upload.repository.ts:128</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="133"
+                                    class="link-to-prism">src/upload/upload.repository.ts:133</a></div>
                         </td>
                     </tr>
 
@@ -758,8 +758,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="99"
-                                    class="link-to-prism">src/upload/upload.repository.ts:99</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="104"
+                                    class="link-to-prism">src/upload/upload.repository.ts:104</a></div>
                         </td>
                     </tr>
 
@@ -907,12 +907,17 @@ export class UploadRepository {
         ? {
             ext: filters.ext ? filters.ext : undefined,
             name: filters.name ? filters.name : undefined,
+            owner: filters.owner ? filters.owner : undefined,
             owner_id: filters.owner_id ? filters.owner_id : undefined,
             is_system: filters.is_system ? filters.is_system : undefined,
           }
         : undefined,
       include: {
-        owner: true,
+        owner: {
+          include: {
+            avatar: true,
+          },
+        },
       },
       orderBy: {
         created_at: &#x27;desc&#x27;,

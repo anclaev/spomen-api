@@ -4,6 +4,7 @@ export type UploadFilters = {
   name: any | null
   ext: any | null
   owner_id: any | null
+  owner: any | null
   is_system: any | null
 }
 
