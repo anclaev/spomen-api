@@ -1,7 +1,7 @@
 import {
   Upload,
-  UploadWhereInput,
   UploadUpdateInput,
+  UploadWhereInput,
   UploadWhereUniqueInput,
 } from '@graphql'
 
@@ -50,6 +50,7 @@ export class UploadResolver {
    * Получение списка загрузок
    * @param {number} page Текущая страница
    * @param {number} size Размер страницы
+   * @param filter
    * @param {AuthenticatedUser} user Текущий пользователь системы
    * @returns {Upload[]} Список загрузок
    */
@@ -121,14 +122,14 @@ export class UploadResolver {
    * @returns {string[]} Список расширений
    */
   @UseGqlAuth()
-  @Query(() => [String], { name: 'getExtenstions' })
+  @Query(() => [String], { name: 'getExtensions' })
   async getExtensions(
     @Args('size', { type: () => Number, defaultValue: 10 }) size: number,
     @Args('page', { type: () => Number, defaultValue: 1 }) page: number,
   ): Promise<string[]> {
-    const extenstions = await this.upload.getExtenstionsList({ size, page })
+    const extensions = await this.upload.getExtenstionsList({ size, page })
 
-    return this.catchError<string[]>(extenstions)
+    return this.catchError<string[]>(extensions)
   }
 
   /**
