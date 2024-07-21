@@ -26,7 +26,8 @@ export class UploadRepository {
    * Конструктор репозитория загрузок
    * @param {PrismaService} prisma Сервис для работы с БД
    */
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {
+  }
 
   /**
    * Доступ к модели загрузок Prisma
@@ -50,14 +51,18 @@ export class UploadRepository {
     return this.prisma.upload.findMany({
       where: filters
         ? {
-            ext: filters.ext ? filters.ext : undefined,
-            name: filters.name ? filters.name : undefined,
-            owner_id: filters.owner_id ? filters.owner_id : undefined,
-            is_system: filters.is_system ? filters.is_system : undefined,
-          }
+          ext: filters.ext ? filters.ext : undefined,
+          name: filters.name ? filters.name : undefined,
+          owner_id: filters.owner_id ? filters.owner_id : undefined,
+          is_system: filters.is_system ? filters.is_system : undefined,
+        }
         : undefined,
       include: {
-        owner: true,
+        owner: {
+          include: {
+            avatar: true,
+          },
+        },
       },
       orderBy: {
         created_at: 'desc',
@@ -126,9 +131,9 @@ export class UploadRepository {
    * @returns {{ext: string}[]} Массив объектов с расширениями
    */
   async getDistinctExt({
-    page,
-    size,
-  }: Pagination): Promise<Pick<Upload, 'ext'>[]> {
+                         page,
+                         size,
+                       }: Pagination): Promise<Pick<Upload, 'ext'>[]> {
     return this.prisma.upload.findMany({
       select: {
         ext: true,
