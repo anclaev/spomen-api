@@ -287,8 +287,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="59"
-                                    class="link-to-prism">src/account/account.resolver.ts:59</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="58"
+                                    class="link-to-prism">src/account/account.resolver.ts:58</a></div>
                         </td>
                     </tr>
 
@@ -396,8 +396,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="117"
-                                    class="link-to-prism">src/account/account.resolver.ts:117</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="116"
+                                    class="link-to-prism">src/account/account.resolver.ts:116</a></div>
                         </td>
                     </tr>
 
@@ -490,8 +490,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="102"
-                                    class="link-to-prism">src/account/account.resolver.ts:102</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="101"
+                                    class="link-to-prism">src/account/account.resolver.ts:101</a></div>
                         </td>
                     </tr>
 
@@ -592,8 +592,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="41"
-                                    class="link-to-prism">src/account/account.resolver.ts:41</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="40"
+                                    class="link-to-prism">src/account/account.resolver.ts:40</a></div>
                         </td>
                     </tr>
 
@@ -678,8 +678,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="82"
-                                    class="link-to-prism">src/account/account.resolver.ts:82</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="81"
+                                    class="link-to-prism">src/account/account.resolver.ts:81</a></div>
                         </td>
                     </tr>
 
@@ -805,8 +805,7 @@ export class AccountResolver {
    * Конструктор ресольвера аккаунта
    * @param {AccountService} account Сервис аккаунта
    */
-  constructor(private readonly account: AccountService) {
-  }
+  constructor(private readonly account: AccountService) {}
 
   /**
    * Получение аккаунта по полям отбора
@@ -817,7 +816,7 @@ export class AccountResolver {
   @Query(() &#x3D;&gt; Account, { name: &#x27;account&#x27; })
   async getAccount(
     @Args(&#x27;where&#x27;, { type: () &#x3D;&gt; AccountWhereUniqueInput })
-      where: AccountWhereUniqueInput,
+    where: AccountWhereUniqueInput,
   ): Promise&lt;Account&gt; {
     const account &#x3D; await this.account.getAccount(where)
 
@@ -840,7 +839,7 @@ export class AccountResolver {
       type: () &#x3D;&gt; AccountWhereInput,
       nullable: true,
     })
-      filters: AccountWhereInput,
+    filters: AccountWhereInput,
   ): Promise&lt;Account[]&gt; {
     const accounts &#x3D; await this.account.getAccounts({ size, page, filters })
 
@@ -858,9 +857,9 @@ export class AccountResolver {
   @Mutation(() &#x3D;&gt; Account, { name: &#x27;updateAccount&#x27; })
   async updateAccount(
     @Args(&#x27;data&#x27;, { type: () &#x3D;&gt; AccountUpdateInput })
-      data: AccountUpdateInput,
+    data: AccountUpdateInput,
     @Args(&#x27;where&#x27;, { type: () &#x3D;&gt; AccountWhereUniqueInput })
-      where: AccountWhereUniqueInput,
+    where: AccountWhereUniqueInput,
     @UseGqlUser() user: AuthenticatedUser,
   ): Promise&lt;Account&gt; {
     const updatedAccount &#x3D; await this.account.updateAccount(data, where, user)
@@ -878,7 +877,7 @@ export class AccountResolver {
   @Mutation(() &#x3D;&gt; Account, { name: &#x27;deleteAccount&#x27; })
   async deleteAccount(
     @Args(&#x27;where&#x27;, { type: () &#x3D;&gt; AccountWhereUniqueInput })
-      where: AccountWhereUniqueInput,
+    where: AccountWhereUniqueInput,
     @UseGqlUser() user: AuthenticatedUser,
   ): Promise&lt;Account&gt; {
     const deletedAccount &#x3D; await this.account.deleteAccount(where, user)

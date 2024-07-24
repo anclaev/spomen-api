@@ -1370,9 +1370,9 @@ export class AuthService {
    * @returns {Boolean} Результат логаута
    */
   async logout({
-                 user_id,
-                 refresh_token,
-               }: LogoutDto): Promise&lt;Boolean | APIError&gt; {
+    user_id,
+    refresh_token,
+  }: LogoutDto): Promise&lt;Boolean | APIError&gt; {
     const result &#x3D; await this.token.logout(user_id, refresh_token)
 
     if (result instanceof APIError) {

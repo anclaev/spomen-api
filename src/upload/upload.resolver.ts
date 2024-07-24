@@ -1,12 +1,12 @@
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql'
+import { HttpException } from '@nestjs/common'
+
 import {
   Upload,
   UploadUpdateInput,
   UploadWhereInput,
   UploadWhereUniqueInput,
 } from '@graphql'
-
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql'
-import { HttpException } from '@nestjs/common'
 
 // Декораторы
 import { UseGqlAuth } from '@decorators/gql-auth'
@@ -31,7 +31,7 @@ export class UploadResolver {
   constructor(private readonly upload: UploadService) {}
 
   /**
-   * Запрос на получение загрузки по ID
+   * Получение загрузки по полям отбора
    * @param {UploadWhereUniqueInput} where Данные для поиска
    * @returns {Upload} Загрузка
    */
@@ -52,7 +52,7 @@ export class UploadResolver {
    * @param {number} size Размер страницы
    * @param filters Фильтры отбора
    * @param {AuthenticatedUser} user Текущий пользователь системы
-   * @returns {Upload[]} Список  загрузок
+   * @returns {Upload[]} Список загрузок
    */
   @UseGqlAuth()
   @Query(() => [Upload], { name: 'uploads' })
@@ -134,7 +134,7 @@ export class UploadResolver {
    * @returns {string[]} Список расширений
    */
   @UseGqlAuth()
-  @Query(() => [String], { name: 'getExtensions' })
+  @Query(() => [String], { name: 'uploadExtensions' })
   async getExtensions(
     @Args('size', { type: () => Number, defaultValue: 10 }) size: number,
     @Args('page', { type: () => Number, defaultValue: 1 }) page: number,

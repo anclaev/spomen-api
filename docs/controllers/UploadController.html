@@ -210,8 +210,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="101"
-                                    class="link-to-prism">src/upload/upload.controller.ts:101</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="104"
+                                    class="link-to-prism">src/upload/upload.controller.ts:104</a></div>
                         </td>
                     </tr>
 
@@ -304,8 +304,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="55"
-                                    class="link-to-prism">src/upload/upload.controller.ts:55</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="54"
+                                    class="link-to-prism">src/upload/upload.controller.ts:54</a></div>
                         </td>
                     </tr>
 
@@ -423,8 +423,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="74"
-                                    class="link-to-prism">src/upload/upload.controller.ts:74</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="73"
+                                    class="link-to-prism">src/upload/upload.controller.ts:73</a></div>
                         </td>
                     </tr>
 
@@ -540,8 +540,7 @@ export class UploadController {
    * Конструктор контроллера загрузок
    * @param {UploadService} upload Сервис работы с загрузками
    */
-  constructor(private readonly upload: UploadService) {
-  }
+  constructor(private readonly upload: UploadService) {}
 
   /**
    * Обработка получения файла по идентификатору загрузки
@@ -575,11 +574,15 @@ export class UploadController {
     @UseUser() user: AuthenticatedUser,
     @Body() dto: PutFileDto,
   ): Promise&lt;Upload&gt; {
-    const { file, path, acl, compress } &#x3D; dto
+    const { file, path, acl, compress, name } &#x3D; dto
 
     const upload &#x3D; await this.upload.putFile({
       file: {
-        name: file.originalName.slice(0, file.originalName.lastIndexOf(&#x27;.&#x27;)),
+        name,
+        original_name: file.originalName.slice(
+          0,
+          file.originalName.lastIndexOf(&#x27;.&#x27;),
+        ),
         ext: mime.extension(file.mimetype) || &#x27;&#x27;,
         mime: file.mimetype,
         buffer: file.buffer,

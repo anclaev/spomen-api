@@ -211,7 +211,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">src/upload/upload.resolver.ts:27</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/upload/upload.resolver.ts:26</a></div>
                             </td>
                         </tr>
 
@@ -284,8 +284,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="154"
-                                    class="link-to-prism">src/upload/upload.resolver.ts:154</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="152"
+                                    class="link-to-prism">src/upload/upload.resolver.ts:152</a></div>
                         </td>
                     </tr>
 
@@ -378,8 +378,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="121"
-                                    class="link-to-prism">src/upload/upload.resolver.ts:121</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="119"
+                                    class="link-to-prism">src/upload/upload.resolver.ts:119</a></div>
                         </td>
                     </tr>
 
@@ -480,8 +480,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="140"
-                                    class="link-to-prism">src/upload/upload.resolver.ts:140</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="138"
+                                    class="link-to-prism">src/upload/upload.resolver.ts:138</a></div>
                         </td>
                     </tr>
 
@@ -582,8 +582,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="42"
-                                    class="link-to-prism">src/upload/upload.resolver.ts:42</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="40"
+                                    class="link-to-prism">src/upload/upload.resolver.ts:40</a></div>
                         </td>
                     </tr>
 
@@ -668,8 +668,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="100"
-                                    class="link-to-prism">src/upload/upload.resolver.ts:100</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="98"
+                                    class="link-to-prism">src/upload/upload.resolver.ts:98</a></div>
                         </td>
                     </tr>
 
@@ -786,8 +786,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="61"
-                                    class="link-to-prism">src/upload/upload.resolver.ts:61</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="59"
+                                    class="link-to-prism">src/upload/upload.resolver.ts:59</a></div>
                         </td>
                     </tr>
 
@@ -909,7 +909,6 @@ import {
   UploadWhereUniqueInput,
 } from &#x27;@graphql&#x27;
 
-
 // Декораторы
 import { UseGqlAuth } from &#x27;@decorators/gql-auth&#x27;
 import { UseGqlUser } from &#x27;@decorators/gql-user&#x27;
@@ -930,8 +929,7 @@ export class UploadResolver {
    * Конструктор ресольвера загрузок
    * @param {UploadService} upload Сервис загрузок
    */
-  constructor(private readonly upload: UploadService) {
-  }
+  constructor(private readonly upload: UploadService) {}
 
   /**
    * Получение загрузки по полям отбора
@@ -942,7 +940,7 @@ export class UploadResolver {
   @Query(() &#x3D;&gt; Upload, { name: &#x27;upload&#x27; })
   async getUpload(
     @Args(&#x27;where&#x27;, { type: () &#x3D;&gt; UploadWhereUniqueInput })
-      where: UploadWhereUniqueInput,
+    where: UploadWhereUniqueInput,
   ): Promise&lt;Upload&gt; {
     const upload &#x3D; await this.upload.getUpload(where)
 
@@ -966,7 +964,7 @@ export class UploadResolver {
       type: () &#x3D;&gt; UploadWhereInput,
       nullable: true,
     })
-      filters: UploadWhereInput,
+    filters: UploadWhereInput,
     @UseGqlUser() user: AuthenticatedUser,
   ): Promise&lt;Upload[]&gt; {
     if (filters.name &amp;&amp; Object.keys(filters.name).length &#x3D;&#x3D;&#x3D; 0)
@@ -1000,11 +998,11 @@ export class UploadResolver {
   @Mutation(() &#x3D;&gt; Upload, { name: &#x27;updateUpload&#x27; })
   async updateUpload(
     @Args(&#x27;data&#x27;, { type: () &#x3D;&gt; UploadUpdateInput })
-      data: UploadUpdateInput,
+    data: UploadUpdateInput,
     @Args(&#x27;where&#x27;, { type: () &#x3D;&gt; UploadWhereUniqueInput })
-      where: UploadWhereUniqueInput,
+    where: UploadWhereUniqueInput,
     @UseGqlUser()
-      user: AuthenticatedUser,
+    user: AuthenticatedUser,
   ): Promise&lt;Upload&gt; {
     const updatedUpload &#x3D; await this.upload.updateUpload(data, where, user)
 
@@ -1021,9 +1019,9 @@ export class UploadResolver {
   @Mutation(() &#x3D;&gt; Upload, { name: &#x27;deleteUpload&#x27; })
   async deleteUpload(
     @Args(&#x27;where&#x27;, { type: () &#x3D;&gt; UploadWhereUniqueInput })
-      where: UploadWhereUniqueInput,
+    where: UploadWhereUniqueInput,
     @UseGqlUser()
-      user: AuthenticatedUser,
+    user: AuthenticatedUser,
   ): Promise&lt;Upload&gt; {
     const deletedUpload &#x3D; await this.upload.deleteUpload(where, user)
 

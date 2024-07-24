@@ -1,12 +1,12 @@
+import { Resolver, Args, Query, Mutation } from '@nestjs/graphql'
+import { HttpException } from '@nestjs/common'
+
 import {
   Account,
   AccountWhereInput,
   AccountUpdateInput,
   AccountWhereUniqueInput,
 } from '@graphql'
-
-import { Resolver, Args, Query, Mutation } from '@nestjs/graphql'
-import { HttpException } from '@nestjs/common'
 
 // Декораторы
 import { UseGqlAuth } from '@decorators/gql-auth'
@@ -32,13 +32,13 @@ export class AccountResolver {
 
   /**
    * Получение аккаунта по полям отбора
-   * @param {AccountWhereUniqueInput} query Поля отбора
-   * @returns {Account} Аккаунт в системе
+   * @param {AccountWhereUniqueInput} where Поля отбора
+   * @returns {Account} Аккаунт
    */
   @UseGqlAuth()
   @Query(() => Account, { name: 'account' })
   async getAccount(
-    @Args('args', { type: () => AccountWhereUniqueInput })
+    @Args('where', { type: () => AccountWhereUniqueInput })
     where: AccountWhereUniqueInput,
   ): Promise<Account> {
     const account = await this.account.getAccount(where)
@@ -64,7 +64,9 @@ export class AccountResolver {
     })
     filters: AccountWhereInput,
   ): Promise<Account[]> {
-    return await this.account.getAccounts({ size, page, filters })
+    const accounts = await this.account.getAccounts({ size, page, filters })
+
+    return this.catchError<Account[]>(accounts)
   }
 
   /**

@@ -129,7 +129,7 @@
       "@interceptors/(.*)$": "<rootDir>/common/interceptors/$1",
       "@interfaces/(.*)$": "<rootDir>/common/interfaces/$1",
       "@decorators/(.*)$": "<rootDir>/common/decorators/$1",
-      "@graphql/(.*)$": "<rootDir>/common/graphql/$1",
+      "@graphql": "<rootDir>/common/graphql/index",
       "@enums/(.*)$": "<rootDir>/common/enums/$1",
       "@utils/(.*)$": "<rootDir>/common/utils/$1",
       "@mocks/(.*)$": "<rootDir>/common/mocks/$1",
@@ -145,7 +145,13 @@
     "collectCoverageFrom": [
       "**/*.{!(module|guard),}.ts"
     ],
-    "coverageDirectory": "../coverage",
+    "coverageDirectory": "coverage",
+    "coverageThreshold": {
+      "global": {
+        "lines": 90,
+        "statements": 90
+      }
+    },
     "testEnvironment": "node",
     "maxWorkers": "25%"
   },

@@ -76,16 +76,6 @@ describe('AuthService', () => {
       .then((data) => expect(data).toStrictEqual(mockAuthenticatedUser))
   })
 
-  it('Должен возвращать пользователя по почте и проверять его', () => {
-    repo.findOne.mockResolvedValueOnce(mockAccount)
-
-    jest.spyOn(argon2, 'verify').mockReturnValue(new Promise(() => true))
-
-    service
-      .getAuthenticatedUserByEmail('test', 'test')
-      .then((data) => expect(data).toStrictEqual(mockAuthenticatedUser))
-  })
-
   it('Должен возвращать пользователя по логину и проверять его', () => {
     repo.findOne.mockResolvedValueOnce(mockAccount)
 

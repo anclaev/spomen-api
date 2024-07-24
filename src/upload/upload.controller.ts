@@ -45,11 +45,11 @@ export class UploadController {
   /**
    * Обработка получения файла по идентификатору загрузки
    * @param {string} id Идентификатор загрузки
-   * @param {AuthenticatedUser} user Текущи йпользователь системы
+   * @param {AuthenticatedUser} user Текущий пользователь системы
    * @param {Response} res Объект ответа запроса
-   * @returns {StreamableFile} res Файл из хранилища
+   * @returns {StreamableFile} Файл из хранилища
    */
-  @Get('file/:id')
+  @Get(':id')
   @UseAuth()
   async getFile(
     @Param('id') id: string,
@@ -74,11 +74,15 @@ export class UploadController {
     @UseUser() user: AuthenticatedUser,
     @Body() dto: PutFileDto,
   ): Promise<Upload> {
-    const { file, path, acl, compress } = dto
+    const { file, path, acl, compress, name } = dto
 
     const upload = await this.upload.putFile({
       file: {
-        name: file.originalName.slice(0, file.originalName.lastIndexOf('.')),
+        name,
+        original_name: file.originalName.slice(
+          0,
+          file.originalName.lastIndexOf('.'),
+        ),
         ext: mime.extension(file.mimetype) || '',
         mime: file.mimetype,
         buffer: file.buffer,

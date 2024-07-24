@@ -99,7 +99,7 @@ export class UploadService implements OnModuleInit {
   }
 
   /**
-   * Проверка на существование бакетов при инициализации модуля
+   * Проверка существования бакетов при инициализации модуля
    */
   async onModuleInit() {
     const privateIsExist = await this.s3.bucketExists(this.bucket)
@@ -128,19 +128,22 @@ export class UploadService implements OnModuleInit {
    * @returns {Upload | APIError} Загрузка
    */
   async getUpload(where: UploadWhereUniqueInput): Promise<Upload | APIError> {
-    const upload = await this.repo.model.findMany({
-      where: where as Required<UploadWhereUniqueInput>,
-      take: 1,
-      include: {
-        owner: true,
-        _count: true,
-      },
-    })
+    try {
+      const upload = await this.repo.model.findMany({
+        where: where as Required<UploadWhereUniqueInput>,
+        take: 1,
+        include: {
+          owner: true,
+        },
+      })
 
-    if (upload.length === 0)
-      return new APIError(HttpStatus.NOT_FOUND, 'Загрузка не найдена')
+      if (upload.length === 0)
+        return new APIError(HttpStatus.NOT_FOUND, 'Загрузка не найдена')
 
-    return upload[0]
+      return upload[0]
+    } catch (e) {
+      return new APIError(HttpStatus.INTERNAL_SERVER_ERROR, e.message)
+    }
   }
 
   /**
@@ -339,7 +342,7 @@ export class UploadService implements OnModuleInit {
     const s3File = new S3File()
 
     // Преобразование имени файла в транслит (для кириллицы)
-    s3File.name = this.translit.transform(file.name.replace(' ', '_'))
+    s3File.name = this.translit.transform(file.original_name.replace(' ', '_'))
 
     // Путь к файлу в хранилище
     s3File.path = `${path}/${s3File.name}-${uuid()}.${file.ext}`
@@ -460,13 +463,13 @@ export class UploadService implements OnModuleInit {
     const id = uuid()
     const url = permissions.find((item) => item === 'Public')
       ? `${this.endpoint}/${s3File.bucket}/${s3File.path}`
-      : `${this.config.apiEndpoint}/upload/file/${id}`
+      : `${this.config.apiEndpoint}/upload/${id}`
 
     try {
       return await this.repo.create({
         data: {
           id,
-          name: file.name,
+          name: file.name || file.original_name,
           ext: file.ext,
           url,
           file_name: s3File.name,

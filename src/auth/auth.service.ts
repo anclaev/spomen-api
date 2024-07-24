@@ -1,4 +1,4 @@
-import { Injectable, HttpStatus } from '@nestjs/common'
+import { HttpStatus, Injectable } from '@nestjs/common'
 import generator from 'generate-password-ts'
 import { Role } from '@prisma/client'
 import { Account } from '@graphql'
@@ -29,12 +29,16 @@ import { LogoutDto } from './dto/logout.dto'
  */
 @Injectable()
 export class AuthService {
-  private cookieDomain: string
+  /**
+   * Домен для установки авторизационных кук
+   * @private
+   */
+  private readonly cookieDomain: string
 
   /**
    * Конструктор сервиса авторизации
    * @param {ConfigService} config Сервис работы с конфигурацией
-   * @param {JwtService} jwt Сервис работы с JWT-токенами
+   * @param {TokenService} token Сервис работы с JWT-токенами
    * @param {AccountService} account Сервис аккаунта
    */
   constructor(
@@ -56,7 +60,7 @@ export class AuthService {
   async signUp(dto: SignUpDto): Promise<AuthenticatedUser | APIError> {
     const password = await argon2.hash(dto.password)
 
-    const createdAccount = await this.account.create({
+    const createdAccount = await this.account.createAccount({
       data: {
         ...dto,
         password,
@@ -114,25 +118,6 @@ export class AuthService {
   }
 
   /**
-   * Авторизация пользователя по почте
-   * @param {String} email Почта аккаунта
-   * @param {String} password Пароль от аккаунта
-   * @returns {AuthenticatedUser} Аккаунт пользователя с токеном доступа
-   */
-  async getAuthenticatedUserByEmail(
-    email: string,
-    password: string,
-  ): Promise<AuthenticatedUser | APIError> {
-    const account = await this.account.getAccount({ email: email.trim() })
-
-    if (account instanceof APIError) {
-      return account
-    }
-
-    return await this.verifyAccount(account, password)
-  }
-
-  /**
    * Авторизация аккаунта по паролю
    * @param {Account} account Аккаунт пользователя
    * @param {String} password Пароль от аккаунта
@@ -142,9 +127,9 @@ export class AuthService {
     account: Account,
     password: string,
   ): Promise<AuthenticatedUser | APIError> {
-    const verifed = await argon2.verify(account.password, password)
+    const verified = await argon2.verify(account.password, password)
 
-    if (!verifed) {
+    if (!verified) {
       return new APIError(HttpStatus.BAD_REQUEST, 'Некорректные данные')
     }
 
@@ -167,11 +152,11 @@ export class AuthService {
   }
 
   /**
-   * Проверка пользователя VKID
+   * Проверка пользователя VK ID
    * @description
    * * Обновляет пользователя в случае наличия в базе
    * * Создаёт в случае отсутствия
-   * @param {VKIDUser} vkIdUser Пользователь VKID
+   * @param {VKIDUser} vkIdUser Пользователь VK ID
    * @returns {AuthenticatedUser} Авторизованный пользователь
    */
   async verifyVKIDUser(
@@ -193,7 +178,7 @@ export class AuthService {
 
       const hashedPassword = await argon2.hash(password)
 
-      const user = await this.account.create({
+      const user = await this.account.createAccount({
         data: {
           username,
           password: hashedPassword,
@@ -289,7 +274,7 @@ export class AuthService {
       return result
     }
 
-    const tokens = await this.token.grant(
+    return await this.token.grant(
       {
         email: user.email,
         userid: user.id,
@@ -300,8 +285,6 @@ export class AuthService {
       },
       true,
     )
-
-    return tokens
   }
 
   /**

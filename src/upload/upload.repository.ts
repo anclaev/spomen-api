@@ -11,7 +11,6 @@ import {
 } from '@graphql'
 
 // Интерфейсы
-import { DeleteManyResult } from '@interfaces/prisma'
 import { Pagination } from '@interfaces/pagination'
 import { UploadFilters } from '@interfaces/upload'
 import { ToPrisma } from '@interfaces/prisma'
@@ -29,7 +28,7 @@ export class UploadRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   /**
-   * Доступ к модели загрузок Prisma
+   * Доступ к модели Prisma
    */
   get model() {
     return this.prisma.upload
@@ -121,7 +120,7 @@ export class UploadRepository {
    */
   async deleteMany(
     args: Omit<DeleteManyUploadArgs, 'where'>,
-  ): Promise<DeleteManyResult> {
+  ): Promise<Prisma.BatchPayload> {
     return this.prisma.upload.deleteMany(args)
   }
 

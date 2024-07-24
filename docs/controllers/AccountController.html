@@ -210,8 +210,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="108"
-                                    class="link-to-prism">src/account/account.controller.ts:108</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="111"
+                                    class="link-to-prism">src/account/account.controller.ts:111</a></div>
                         </td>
                     </tr>
 
@@ -304,8 +304,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="86"
-                                    class="link-to-prism">src/account/account.controller.ts:86</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="89"
+                                    class="link-to-prism">src/account/account.controller.ts:89</a></div>
                         </td>
                     </tr>
 
@@ -544,7 +544,10 @@ export class AccountController {
 
     const uploadedAvatar &#x3D; await this.account.uploadAvatar(
       {
-        name: file.originalName.slice(0, file.originalName.lastIndexOf(&#x27;.&#x27;)),
+        original_name: file.originalName.slice(
+          0,
+          file.originalName.lastIndexOf(&#x27;.&#x27;),
+        ),
         ext: mime.extension(file.mimetype) || &#x27;&#x27;,
         mime: file.mimetype,
         buffer: file.buffer,

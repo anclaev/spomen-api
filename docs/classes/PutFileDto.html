@@ -173,6 +173,13 @@
                             <li>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Optional</span>
+                                <a href="#name" >name</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
                                 <a href="#path" >path</a>
                             </li>
                         </ul>
@@ -225,7 +232,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="43" class="link-to-prism">src/upload/dto/put-file.dto.ts:43</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="51" class="link-to-prism">src/upload/dto/put-file.dto.ts:51</a></div>
                         </td>
                     </tr>
 
@@ -269,7 +276,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/upload/dto/put-file.dto.ts:36</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="44" class="link-to-prism">src/upload/dto/put-file.dto.ts:44</a></div>
                         </td>
                     </tr>
 
@@ -319,6 +326,51 @@
             <tr>
                 <td class="col-md-4">
                     <div class="io-description"><p>Файл для загрузки</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="name"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Optional</span>
+                        <span ><b>name</b></span>
+                        <a href="#name"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <b>Decorators : </b>
+                        <br />
+                        <code>
+                            @IsString()<br />@IsNotEmpty()<br />@IsOptional()<br />
+                        </code>
+                    </td>
+                </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in <a href="" data-line="37" class="link-to-prism">src/upload/dto/put-file.dto.ts:37</a></div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Название файла (опционально)</p>
 </div>
                 </td>
             </tr>
@@ -409,6 +461,14 @@ export class PutFileDto {
   @IsString()
   @IsNotEmpty()
   path: string
+
+  /**
+   * Название файла (опционально)
+   */
+  @IsString()
+  @IsNotEmpty()
+  @IsOptional()
+  name?: string
 
   /**
    * Флаг сжатия файла (опционально)

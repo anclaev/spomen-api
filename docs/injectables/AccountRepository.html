@@ -282,8 +282,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="90"
-                                    class="link-to-prism">src/account/account.repository.ts:90</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="91"
+                                    class="link-to-prism">src/account/account.repository.ts:91</a></div>
                         </td>
                     </tr>
 
@@ -359,8 +359,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="108"
-                                    class="link-to-prism">src/account/account.repository.ts:108</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="109"
+                                    class="link-to-prism">src/account/account.repository.ts:109</a></div>
                         </td>
                     </tr>
 
@@ -436,8 +436,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="117"
-                                    class="link-to-prism">src/account/account.repository.ts:117</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="118"
+                                    class="link-to-prism">src/account/account.repository.ts:118</a></div>
                         </td>
                     </tr>
 
@@ -513,8 +513,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="75"
-                                    class="link-to-prism">src/account/account.repository.ts:75</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="76"
+                                    class="link-to-prism">src/account/account.repository.ts:76</a></div>
                         </td>
                     </tr>
 
@@ -590,8 +590,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="43"
-                                    class="link-to-prism">src/account/account.repository.ts:43</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="42"
+                                    class="link-to-prism">src/account/account.repository.ts:42</a></div>
                         </td>
                     </tr>
 
@@ -683,8 +683,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="99"
-                                    class="link-to-prism">src/account/account.repository.ts:99</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="100"
+                                    class="link-to-prism">src/account/account.repository.ts:100</a></div>
                         </td>
                     </tr>
 
@@ -760,7 +760,7 @@
                 </tr>
                             <tr>
                                 <td class="col-md-4">
-                                    <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/account/account.repository.ts:33</a></div>
+                                    <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/account/account.repository.ts:32</a></div>
                                 </td>
                             </tr>
                     <tr>
@@ -804,8 +804,7 @@ export class AccountRepository {
    * Конструктор репозитория аккаунта
    * @param {PrismaService} prisma Сервис для работы с БД
    */
-  constructor(private readonly prisma: PrismaService) {
-  }
+  constructor(private readonly prisma: PrismaService) {}
 
   /**
    * Доступ к модели Prisma
@@ -827,15 +826,17 @@ export class AccountRepository {
     const { size, page } &#x3D; args
 
     return this.prisma.account.findMany({
-      where: filters ? {
-        username: filters.username ? filters.username : undefined,
-        email: filters.email ? filters.email : undefined,
-        first_name: filters.first_name ? filters.first_name : undefined,
-        last_name: filters.last_name ? filters.last_name : undefined,
-        birthday: filters.birthday ? filters.birthday : undefined,
-        roles: filters.roles ? filters.roles : undefined,
-        sex: filters.sex ? filters.sex : undefined,
-      } : undefined,
+      where: filters
+        ? {
+            username: filters.username ? filters.username : undefined,
+            email: filters.email ? filters.email : undefined,
+            first_name: filters.first_name ? filters.first_name : undefined,
+            last_name: filters.last_name ? filters.last_name : undefined,
+            birthday: filters.birthday ? filters.birthday : undefined,
+            roles: filters.roles ? filters.roles : undefined,
+            sex: filters.sex ? filters.sex : undefined,
+          }
+        : undefined,
       include: {
         avatar: true,
       },
@@ -900,30 +901,6 @@ export class AccountRepository {
     return this.prisma.account.deleteMany(args)
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 </code></pre>
     </div>
 

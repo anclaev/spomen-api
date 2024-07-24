@@ -29,6 +29,14 @@ export class PutFileDto {
   path: string
 
   /**
+   * Название файла (опционально)
+   */
+  @IsString()
+  @IsNotEmpty()
+  @IsOptional()
+  name?: string
+
+  /**
    * Флаг сжатия файла (опционально)
    */
   @IsBoolean()

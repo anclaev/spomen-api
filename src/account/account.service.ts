@@ -1,12 +1,12 @@
+import { HttpStatus, Injectable } from '@nestjs/common'
+import { Permission, Upload } from '@prisma/client'
+
 import {
   Account,
   AccountUpdateInput,
   AccountWhereUniqueInput,
   CreateOneAccountArgs,
 } from '@graphql'
-
-import { HttpStatus, Injectable } from '@nestjs/common'
-import { Permission, Upload } from '@prisma/client'
 
 // Сервисы
 import { UploadService } from '@/upload/upload.service'
@@ -27,6 +27,7 @@ import { STORAGE } from '@enums/storage'
 
 // DTO
 import { GetAccountsDto } from './dto/get-accounts.dto'
+import { AccountFilters } from '@interfaces/account'
 
 /**
  * Сервис аккаунта
@@ -51,27 +52,22 @@ export class AccountService {
   async getAccount(
     where: AccountWhereUniqueInput,
   ): Promise<Account | APIError> {
-    const account = await this.repo.model.findMany({
-      where: where as Required<AccountWhereUniqueInput>,
-      take: 1,
-      include: {
-        _count: true,
-        avatar: true,
-        actors: true,
-        chats: true,
-        messages: true,
-        owned_chats: true,
-        owned_comments: true,
-        owned_memories: true,
-        owned_messages: true,
-        uploaded_files: true,
-      },
-    })
+    try {
+      const account = await this.repo.model.findMany({
+        where: where as Required<AccountWhereUniqueInput>,
+        take: 1,
+        include: {
+          avatar: true,
+        },
+      })
 
-    if (account.length === 0)
-      return new APIError(HttpStatus.NOT_FOUND, 'Аккаунт не найден')
+      if (account.length === 0)
+        return new APIError(HttpStatus.NOT_FOUND, 'Аккаунт не найден')
 
-    return account[0]
+      return account[0]
+    } catch (e) {
+      return new APIError(HttpStatus.INTERNAL_SERVER_ERROR, e.message)
+    }
   }
 
   /**
@@ -83,25 +79,15 @@ export class AccountService {
     page,
     size,
     filters,
-  }: GetAccountsDto): Promise<Account[]> {
-    return this.repo.model.findMany({
-      where: filters,
-      take: size,
-      skip: size * (page - 1),
-      orderBy: { created_at: 'desc' },
-      include: {
-        avatar: true,
-        chats: true,
-        uploaded_files: true,
-        messages: true,
-        owned_chats: true,
-        owned_comments: true,
-        owned_memories: true,
-        owned_messages: true,
-        actors: true,
-        _count: true,
-      },
-    })
+  }: GetAccountsDto): Promise<Account[] | APIError> {
+    try {
+      return this.repo.getPaginated(
+        { size, page },
+        filters as unknown as AccountFilters,
+      )
+    } catch (e) {
+      return new APIError(HttpStatus.INTERNAL_SERVER_ERROR, e.message)
+    }
   }
 
   /**
@@ -109,7 +95,7 @@ export class AccountService {
    * @param {CreateOneAccountArgs} dto Данные нового аккаунта
    * @returns {Account} Созданный аккаунт
    */
-  async create(dto: CreateOneAccountArgs): Promise<Account | APIError> {
+  async createAccount(dto: CreateOneAccountArgs): Promise<Account | APIError> {
     try {
       return await this.repo.create(dto)
     } catch (e) {
@@ -166,7 +152,7 @@ export class AccountService {
     }
 
     try {
-      return await this.repo.model.delete({
+      return await this.repo.delete({
         where: where as Required<AccountWhereUniqueInput>,
       })
     } catch (e) {
