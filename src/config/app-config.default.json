@@ -1,0 +1,6 @@
+{
+  "MAX_UPLOADS_LIMIT": "Максимальное количество загрузок",
+  "MAX_REFRESH_TOKENS": "Максимальное количество сессий",
+  "ACCESS_TOKEN_EXPIRATION": "Срок жизни авторизации",
+  "REFRESH_TOKEN_EXPIRATION": "Срок жизни сессии"
+}

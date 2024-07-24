@@ -8,8 +8,8 @@ import * as argon2 from 'argon2'
 
 // Сервисы
 import { AccountService } from '@/account/account.service'
+import { ConfigService } from '@/config/config.service'
 import { TokenService } from './token.service'
-import { ConfigService } from '@core/config'
 
 // Утилиты
 import { Cookies } from '@utils/cookies'

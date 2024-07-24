@@ -6,7 +6,7 @@ import { Request } from 'express'
 
 // Сервисы
 import { AccountService } from '@/account/account.service'
-import { ConfigService } from '@core/config'
+import { ConfigService } from '@/config/config.service'
 
 // Утилиты
 import { serializeUser } from '@utils/serialize'

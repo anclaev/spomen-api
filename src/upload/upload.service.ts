@@ -16,7 +16,7 @@ import { v4 as uuid } from 'uuid'
 const translit = require('cyrillic-to-translit-js')
 
 // Сервисы
-import { ConfigService } from '@core/config'
+import { ConfigService } from '@/config/config.service'
 
 // Репозитории
 import { UploadRepository } from './upload.repository'

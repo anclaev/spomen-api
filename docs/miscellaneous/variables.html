@@ -128,7 +128,10 @@
                             <a href="#config" title="src/common/utils/sharp.ts" ><b>config</b>&nbsp;&nbsp;&nbsp;(src/.../sharp.ts)</a>
                         </li>
                         <li>
-                            <a href="#configSchema" title="src/core/config/config.schema.ts" ><b>configSchema</b>&nbsp;&nbsp;&nbsp;(src/.../config.schema.ts)</a>
+                            <a href="#configSchema" title="src/config/config.schema.ts" ><b>configSchema</b>&nbsp;&nbsp;&nbsp;(src/.../config.schema.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#DEFAULT_UPLOADS_LIMIT" title="src/config/app-config.service.ts" ><b>DEFAULT_UPLOADS_LIMIT</b>&nbsp;&nbsp;&nbsp;(src/.../app-config.service.ts)</a>
                         </li>
                         <li>
                             <a href="#filters" title="src/common/utils/sentry.ts" ><b>filters</b>&nbsp;&nbsp;&nbsp;(src/.../sentry.ts)</a>
@@ -252,6 +255,7 @@
 
   const prismaHealthIndicator &#x3D; app.get(PrismaHealthIndicator)
   const { httpAdapter } &#x3D; app.get(HttpAdapterHost)
+  const appConfig &#x3D; app.get(AppConfigService)
   const prisma &#x3D; app.get(PrismaService)
   const config &#x3D; app.get(ConfigService)
   const logger &#x3D; app.get(Logger)
@@ -274,12 +278,14 @@
   try {
     await prismaHealthIndicator.pingCheck(&#x27;Prisma&#x27;, prisma)
     logger.log(
-      &#x60;Connection to database ${colorize(&#x27;successfull&#x27;, CONSOLE_COLOR.PRIMARY)}!&#x60;,
+      &#x60;Connection to database ${colorize(&#x27;successfully&#x27;, CONSOLE_COLOR.PRIMARY)}!&#x60;,
       &#x27;PrismaClient&#x27;,
     )
   } catch (e) {
     logger.error(&#x27;No connection to database!&#x27;, null, &#x27;PrismaClient&#x27;)
   }
+
+  await appConfig.init()
 
   Sentry.setupNestErrorHandler(app, new SentryFilter(httpAdapter))
 
@@ -288,7 +294,7 @@
     new HandledExceptionFilter(),
   )
 
-  await await app.listen(config.port).finally(() &#x3D;&gt; {
+  await app.listen(config.port).finally(() &#x3D;&gt; {
     logger.log(
       &#x60;Environment: ${colorize(config.environment.toUpperCase(), CONSOLE_COLOR.PRIMARY)} | ${colorize(&#x27;Port:&#x27;)} ${colorize(config.port.toString(), CONSOLE_COLOR.PRIMARY)}&#x60;,
       &#x27;NestApplication&#x27;,
@@ -475,7 +481,7 @@
         </tbody>
     </table>
 </section>
-    <h3>src/core/config/config.schema.ts</h3>
+    <h3>src/config/config.schema.ts</h3>
     <section data-compodoc="block-properties">
     <h3></h3>    <table class="table table-sm table-bordered">
         <tbody>
@@ -494,6 +500,9 @@
   NODE_ENV: Joi.string()
     .valid(&#x27;local&#x27;, &#x27;development&#x27;, &#x27;staging&#x27;, &#x27;production&#x27;, &#x27;test&#x27;)
     .default(&#x27;local&#x27;),
+  MAX_UPLOADS_LIMIT: Joi.string().default(
+    JSON.stringify(DEFAULT_UPLOADS_LIMIT),
+  ),
   COOKIE_SECRET: Joi.string().required(),
   PORT: Joi.number().default(3000),
   ORIGIN: Joi.string().default(&#x27;localhost&#x27;),
@@ -533,6 +542,41 @@
             <tr>
                 <td class="col-md-4">
                     <div class="io-description"><p>Схема конфигурации</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/config/app-config.service.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="DEFAULT_UPLOADS_LIMIT"></a>
+                    <span class="name">
+                        <span ><b>DEFAULT_UPLOADS_LIMIT</b></span>
+                        <a href="#DEFAULT_UPLOADS_LIMIT"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>[
+  {
+    Default: 30,
+    Public: 30,
+    Administrator: 100,
+  },
+]</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Лимиты загрузок по-умолчанию</p>
 </div>
                 </td>
             </tr>

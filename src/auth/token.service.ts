@@ -4,7 +4,7 @@ import { JwtService } from '@nestjs/jwt'
 
 // Сервисы
 import { AccountService } from '@/account/account.service'
-import { ConfigService } from '@core/config'
+import { ConfigService } from '@/config/config.service'
 
 // Интерфейсы
 import { TokenPayload, Tokens } from '@interfaces/tokens'

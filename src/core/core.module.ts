@@ -3,34 +3,24 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo'
 import { PrismaModule, PrismaService } from 'nestjs-prisma'
 import { Global, Logger, Module } from '@nestjs/common'
 import { NestjsFormDataModule } from 'nestjs-form-data'
+import { ConfigModule } from '@/config/config.module'
 import { GraphQLModule } from '@nestjs/graphql'
 import { NestMinioModule } from 'nestjs-minio'
-import { ConfigModule } from '@nestjs/config'
 import { JwtModule } from '@nestjs/jwt'
 
-import { ConfigService } from './config/config.service'
-import validationSchema from './config/config.schema'
+import { AppConfigService } from '@/config/app-config.service'
+import { ConfigService } from '@/config/config.service'
 
 /**
  * Системный модуль приложения
  * @description Экспортирует:
  * * Логгер приложения
- * * Сервис конфигурации
  * * Сервис работы с базой данных
  */
 @Global()
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      cache: true,
-      envFilePath: `.env.${process.env['NODE_ENV'] ?? 'local'}`,
-      validationOptions: {
-        allowUnknown: true,
-        abortEarly: true,
-      },
-      validationSchema,
-    }),
+    ConfigModule,
     NestjsFormDataModule.config({
       isGlobal: true,
       limits: {
@@ -96,7 +86,7 @@ import validationSchema from './config/config.schema'
     }),
     TerminusModule,
   ],
-  providers: [Logger, ConfigService, PrismaService, PrismaHealthIndicator],
-  exports: [Logger, ConfigService, PrismaService],
+  providers: [Logger, PrismaService, AppConfigService, PrismaHealthIndicator],
+  exports: [Logger, PrismaService, AppConfigService],
 })
 export class CoreModule {}

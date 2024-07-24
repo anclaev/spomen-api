@@ -1,221 +1,227 @@
 generator client {
-    provider        = "prisma-client-js"
-    previewFeatures = ["tracing"]
+  provider        = "prisma-client-js"
+  previewFeatures = ["tracing"]
 }
 
 generator graphql {
-    provider                              = "prisma-nestjs-graphql"
-    output                                = "../src/common/graphql"
-    fields_Validator_from                 = "class-validator"
-    fields_Validator_input                = true
-    requireSingleFieldsInWhereUniqueInput = true
-    emitSingle                            = true
-    emitCompiled                          = true
-    purgeOutput                           = true
-    noTypeId                              = true
-    useInputType_WhereInput_ALL           = "WhereInput"
+  provider                              = "prisma-nestjs-graphql"
+  output                                = "../src/common/graphql"
+  fields_Validator_from                 = "class-validator"
+  fields_Validator_input                = true
+  requireSingleFieldsInWhereUniqueInput = true
+  emitSingle                            = true
+  emitCompiled                          = true
+  purgeOutput                           = true
+  noTypeId                              = true
+  useInputType_WhereInput_ALL           = "WhereInput"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 enum Role {
-    Public
-    Administrator
+  Public
+  Administrator
 }
 
 enum ActorRole {
-    Member
-    Owner
+  Member
+  Owner
 }
 
 enum Permission {
-    OwnerOnly
-    MemoryOnly
-    TimelineOnly
-    ChatOnly
-    Public
+  OwnerOnly
+  MemoryOnly
+  TimelineOnly
+  ChatOnly
+  Public
+}
+
+model Config {
+  key   String @id @unique
+  label String @unique
+  value Json
 }
 
 model Account {
-    id         String    @id @default(uuid())
-    vk_id      String?   @unique
-    vk_avatar  String?
-    username   String    @unique
-    email      String?   @unique
-    password   String
-    passkey    String?
-    first_name String?
-    last_name  String?
-    birthday   DateTime? @db.Date
-    sex        Int       @default(0)
+  id         String    @id @default(uuid())
+  vk_id      String?   @unique
+  vk_avatar  String?
+  username   String    @unique
+  email      String?   @unique
+  password   String
+  passkey    String?
+  first_name String?
+  last_name  String?
+  birthday   DateTime? @db.Date
+  sex        Int       @default(0)
 
-    roles          Role[]
-    refresh_tokens String[]
+  roles          Role[]
+  refresh_tokens String[]
 
-    avatar   Upload? @relation("AccountAvatars", fields: [avatarId], references: [id])
-    avatarId String?
+  avatar   Upload? @relation("AccountAvatars", fields: [avatarId], references: [id])
+  avatarId String?
 
-    chats    Chat[]          @relation("ChatMember")
-    messages MessageTarget[] @relation("MessageTarget")
-    actors   Actor[]         @relation("ActorAccount")
+  chats    Chat[]          @relation("ChatMember")
+  messages MessageTarget[] @relation("MessageTarget")
+  actors   Actor[]         @relation("ActorAccount")
 
-    owned_chats    Chat[]    @relation("ChatOwner")
-    owned_messages Message[] @relation("MessageOwner")
-    owned_memories Memory[]  @relation("MemoryOwner")
-    owned_comments Comment[] @relation("CommentOwner")
-    uploaded_files Upload[]  @relation("UploadOwner")
+  owned_chats    Chat[]    @relation("ChatOwner")
+  owned_messages Message[] @relation("MessageOwner")
+  owned_memories Memory[]  @relation("MemoryOwner")
+  owned_comments Comment[] @relation("CommentOwner")
+  uploaded_files Upload[]  @relation("UploadOwner")
 
-    created_at DateTime @default(now()) @db.Date
-    updated_at DateTime @updatedAt @db.Date
+  created_at DateTime @default(now()) @db.Date
+  updated_at DateTime @updatedAt @db.Date
 }
 
 model Upload {
-    id   String @id @default(uuid())
-    name String
-    ext  String
-    url  String
+  id   String @id @default(uuid())
+  name String
+  ext  String
+  url  String
 
-    file_name String
-    bucket    String
-    path      String
+  file_name String
+  bucket    String
+  path      String
 
-    is_system Boolean @default(false)
+  is_system Boolean @default(false)
 
-    permissions Permission[]
+  permissions Permission[]
 
-    messages Message[] @relation("MessageUploads")
-    memories Memory[]  @relation("MemoryUploads")
-    comments Comment[] @relation("CommentUploads")
-    accounts Account[] @relation("AccountAvatars")
+  messages Message[] @relation("MessageUploads")
+  memories Memory[]  @relation("MemoryUploads")
+  comments Comment[] @relation("CommentUploads")
+  accounts Account[] @relation("AccountAvatars")
 
-    owner    Account @relation("UploadOwner", fields: [owner_id], references: [id])
-    owner_id String
+  owner    Account @relation("UploadOwner", fields: [owner_id], references: [id])
+  owner_id String
 
-    created_at DateTime @default(now()) @db.Date
-    updated_at DateTime @updatedAt @db.Date
+  created_at DateTime @default(now()) @db.Date
+  updated_at DateTime @updatedAt @db.Date
 }
 
 model Chat {
-    id String @id @default(uuid())
+  id String @id @default(uuid())
 
-    name String?
+  name String?
 
-    owner    Account? @relation("ChatOwner", fields: [owner_id], references: [id])
-    owner_id String?
+  owner    Account? @relation("ChatOwner", fields: [owner_id], references: [id])
+  owner_id String?
 
-    timeline Timeline? @relation("TimelineChat")
-    memory   Memory?   @relation("MemoryChat")
+  timeline Timeline? @relation("TimelineChat")
+  memory   Memory?   @relation("MemoryChat")
 
-    members Account[] @relation("ChatMember")
+  members Account[] @relation("ChatMember")
 
-    created_at DateTime @default(now()) @db.Date
-    updated_at DateTime @updatedAt @db.Date
+  created_at DateTime @default(now()) @db.Date
+  updated_at DateTime @updatedAt @db.Date
 }
 
 model Message {
-    id String @id @default(uuid())
+  id String @id @default(uuid())
 
-    text String
+  text String
 
-    uploads Upload[]        @relation("MessageUploads")
-    targets MessageTarget[] @relation("MessageTargets")
+  uploads Upload[]        @relation("MessageUploads")
+  targets MessageTarget[] @relation("MessageTargets")
 
-    owner    Account @relation("MessageOwner", fields: [owner_id], references: [id])
-    owner_id String
+  owner    Account @relation("MessageOwner", fields: [owner_id], references: [id])
+  owner_id String
 
-    created_at DateTime @default(now()) @db.Date
-    updated_at DateTime @updatedAt @db.Date
+  created_at DateTime @default(now()) @db.Date
+  updated_at DateTime @updatedAt @db.Date
 }
 
 model MessageTarget {
-    id String @id @default(uuid())
+  id String @id @default(uuid())
 
-    message    Message @relation("MessageTargets", fields: [message_id], references: [id])
-    message_id String
+  message    Message @relation("MessageTargets", fields: [message_id], references: [id])
+  message_id String
 
-    target    Account @relation("MessageTarget", fields: [target_id], references: [id])
-    target_id String
+  target    Account @relation("MessageTarget", fields: [target_id], references: [id])
+  target_id String
 
-    readed_at  DateTime? @db.Date
-    created_at DateTime  @default(now()) @db.Date
-    updated_at DateTime  @updatedAt @db.Date
+  readed_at  DateTime? @db.Date
+  created_at DateTime  @default(now()) @db.Date
+  updated_at DateTime  @updatedAt @db.Date
 }
 
 model Actor {
-    id String @id @default(uuid())
+  id String @id @default(uuid())
 
-    account    Account @relation("ActorAccount", fields: [account_id], references: [id])
-    account_id String
+  account    Account @relation("ActorAccount", fields: [account_id], references: [id])
+  account_id String
 
-    role ActorRole
+  role ActorRole
 
-    started   DateTime
-    completed DateTime?
+  started   DateTime
+  completed DateTime?
 
-    memories Memory[] @relation("MemberActors")
+  memories Memory[] @relation("MemberActors")
 
-    timeline    Timeline? @relation("ActorTimeline", fields: [timeline_id], references: [id])
-    timeline_id String?
+  timeline    Timeline? @relation("ActorTimeline", fields: [timeline_id], references: [id])
+  timeline_id String?
 
-    created_at DateTime @default(now()) @db.Date
-    updated_at DateTime @updatedAt @db.Date
+  created_at DateTime @default(now()) @db.Date
+  updated_at DateTime @updatedAt @db.Date
 }
 
 model Timeline {
-    id String @id @default(uuid())
+  id String @id @default(uuid())
 
-    name    String?
-    is_root Boolean @default(false)
+  name    String?
+  is_root Boolean @default(false)
 
-    started   DateTime
-    completed DateTime?
+  started   DateTime
+  completed DateTime?
 
-    chat    Chat?   @relation("TimelineChat", fields: [chat_id], references: [id])
-    chat_id String? @unique
+  chat    Chat?   @relation("TimelineChat", fields: [chat_id], references: [id])
+  chat_id String? @unique
 
-    actors Actor[] @relation("ActorTimeline")
+  actors Actor[] @relation("ActorTimeline")
 
-    created_at DateTime @default(now()) @db.Date
-    updated_at DateTime @updatedAt @db.Date
+  created_at DateTime @default(now()) @db.Date
+  updated_at DateTime @updatedAt @db.Date
 }
 
 model Memory {
-    id String @id @default(uuid())
+  id String @id @default(uuid())
 
-    name        String
-    short_name  String?
-    description String
+  name        String
+  short_name  String?
+  description String
 
-    actors   Actor[]   @relation("MemberActors")
-    uploads  Upload[]  @relation("MemoryUploads")
-    comments Comment[] @relation("MemoryComments")
+  actors   Actor[]   @relation("MemberActors")
+  uploads  Upload[]  @relation("MemoryUploads")
+  comments Comment[] @relation("MemoryComments")
 
-    chat    Chat?   @relation("MemoryChat", fields: [chat_id], references: [id])
-    chat_id String? @unique
+  chat    Chat?   @relation("MemoryChat", fields: [chat_id], references: [id])
+  chat_id String? @unique
 
-    owner    Account @relation("MemoryOwner", fields: [owner_id], references: [id])
-    owner_id String
+  owner    Account @relation("MemoryOwner", fields: [owner_id], references: [id])
+  owner_id String
 
-    created_at DateTime @default(now()) @db.Date
-    updated_at DateTime @updatedAt @db.Date
+  created_at DateTime @default(now()) @db.Date
+  updated_at DateTime @updatedAt @db.Date
 }
 
 model Comment {
-    id String @id @default(uuid())
+  id String @id @default(uuid())
 
-    text String
+  text String
 
-    memory    Memory @relation("MemoryComments", fields: [memory_id], references: [id])
-    memory_id String
+  memory    Memory @relation("MemoryComments", fields: [memory_id], references: [id])
+  memory_id String
 
-    uploads Upload[] @relation("CommentUploads")
+  uploads Upload[] @relation("CommentUploads")
 
-    owner    Account @relation("CommentOwner", fields: [owner_id], references: [id])
-    owner_id String
+  owner    Account @relation("CommentOwner", fields: [owner_id], references: [id])
+  owner_id String
 
-    created_at DateTime @default(now()) @db.Date
-    updated_at DateTime @updatedAt @db.Date
+  created_at DateTime @default(now()) @db.Date
+  updated_at DateTime @updatedAt @db.Date
 }
