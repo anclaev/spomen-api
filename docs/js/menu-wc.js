@@ -386,9 +386,6 @@ customElements.define('compodoc-menu', class extends HTMLElement {
                                 <a href="interfaces/AuthenticatedUser.html" data-type="entity-link" >AuthenticatedUser</a>
                             </li>
                             <li class="link">
-                                <a href="interfaces/DeleteManyResult.html" data-type="entity-link" >DeleteManyResult</a>
-                            </li>
-                            <li class="link">
                                 <a href="interfaces/File.html" data-type="entity-link" >File</a>
                             </li>
                             <li class="link">

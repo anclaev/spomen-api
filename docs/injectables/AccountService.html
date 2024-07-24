@@ -155,7 +155,7 @@
                             </li>
                             <li>
                                     <span class="modifier">Async</span>
-                                <a href="#create" >create</a>
+                                <a href="#createAccount" >createAccount</a>
                             </li>
                             <li>
                                     <span class="modifier">Async</span>
@@ -204,7 +204,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="35" class="link-to-prism">src/account/account.service.ts:35</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="36" class="link-to-prism">src/account/account.service.ts:36</a></div>
                             </td>
                         </tr>
 
@@ -292,8 +292,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="275"
-                                    class="link-to-prism">src/account/account.service.ts:275</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="263"
+                                    class="link-to-prism">src/account/account.service.ts:263</a></div>
                         </td>
                     </tr>
 
@@ -351,26 +351,26 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="create"></a>
+                    <a name="createAccount"></a>
                     <span class="name">
                             <span class="modifier">Async</span>
-                        <span ><b>create</b></span>
-                        <a href="#create"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>createAccount</b></span>
+                        <a href="#createAccount"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>create(dto: CreateOneAccountArgs)</code>
+                    <code>createAccount(dto: CreateOneAccountArgs)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="112"
-                                    class="link-to-prism">src/account/account.service.ts:112</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="100"
+                                    class="link-to-prism">src/account/account.service.ts:100</a></div>
                         </td>
                     </tr>
 
@@ -446,8 +446,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="158"
-                                    class="link-to-prism">src/account/account.service.ts:158</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="146"
+                                    class="link-to-prism">src/account/account.service.ts:146</a></div>
                         </td>
                     </tr>
 
@@ -539,8 +539,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="51"
-                                    class="link-to-prism">src/account/account.service.ts:51</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="53"
+                                    class="link-to-prism">src/account/account.service.ts:53</a></div>
                         </td>
                     </tr>
 
@@ -616,8 +616,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="82"
-                                    class="link-to-prism">src/account/account.service.ts:82</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="79"
+                                    class="link-to-prism">src/account/account.service.ts:79</a></div>
                         </td>
                     </tr>
 
@@ -654,7 +654,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>    <code>Promise&lt;Account[]&gt;</code>
+                            <b>Returns : </b>        <code><a href="../classes/APIError.html" target="_self" >Promise&lt;[] | APIError&gt;</a></code>
 
                         </div>
                             <div class="io-description">
@@ -687,8 +687,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="245"
-                                    class="link-to-prism">src/account/account.service.ts:245</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="233"
+                                    class="link-to-prism">src/account/account.service.ts:233</a></div>
                         </td>
                     </tr>
 
@@ -780,8 +780,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="127"
-                                    class="link-to-prism">src/account/account.service.ts:127</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="115"
+                                    class="link-to-prism">src/account/account.service.ts:115</a></div>
                         </td>
                     </tr>
 
@@ -889,8 +889,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="184"
-                                    class="link-to-prism">src/account/account.service.ts:184</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="172"
+                                    class="link-to-prism">src/account/account.service.ts:172</a></div>
                         </td>
                     </tr>
 
@@ -982,15 +982,15 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { HttpStatus, Injectable } from &#x27;@nestjs/common&#x27;
+import { Permission, Upload } from &#x27;@prisma/client&#x27;
+
+import {
   Account,
   AccountUpdateInput,
   AccountWhereUniqueInput,
   CreateOneAccountArgs,
 } from &#x27;@graphql&#x27;
-
-import { HttpStatus, Injectable } from &#x27;@nestjs/common&#x27;
-import { Permission, Upload } from &#x27;@prisma/client&#x27;
 
 // Сервисы
 import { UploadService } from &#x27;@/upload/upload.service&#x27;
@@ -1011,6 +1011,7 @@ import { STORAGE } from &#x27;@enums/storage&#x27;
 
 // DTO
 import { GetAccountsDto } from &#x27;./dto/get-accounts.dto&#x27;
+import { AccountFilters } from &#x27;@interfaces/account&#x27;
 
 /**
  * Сервис аккаунта
@@ -1025,7 +1026,8 @@ export class AccountService {
   constructor(
     private readonly repo: AccountRepository,
     private readonly upload: UploadService,
-  ) {}
+  ) {
+  }
 
   /**
    * Получение уникального аккаунта
@@ -1035,27 +1037,22 @@ export class AccountService {
   async getAccount(
     where: AccountWhereUniqueInput,
   ): Promise&lt;Account | APIError&gt; {
-    const account &#x3D; await this.repo.model.findMany({
-      where: where as Required&lt;AccountWhereUniqueInput&gt;,
-      take: 1,
-      include: {
-        _count: true,
-        avatar: true,
-        actors: true,
-        chats: true,
-        messages: true,
-        owned_chats: true,
-        owned_comments: true,
-        owned_memories: true,
-        owned_messages: true,
-        uploaded_files: true,
-      },
-    })
+    try {
+      const account &#x3D; await this.repo.model.findMany({
+        where: where as Required&lt;AccountWhereUniqueInput&gt;,
+        take: 1,
+        include: {
+          avatar: true,
+        },
+      })
 
-    if (account.length &#x3D;&#x3D;&#x3D; 0)
-      return new APIError(HttpStatus.NOT_FOUND, &#x27;Аккаунт не найден&#x27;)
+      if (account.length &#x3D;&#x3D;&#x3D; 0)
+        return new APIError(HttpStatus.NOT_FOUND, &#x27;Аккаунт не найден&#x27;)
 
-    return account[0]
+      return account[0]
+    } catch (e) {
+      return new APIError(HttpStatus.INTERNAL_SERVER_ERROR, e.message)
+    }
   }
 
   /**
@@ -1064,28 +1061,19 @@ export class AccountService {
    * @returns {Account[]} Список аккаунтов
    */
   async getAccounts({
-    page,
-    size,
-    filters,
-  }: GetAccountsDto): Promise&lt;Account[]&gt; {
-    return this.repo.model.findMany({
-      where: filters,
-      take: size,
-      skip: size * (page - 1),
-      orderBy: { created_at: &#x27;desc&#x27; },
-      include: {
-        avatar: true,
-        chats: true,
-        uploaded_files: true,
-        messages: true,
-        owned_chats: true,
-        owned_comments: true,
-        owned_memories: true,
-        owned_messages: true,
-        actors: true,
-        _count: true,
-      },
-    })
+                      page,
+                      size,
+                      filters,
+                    }: GetAccountsDto)
+    : Promise&lt;Account[] | APIError&gt; {
+    try {
+      return this.repo.getPaginated(
+        { size, page },
+        filters as unknown as AccountFilters,
+      )
+    } catch (e) {
+      return new APIError(HttpStatus.INTERNAL_SERVER_ERROR, e.message)
+    }
   }
 
   /**
@@ -1093,7 +1081,7 @@ export class AccountService {
    * @param {CreateOneAccountArgs} dto Данные нового аккаунта
    * @returns {Account} Созданный аккаунт
    */
-  async create(dto: CreateOneAccountArgs): Promise&lt;Account | APIError&gt; {
+  async createAccount(dto: CreateOneAccountArgs): Promise&lt;Account | APIError&gt; {
     try {
       return await this.repo.create(dto)
     } catch (e) {
@@ -1150,7 +1138,7 @@ export class AccountService {
     }
 
     try {
-      return await this.repo.model.delete({
+      return await this.repo.delete({
         where: where as Required&lt;AccountWhereUniqueInput&gt;,
       })
     } catch (e) {

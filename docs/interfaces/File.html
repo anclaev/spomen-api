@@ -133,6 +133,13 @@
         </p>
 
 
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>Интерфейс файла</p>
+
+            </p>
 
 
         <section data-compodoc="block-index">
@@ -214,6 +221,12 @@
 
 
 
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-description"><p>Данные файла</p>
+</div>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                     <table class="table table-sm table-bordered">
@@ -247,6 +260,12 @@
 
 
 
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-description"><p>Расширение файла</p>
+</div>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                     <table class="table table-sm table-bordered">
@@ -285,6 +304,12 @@
 
 
 
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-description"><p>Тип файла</p>
+</div>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                     <table class="table table-sm table-bordered">
@@ -318,6 +343,12 @@
 
 
 
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-description"><p>Название файла</p>
+</div>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
             </section>
@@ -327,6 +358,9 @@
     <div class="tab-pane fade  tab-source-code" id="source">
         <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Permission } from &#x27;@prisma/client&#x27;
 
+/**
+ * Фильтры для отбора загрузок
+ */
 export type UploadFilters &#x3D; {
   name: any | null
   ext: any | null
@@ -335,41 +369,143 @@ export type UploadFilters &#x3D; {
   is_system: any | null
 }
 
+/**
+ * Интерфейс файла
+ */
 export interface File {
+  /**
+   * Название файла
+   */
   name: string
+
+  /**
+   * Расширение файла
+   */
   ext: string
+
+  /**
+   * Данные файла
+   */
   buffer: Buffer
+
+  /**
+   * Тип файла
+   */
   mime?: string
 }
 
+/**
+ * Опции загрузки файла в хранилище
+ */
 export type PutFileOptions &#x3D; {
+  /**
+   * Объект файла
+   */
   file: File
+
+  /**
+   * Путь сохранения файла
+   */
   path: string
+
+  /**
+   * ID владельца файла
+   */
   owner: string
+
+  /**
+   * Права доступа к файлу
+   */
   acl?: Permission
+
+  /**
+   * Сжатие файла
+   */
   compress?: boolean
 }
 
+/**
+ * Метаданные файла
+ */
 export type Metadata &#x3D; {
+  /**
+   * ID владельца файла
+   */
   owner: string
+
+  /**
+   * Исходное название файла
+   */
   name: string
+
+  /**
+   * Расширение файла
+   */
   ext: string
+
+  /**
+   * Права доступа к файлу
+   */
   acl: Permission
+
+  /**
+   * Тип файла
+   */
   &#x27;Content-Type&#x27;: string
 }
 
+/**
+ * Класс файла в хранилище
+ */
 export class S3File {
+  /**
+   * Хэшированное название файла
+   */
   name: string
+
+  /**
+   * Бакет файла
+   */
   bucket: string
+
+  /**
+   * Путь к файлу
+   */
   path: string
+
+  /**
+   * ETAG файла
+   */
   etag: string | null &#x3D; null
+
+  /**
+   * Версия файла
+   */
   versionId: string | null &#x3D; null
 }
 
+/**
+ * Параметры сохранения загрузки
+ */
 export type SaveUploadOptions &#x3D; {
+  /**
+   * ID владельца файла
+   */
   owner: string
+
+  /**
+   * Права доступа к файлу
+   */
   permissions: Permission[]
+
+  /**
+   * Объект файла
+   */
   file: File
+
+  /**
+   * Объект файла в хранилище
+   */
   s3File: S3File
 }
 </code></pre>

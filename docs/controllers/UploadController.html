@@ -210,8 +210,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="100"
-                                    class="link-to-prism">src/upload/upload.controller.ts:100</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="101"
+                                    class="link-to-prism">src/upload/upload.controller.ts:101</a></div>
                         </td>
                     </tr>
 
@@ -298,14 +298,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Get(&#x27;file/:id&#x27;)<br />@UseAuth()<br /></code>
+                    <code>@Get(&#x27;:id&#x27;)<br />@UseAuth()<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="54"
-                                    class="link-to-prism">src/upload/upload.controller.ts:54</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="55"
+                                    class="link-to-prism">src/upload/upload.controller.ts:55</a></div>
                         </td>
                     </tr>
 
@@ -356,7 +356,7 @@
 
 
                                             <td>
-                                                    <p>Текущи йпользователь системы</p>
+                                                    <p>Текущий пользователь системы</p>
 
                                             </td>
                                         </tr>
@@ -384,7 +384,7 @@
 
                         </div>
                             <div class="io-description">
-                                <p>res Файл из хранилища</p>
+                                <p>Файл из хранилища</p>
 
                             </div>
                 </td>
@@ -423,8 +423,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="73"
-                                    class="link-to-prism">src/upload/upload.controller.ts:73</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="74"
+                                    class="link-to-prism">src/upload/upload.controller.ts:74</a></div>
                         </td>
                     </tr>
 
@@ -540,16 +540,17 @@ export class UploadController {
    * Конструктор контроллера загрузок
    * @param {UploadService} upload Сервис работы с загрузками
    */
-  constructor(private readonly upload: UploadService) {}
+  constructor(private readonly upload: UploadService) {
+  }
 
   /**
    * Обработка получения файла по идентификатору загрузки
    * @param {string} id Идентификатор загрузки
-   * @param {AuthenticatedUser} user Текущи йпользователь системы
+   * @param {AuthenticatedUser} user Текущий пользователь системы
    * @param {Response} res Объект ответа запроса
-   * @returns {StreamableFile} res Файл из хранилища
+   * @returns {StreamableFile} Файл из хранилища
    */
-  @Get(&#x27;file/:id&#x27;)
+  @Get(&#x27;:id&#x27;)
   @UseAuth()
   async getFile(
     @Param(&#x27;id&#x27;) id: string,

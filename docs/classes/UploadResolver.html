@@ -211,7 +211,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/upload/upload.resolver.ts:26</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">src/upload/upload.resolver.ts:27</a></div>
                             </td>
                         </tr>
 
@@ -284,8 +284,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="152"
-                                    class="link-to-prism">src/upload/upload.resolver.ts:152</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="154"
+                                    class="link-to-prism">src/upload/upload.resolver.ts:154</a></div>
                         </td>
                     </tr>
 
@@ -378,8 +378,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="119"
-                                    class="link-to-prism">src/upload/upload.resolver.ts:119</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="121"
+                                    class="link-to-prism">src/upload/upload.resolver.ts:121</a></div>
                         </td>
                     </tr>
 
@@ -474,14 +474,14 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@UseGqlAuth()<br />@Query(undefined, {name: &#x27;getExtensions&#x27;})<br /></code>
+                    <code>@UseGqlAuth()<br />@Query(undefined, {name: &#x27;uploadExtensions&#x27;})<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="138"
-                                    class="link-to-prism">src/upload/upload.resolver.ts:138</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="140"
+                                    class="link-to-prism">src/upload/upload.resolver.ts:140</a></div>
                         </td>
                     </tr>
 
@@ -582,15 +582,15 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="40"
-                                    class="link-to-prism">src/upload/upload.resolver.ts:40</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="42"
+                                    class="link-to-prism">src/upload/upload.resolver.ts:42</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                        <div class="io-description"><p>Запрос на получение загрузки по ID</p>
+                        <div class="io-description"><p>Получение загрузки по полям отбора</p>
 </div>
 
                             <div class="io-description">
@@ -668,8 +668,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="98"
-                                    class="link-to-prism">src/upload/upload.resolver.ts:98</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="100"
+                                    class="link-to-prism">src/upload/upload.resolver.ts:100</a></div>
                         </td>
                     </tr>
 
@@ -786,8 +786,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="59"
-                                    class="link-to-prism">src/upload/upload.resolver.ts:59</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="61"
+                                    class="link-to-prism">src/upload/upload.resolver.ts:61</a></div>
                         </td>
                     </tr>
 
@@ -882,7 +882,7 @@
 
                         </div>
                             <div class="io-description">
-                                <p>Список  загрузок</p>
+                                <p>Список загрузок</p>
 
                             </div>
                 </td>
@@ -899,15 +899,16 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import {
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Args, Mutation, Query, Resolver } from &#x27;@nestjs/graphql&#x27;
+import { HttpException } from &#x27;@nestjs/common&#x27;
+
+import {
   Upload,
   UploadUpdateInput,
   UploadWhereInput,
   UploadWhereUniqueInput,
 } from &#x27;@graphql&#x27;
 
-import { Args, Mutation, Query, Resolver } from &#x27;@nestjs/graphql&#x27;
-import { HttpException } from &#x27;@nestjs/common&#x27;
 
 // Декораторы
 import { UseGqlAuth } from &#x27;@decorators/gql-auth&#x27;
@@ -929,10 +930,11 @@ export class UploadResolver {
    * Конструктор ресольвера загрузок
    * @param {UploadService} upload Сервис загрузок
    */
-  constructor(private readonly upload: UploadService) {}
+  constructor(private readonly upload: UploadService) {
+  }
 
   /**
-   * Запрос на получение загрузки по ID
+   * Получение загрузки по полям отбора
    * @param {UploadWhereUniqueInput} where Данные для поиска
    * @returns {Upload} Загрузка
    */
@@ -940,7 +942,7 @@ export class UploadResolver {
   @Query(() &#x3D;&gt; Upload, { name: &#x27;upload&#x27; })
   async getUpload(
     @Args(&#x27;where&#x27;, { type: () &#x3D;&gt; UploadWhereUniqueInput })
-    where: UploadWhereUniqueInput,
+      where: UploadWhereUniqueInput,
   ): Promise&lt;Upload&gt; {
     const upload &#x3D; await this.upload.getUpload(where)
 
@@ -953,7 +955,7 @@ export class UploadResolver {
    * @param {number} size Размер страницы
    * @param filters Фильтры отбора
    * @param {AuthenticatedUser} user Текущий пользователь системы
-   * @returns {Upload[]} Список  загрузок
+   * @returns {Upload[]} Список загрузок
    */
   @UseGqlAuth()
   @Query(() &#x3D;&gt; [Upload], { name: &#x27;uploads&#x27; })
@@ -964,7 +966,7 @@ export class UploadResolver {
       type: () &#x3D;&gt; UploadWhereInput,
       nullable: true,
     })
-    filters: UploadWhereInput,
+      filters: UploadWhereInput,
     @UseGqlUser() user: AuthenticatedUser,
   ): Promise&lt;Upload[]&gt; {
     if (filters.name &amp;&amp; Object.keys(filters.name).length &#x3D;&#x3D;&#x3D; 0)
@@ -998,11 +1000,11 @@ export class UploadResolver {
   @Mutation(() &#x3D;&gt; Upload, { name: &#x27;updateUpload&#x27; })
   async updateUpload(
     @Args(&#x27;data&#x27;, { type: () &#x3D;&gt; UploadUpdateInput })
-    data: UploadUpdateInput,
+      data: UploadUpdateInput,
     @Args(&#x27;where&#x27;, { type: () &#x3D;&gt; UploadWhereUniqueInput })
-    where: UploadWhereUniqueInput,
+      where: UploadWhereUniqueInput,
     @UseGqlUser()
-    user: AuthenticatedUser,
+      user: AuthenticatedUser,
   ): Promise&lt;Upload&gt; {
     const updatedUpload &#x3D; await this.upload.updateUpload(data, where, user)
 
@@ -1019,9 +1021,9 @@ export class UploadResolver {
   @Mutation(() &#x3D;&gt; Upload, { name: &#x27;deleteUpload&#x27; })
   async deleteUpload(
     @Args(&#x27;where&#x27;, { type: () &#x3D;&gt; UploadWhereUniqueInput })
-    where: UploadWhereUniqueInput,
+      where: UploadWhereUniqueInput,
     @UseGqlUser()
-    user: AuthenticatedUser,
+      user: AuthenticatedUser,
   ): Promise&lt;Upload&gt; {
     const deletedUpload &#x3D; await this.upload.deleteUpload(where, user)
 
@@ -1035,7 +1037,7 @@ export class UploadResolver {
    * @returns {string[]} Список расширений
    */
   @UseGqlAuth()
-  @Query(() &#x3D;&gt; [String], { name: &#x27;getExtensions&#x27; })
+  @Query(() &#x3D;&gt; [String], { name: &#x27;uploadExtensions&#x27; })
   async getExtensions(
     @Args(&#x27;size&#x27;, { type: () &#x3D;&gt; Number, defaultValue: 10 }) size: number,
     @Args(&#x27;page&#x27;, { type: () &#x3D;&gt; Number, defaultValue: 1 }) page: number,

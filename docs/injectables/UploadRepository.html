@@ -214,7 +214,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="24" class="link-to-prism">src/upload/upload.repository.ts:24</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="23" class="link-to-prism">src/upload/upload.repository.ts:23</a></div>
                             </td>
                         </tr>
 
@@ -484,7 +484,7 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../interfaces/DeleteManyResult.html" target="_self" >Promise&lt;DeleteManyResult&gt;</a></code>
+                            <b>Returns : </b>    <code>Promise&lt;Prisma.BatchPayload&gt;</code>
 
                         </div>
                             <div class="io-description">
@@ -840,7 +840,7 @@
                             </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-description"><p>Доступ к модели загрузок Prisma</p>
+                                <div class="io-description"><p>Доступ к модели Prisma</p>
 </div>
 
                         </td>
@@ -866,7 +866,6 @@ import {
 } from &#x27;@graphql&#x27;
 
 // Интерфейсы
-import { DeleteManyResult } from &#x27;@interfaces/prisma&#x27;
 import { Pagination } from &#x27;@interfaces/pagination&#x27;
 import { UploadFilters } from &#x27;@interfaces/upload&#x27;
 import { ToPrisma } from &#x27;@interfaces/prisma&#x27;
@@ -881,10 +880,11 @@ export class UploadRepository {
    * Конструктор репозитория загрузок
    * @param {PrismaService} prisma Сервис для работы с БД
    */
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {
+  }
 
   /**
-   * Доступ к модели загрузок Prisma
+   * Доступ к модели Prisma
    */
   get model() {
     return this.prisma.upload
@@ -905,12 +905,12 @@ export class UploadRepository {
     return this.prisma.upload.findMany({
       where: filters
         ? {
-            ext: filters.ext ? filters.ext : undefined,
-            name: filters.name ? filters.name : undefined,
-            owner: filters.owner ? filters.owner : undefined,
-            owner_id: filters.owner_id ? filters.owner_id : undefined,
-            is_system: filters.is_system ? filters.is_system : undefined,
-          }
+          ext: filters.ext ? filters.ext : undefined,
+          name: filters.name ? filters.name : undefined,
+          owner: filters.owner ? filters.owner : undefined,
+          owner_id: filters.owner_id ? filters.owner_id : undefined,
+          is_system: filters.is_system ? filters.is_system : undefined,
+        }
         : undefined,
       include: {
         owner: {
@@ -976,7 +976,7 @@ export class UploadRepository {
    */
   async deleteMany(
     args: Omit&lt;DeleteManyUploadArgs, &#x27;where&#x27;&gt;,
-  ): Promise&lt;DeleteManyResult&gt; {
+  ): Promise&lt;Prisma.BatchPayload&gt; {
     return this.prisma.upload.deleteMany(args)
   }
 
@@ -986,9 +986,9 @@ export class UploadRepository {
    * @returns {{ext: string}[]} Массив объектов с расширениями
    */
   async getDistinctExt({
-    page,
-    size,
-  }: Pagination): Promise&lt;Pick&lt;Upload, &#x27;ext&#x27;&gt;[]&gt; {
+                         page,
+                         size,
+                       }: Pagination): Promise&lt;Pick&lt;Upload, &#x27;ext&#x27;&gt;[]&gt; {
     return this.prisma.upload.findMany({
       select: {
         ext: true,
