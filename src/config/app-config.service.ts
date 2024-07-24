@@ -12,17 +12,13 @@ import * as APP_CONFIG_DEFAULT from './app-config.default.json'
 /**
  * Лимиты загрузок по-умолчанию
  */
-export const DEFAULT_UPLOADS_LIMIT: [
-  {
-    [key: string]: number
-  },
-] = [
-  {
-    Default: 30,
-    Public: 30,
-    Administrator: 100,
-  },
-]
+export const DEFAULT_UPLOADS_LIMIT: {
+  [key: string]: number
+} = {
+  Default: 30,
+  Public: 30,
+  Administrator: 100,
+}
 
 /**
  * Сервис конфигурации приложения
@@ -67,9 +63,11 @@ export class AppConfigService {
               key: item,
               label:
                 APP_CONFIG_DEFAULT[item as keyof typeof APP_CONFIG_DEFAULT],
-              value: typeof value === 'object' ? value : { value },
+              value: { value },
             },
           })
+
+          this.config.set(item, JSON.stringify({ value }))
         } catch (e) {
           this.logger.error(
             'Error saving configuration parameter:' + item,
@@ -80,7 +78,9 @@ export class AppConfigService {
         }
       } else {
         // Сохранение конфигурации из базы данных в приложении
-        this.config.set(existConfigItem.key, existConfigItem.value)
+        const configValue = existConfigItem.value! as { value: any }
+
+        this.config.set(existConfigItem.key, configValue.value)
       }
     }
 

@@ -190,6 +190,7 @@ export class AccountService {
     let uploadedFile = await this.upload.putFile({
       file,
       owner: user.username,
+      owner_roles: user.roles,
       path: toS3Path(STORAGE.AVATARS),
       compress: true,
       acl: Permission.Public,

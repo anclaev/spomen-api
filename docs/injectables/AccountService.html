@@ -292,8 +292,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="261"
-                                    class="link-to-prism">src/account/account.service.ts:261</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="262"
+                                    class="link-to-prism">src/account/account.service.ts:262</a></div>
                         </td>
                     </tr>
 
@@ -687,8 +687,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="231"
-                                    class="link-to-prism">src/account/account.service.ts:231</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="232"
+                                    class="link-to-prism">src/account/account.service.ts:232</a></div>
                         </td>
                     </tr>
 
@@ -1174,6 +1174,7 @@ export class AccountService {
     let uploadedFile &#x3D; await this.upload.putFile({
       file,
       owner: user.username,
+      owner_roles: user.roles,
       path: toS3Path(STORAGE.AVATARS),
       compress: true,
       acl: Permission.Public,

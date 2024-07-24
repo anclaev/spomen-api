@@ -176,7 +176,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/config/app-config.service.ts:31</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">src/config/app-config.service.ts:27</a></div>
                             </td>
                         </tr>
 
@@ -265,8 +265,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="41"
-                                    class="link-to-prism">src/config/app-config.service.ts:41</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="37"
+                                    class="link-to-prism">src/config/app-config.service.ts:37</a></div>
                         </td>
                     </tr>
 
@@ -304,17 +304,13 @@ import * as APP_CONFIG_DEFAULT from &#x27;./app-config.default.json&#x27;
 /**
  * Лимиты загрузок по-умолчанию
  */
-export const DEFAULT_UPLOADS_LIMIT: [
-  {
-    [key: string]: number
-  },
-] &#x3D; [
-  {
-    Default: 30,
-    Public: 30,
-    Administrator: 100,
-  },
-]
+export const DEFAULT_UPLOADS_LIMIT: {
+  [key: string]: number
+} &#x3D; {
+  Default: 30,
+  Public: 30,
+  Administrator: 100,
+}
 
 /**
  * Сервис конфигурации приложения
@@ -359,9 +355,11 @@ export class AppConfigService {
               key: item,
               label:
                 APP_CONFIG_DEFAULT[item as keyof typeof APP_CONFIG_DEFAULT],
-              value: typeof value &#x3D;&#x3D;&#x3D; &#x27;object&#x27; ? value : { value },
+              value: { value },
             },
           })
+
+          this.config.set(item, JSON.stringify({ value }))
         } catch (e) {
           this.logger.error(
             &#x27;Error saving configuration parameter:&#x27; + item,
@@ -372,7 +370,9 @@ export class AppConfigService {
         }
       } else {
         // Сохранение конфигурации из базы данных в приложении
-        this.config.set(existConfigItem.key, existConfigItem.value)
+        const configValue &#x3D; existConfigItem.value! as { value: any }
+
+        this.config.set(existConfigItem.key, configValue.value)
       }
     }
 

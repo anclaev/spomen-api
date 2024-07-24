@@ -206,7 +206,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="116" class="link-to-prism">src/common/interfaces/upload.ts:116</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="121" class="link-to-prism">src/common/interfaces/upload.ts:121</a></div>
                         </td>
                     </tr>
 
@@ -243,7 +243,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="126" class="link-to-prism">src/common/interfaces/upload.ts:126</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="131" class="link-to-prism">src/common/interfaces/upload.ts:131</a></div>
                         </td>
                     </tr>
 
@@ -275,7 +275,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="111" class="link-to-prism">src/common/interfaces/upload.ts:111</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="116" class="link-to-prism">src/common/interfaces/upload.ts:116</a></div>
                         </td>
                     </tr>
 
@@ -307,7 +307,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="121" class="link-to-prism">src/common/interfaces/upload.ts:121</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="126" class="link-to-prism">src/common/interfaces/upload.ts:126</a></div>
                         </td>
                     </tr>
 
@@ -344,7 +344,7 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="131" class="link-to-prism">src/common/interfaces/upload.ts:131</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="136" class="link-to-prism">src/common/interfaces/upload.ts:136</a></div>
                         </td>
                     </tr>
 
@@ -369,7 +369,7 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Permission } from &#x27;@prisma/client&#x27;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Permission, Role } from &#x27;@prisma/client&#x27;
 
 /**
  * Фильтры для отбора загрузок
@@ -430,6 +430,11 @@ export type PutFileOptions &#x3D; {
    * ID владельца файла
    */
   owner: string
+
+  /**
+   * Роль владельца файла
+   */
+  owner_roles: Role[]
 
   /**
    * Права доступа к файлу

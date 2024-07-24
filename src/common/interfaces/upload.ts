@@ -1,4 +1,4 @@
-import { Permission } from '@prisma/client'
+import { Permission, Role } from '@prisma/client'
 
 /**
  * Фильтры для отбора загрузок
@@ -59,6 +59,11 @@ export type PutFileOptions = {
    * ID владельца файла
    */
   owner: string
+
+  /**
+   * Роль владельца файла
+   */
+  owner_roles: Role[]
 
   /**
    * Права доступа к файлу

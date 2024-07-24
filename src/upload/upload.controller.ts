@@ -89,6 +89,7 @@ export class UploadController {
       },
       path: toS3Path(path),
       owner: user.username,
+      owner_roles: user.roles,
       acl,
       compress,
     })

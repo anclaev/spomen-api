@@ -8,7 +8,7 @@ import {
 
 import { UploadUpdateInput, UploadWhereUniqueInput } from '@graphql'
 import { BucketItemStat, Client, S3Error } from 'minio'
-import { Permission, Upload } from '@prisma/client'
+import { Permission, Role, Upload } from '@prisma/client'
 import { InjectMinio } from 'nestjs-minio'
 import { Response } from 'express'
 import { v4 as uuid } from 'uuid'
@@ -323,9 +323,41 @@ export class UploadService implements OnModuleInit {
     file,
     path,
     owner,
+    owner_roles,
     acl,
     compress = false,
   }: PutFileOptions): Promise<Upload | APIError> {
+    // Проверка на количество загрузок у пользователя
+    try {
+      const currentUploads = await this.repo.model.count({
+        where: {
+          owner: {
+            username: {
+              equals: owner,
+            },
+          },
+        },
+      })
+
+      const maxUploadsLimit = JSON.parse(
+        this.config.gett('MAX_UPLOADS_LIMIT'),
+      ) as { [key: string]: number }
+
+      if (
+        (owner_roles.includes('Administrator') &&
+          currentUploads >= maxUploadsLimit['Administrator']) ||
+        (!owner_roles.includes('Administrator') &&
+          currentUploads >= maxUploadsLimit['Public'])
+      ) {
+        return new APIError(HttpStatus.CONFLICT, 'Превышен лимит загрузок')
+      }
+    } catch (e) {
+      return new APIError(
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        'Ошибка при загрузке файла',
+      )
+    }
+
     // Преобразование изображения в webp
     if (file.mime && file.mime.match(/^image\/(.*)/)) {
       try {

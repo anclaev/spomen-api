@@ -210,8 +210,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="104"
-                                    class="link-to-prism">src/upload/upload.controller.ts:104</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="105"
+                                    class="link-to-prism">src/upload/upload.controller.ts:105</a></div>
                         </td>
                     </tr>
 
@@ -589,6 +589,7 @@ export class UploadController {
       },
       path: toS3Path(path),
       owner: user.username,
+      owner_roles: user.roles,
       acl,
       compress,
     })

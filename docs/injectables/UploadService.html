@@ -401,8 +401,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="510"
-                                    class="link-to-prism">src/upload/upload.service.ts:510</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="542"
+                                    class="link-to-prism">src/upload/upload.service.ts:542</a></div>
                         </td>
                     </tr>
 
@@ -495,8 +495,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="575"
-                                    class="link-to-prism">src/upload/upload.service.ts:575</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="607"
+                                    class="link-to-prism">src/upload/upload.service.ts:607</a></div>
                         </td>
                     </tr>
 
@@ -587,8 +587,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="395"
-                                    class="link-to-prism">src/upload/upload.service.ts:395</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="427"
+                                    class="link-to-prism">src/upload/upload.service.ts:427</a></div>
                         </td>
                     </tr>
 
@@ -757,8 +757,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="443"
-                                    class="link-to-prism">src/upload/upload.service.ts:443</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="475"
+                                    class="link-to-prism">src/upload/upload.service.ts:475</a></div>
                         </td>
                     </tr>
 
@@ -1095,8 +1095,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="547"
-                                    class="link-to-prism">src/upload/upload.service.ts:547</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="579"
+                                    class="link-to-prism">src/upload/upload.service.ts:579</a></div>
                         </td>
                     </tr>
 
@@ -1292,8 +1292,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="457"
-                                    class="link-to-prism">src/upload/upload.service.ts:457</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="489"
+                                    class="link-to-prism">src/upload/upload.service.ts:489</a></div>
                         </td>
                     </tr>
 
@@ -1363,8 +1363,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="500"
-                                    class="link-to-prism">src/upload/upload.service.ts:500</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="532"
+                                    class="link-to-prism">src/upload/upload.service.ts:532</a></div>
                         </td>
                     </tr>
 
@@ -1557,8 +1557,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="556"
-                                    class="link-to-prism">src/upload/upload.service.ts:556</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="588"
+                                    class="link-to-prism">src/upload/upload.service.ts:588</a></div>
                         </td>
                     </tr>
 
@@ -1635,8 +1635,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="527"
-                                    class="link-to-prism">src/upload/upload.service.ts:527</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="559"
+                                    class="link-to-prism">src/upload/upload.service.ts:559</a></div>
                         </td>
                     </tr>
 
@@ -1897,7 +1897,7 @@
 
 import { UploadUpdateInput, UploadWhereUniqueInput } from &#x27;@graphql&#x27;
 import { BucketItemStat, Client, S3Error } from &#x27;minio&#x27;
-import { Permission, Upload } from &#x27;@prisma/client&#x27;
+import { Permission, Role, Upload } from &#x27;@prisma/client&#x27;
 import { InjectMinio } from &#x27;nestjs-minio&#x27;
 import { Response } from &#x27;express&#x27;
 import { v4 as uuid } from &#x27;uuid&#x27;
@@ -2212,9 +2212,41 @@ export class UploadService implements OnModuleInit {
     file,
     path,
     owner,
+    owner_roles,
     acl,
     compress &#x3D; false,
   }: PutFileOptions): Promise&lt;Upload | APIError&gt; {
+    // Проверка на количество загрузок у пользователя
+    try {
+      const currentUploads &#x3D; await this.repo.model.count({
+        where: {
+          owner: {
+            username: {
+              equals: owner,
+            },
+          },
+        },
+      })
+
+      const maxUploadsLimit &#x3D; JSON.parse(
+        this.config.gett(&#x27;MAX_UPLOADS_LIMIT&#x27;),
+      ) as { [key: string]: number }
+
+      if (
+        (owner_roles.includes(&#x27;Administrator&#x27;) &amp;&amp;
+          currentUploads &gt;&#x3D; maxUploadsLimit[&#x27;Administrator&#x27;]) ||
+        (!owner_roles.includes(&#x27;Administrator&#x27;) &amp;&amp;
+          currentUploads &gt;&#x3D; maxUploadsLimit[&#x27;Public&#x27;])
+      ) {
+        return new APIError(HttpStatus.CONFLICT, &#x27;Превышен лимит загрузок&#x27;)
+      }
+    } catch (e) {
+      return new APIError(
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        &#x27;Ошибка при загрузке файла&#x27;,
+      )
+    }
+
     // Преобразование изображения в webp
     if (file.mime &amp;&amp; file.mime.match(/^image\/(.*)/)) {
       try {
