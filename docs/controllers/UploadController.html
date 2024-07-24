@@ -417,7 +417,7 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Post()<br />@UseAuth([&#x27;Administrator&#x27;])<br />@FormDataRequest()<br /></code>
+                    <code>@Post()<br />@UseAuth()<br />@FormDataRequest()<br /></code>
                 </td>
             </tr>
 
@@ -568,7 +568,7 @@ export class UploadController {
    * @returns {Upload} Загрузка в базе данных
    */
   @Post()
-  @UseAuth([&#x27;Administrator&#x27;])
+  @UseAuth()
   @FormDataRequest()
   async uploadFile(
     @UseUser() user: AuthenticatedUser,

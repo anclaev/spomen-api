@@ -145,7 +145,7 @@
     "collectCoverageFrom": [
       "**/*.{!(module|guard),}.ts"
     ],
-    "coverageDirectory": "coverage",
+    "coverageDirectory": "../coverage",
     "coverageThreshold": {
       "global": {
         "lines": 90,

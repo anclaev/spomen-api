@@ -68,7 +68,7 @@ export class UploadController {
    * @returns {Upload} Загрузка в базе данных
    */
   @Post()
-  @UseAuth(['Administrator'])
+  @UseAuth()
   @FormDataRequest()
   async uploadFile(
     @UseUser() user: AuthenticatedUser,
