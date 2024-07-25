@@ -151,7 +151,15 @@
                         <ul class="index-list">
                             <li>
                                     <span class="modifier">Async</span>
+                                <a href="#getConfig" >getConfig</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
                                 <a href="#init" >init</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#updateConfig" >updateConfig</a>
                             </li>
                         </ul>
                     </td>
@@ -176,7 +184,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="27" class="link-to-prism">src/config/app-config.service.ts:27</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/config/app-config.service.ts:30</a></div>
                             </td>
                         </tr>
 
@@ -247,6 +255,45 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="getConfig"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getConfig</b></span>
+                        <a href="#getConfig"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getConfig()</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="96"
+                                    class="link-to-prism">src/config/app-config.service.ts:96</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;Config[]&gt;</code>
+
+                        </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="init"></a>
                     <span class="name">
                             <span class="modifier">Async</span>
@@ -265,8 +312,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="37"
-                                    class="link-to-prism">src/config/app-config.service.ts:37</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="40"
+                                    class="link-to-prism">src/config/app-config.service.ts:40</a></div>
                         </td>
                     </tr>
 
@@ -284,14 +331,84 @@
             </tr>
         </tbody>
     </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="updateConfig"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>updateConfig</b></span>
+                        <a href="#updateConfig"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>updateConfig(dto: <a href="../classes/UpdateConfigDto.html" target="_self">UpdateConfigDto</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="100"
+                                    class="link-to-prism">src/config/app-config.service.ts:100</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>dto</td>
+                                            <td>
+                                                            <code><a href="../classes/UpdateConfigDto.html" target="_self" >UpdateConfigDto</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>        <code><a href="../classes/APIError.html" target="_self" >Promise&lt;Config | APIError&gt;</a></code>
+
+                        </div>
+                            <div class="io-description">
+                                
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </section>
 
     </div>
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Injectable, Logger } from &#x27;@nestjs/common&#x27;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { HttpStatus, Injectable, Logger } from &#x27;@nestjs/common&#x27;
 import { PrismaService } from &#x27;nestjs-prisma&#x27;
+import { Config } from &#x27;@prisma/client&#x27;
 
 import { ConfigService } from &#x27;@/config/config.service&#x27;
 
@@ -300,6 +417,8 @@ import { colorize } from &#x27;@utils/funcs&#x27;
 import { CONSOLE_COLOR } from &#x27;@enums/console-color&#x27;
 
 import * as APP_CONFIG_DEFAULT from &#x27;./app-config.default.json&#x27;
+import { UpdateConfigDto } from &#x27;@/config/dto/update-config.dto&#x27;
+import { APIError } from &#x27;@interfaces/api-error&#x27;
 
 /**
  * Лимиты загрузок по-умолчанию
@@ -380,6 +499,64 @@ export class AppConfigService {
       &#x60;Configuration initialized ${colorize(&#x27;successfully&#x27;, CONSOLE_COLOR.PRIMARY)}!&#x60;,
       &#x27;AppConfigService&#x27;,
     )
+  }
+
+  async getConfig(): Promise&lt;Config[]&gt; {
+    return this.prisma.config.findMany()
+  }
+
+  async updateConfig(dto: UpdateConfigDto): Promise&lt;Config | APIError&gt; {
+    const isExistConfig &#x3D; await this.prisma.config.findUnique({
+      where: {
+        key: dto.key,
+      },
+    })
+
+    if (!isExistConfig)
+      return new APIError(
+        HttpStatus.BAD_REQUEST,
+        &#x27;Некорректные данные конфигурации&#x27;,
+      )
+
+    const updatedConfig &#x3D; await this.prisma.config.update({
+      where: {
+        key: dto.key,
+      },
+      data: {
+        value: dto.value
+          ? {
+              value: dto.value,
+            }
+          : undefined,
+        label: dto.label ? dto.label.trim() : undefined,
+      },
+    })
+
+    if (!updatedConfig)
+      return new APIError(
+        HttpStatus.BAD_REQUEST,
+        &#x27;Некорректные данные конфигурации&#x27;,
+      )
+
+    if (dto.value) {
+      const previousValue &#x3D; this.config.get(dto.key)
+
+      this.config.set(dto.key, dto.value)
+
+      this.logger.warn(
+        &#x60;Configuration ${colorize(&#x27;&quot;&#x27; + dto.key + &#x27;&quot;&#x27;, CONSOLE_COLOR.PRIMARY)} ${colorize(&#x27;updated!&#x27;, CONSOLE_COLOR.WARN)}&#x60;,
+        &#x27;AppConfigService&#x27;,
+      )
+      this.logger.warn(
+        &#x60;Last value: ${colorize(JSON.stringify(previousValue), CONSOLE_COLOR.PRIMARY)}&#x60;,
+        &#x27;AppConfigService&#x27;,
+      )
+      this.logger.warn(
+        &#x60;Current value: ${colorize(JSON.stringify(dto.value), CONSOLE_COLOR.PRIMARY)}&#x60;,
+        &#x27;AppConfigService&#x27;,
+      )
+    }
+    return updatedConfig
   }
 }
 </code></pre>

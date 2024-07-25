@@ -1,6 +1,8 @@
 import { IsNotEmpty, IsOptional, IsString } from 'class-validator'
 
-// Данные для обновления конфигурации
+/**
+ * Данные для обновления конфигурации
+ */
 export class UpdateConfigDto {
   /**
    * Ключ конфигурации

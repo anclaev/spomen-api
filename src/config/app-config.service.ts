@@ -1,5 +1,6 @@
-import { Injectable, Logger } from '@nestjs/common'
+import { HttpStatus, Injectable, Logger } from '@nestjs/common'
 import { PrismaService } from 'nestjs-prisma'
+import { Config } from '@prisma/client'
 
 import { ConfigService } from '@/config/config.service'
 
@@ -8,6 +9,8 @@ import { colorize } from '@utils/funcs'
 import { CONSOLE_COLOR } from '@enums/console-color'
 
 import * as APP_CONFIG_DEFAULT from './app-config.default.json'
+import { UpdateConfigDto } from '@/config/dto/update-config.dto'
+import { APIError } from '@interfaces/api-error'
 
 /**
  * Лимиты загрузок по-умолчанию
@@ -88,5 +91,63 @@ export class AppConfigService {
       `Configuration initialized ${colorize('successfully', CONSOLE_COLOR.PRIMARY)}!`,
       'AppConfigService',
     )
+  }
+
+  async getConfig(): Promise<Config[]> {
+    return this.prisma.config.findMany()
+  }
+
+  async updateConfig(dto: UpdateConfigDto): Promise<Config | APIError> {
+    const isExistConfig = await this.prisma.config.findUnique({
+      where: {
+        key: dto.key,
+      },
+    })
+
+    if (!isExistConfig)
+      return new APIError(
+        HttpStatus.BAD_REQUEST,
+        'Некорректные данные конфигурации',
+      )
+
+    const updatedConfig = await this.prisma.config.update({
+      where: {
+        key: dto.key,
+      },
+      data: {
+        value: dto.value
+          ? {
+              value: dto.value,
+            }
+          : undefined,
+        label: dto.label ? dto.label.trim() : undefined,
+      },
+    })
+
+    if (!updatedConfig)
+      return new APIError(
+        HttpStatus.BAD_REQUEST,
+        'Некорректные данные конфигурации',
+      )
+
+    if (dto.value) {
+      const previousValue = this.config.get(dto.key)
+
+      this.config.set(dto.key, dto.value)
+
+      this.logger.warn(
+        `Configuration ${colorize('"' + dto.key + '"', CONSOLE_COLOR.PRIMARY)} ${colorize('updated!', CONSOLE_COLOR.WARN)}`,
+        'AppConfigService',
+      )
+      this.logger.warn(
+        `Last value: ${colorize(JSON.stringify(previousValue), CONSOLE_COLOR.PRIMARY)}`,
+        'AppConfigService',
+      )
+      this.logger.warn(
+        `Current value: ${colorize(JSON.stringify(dto.value), CONSOLE_COLOR.PRIMARY)}`,
+        'AppConfigService',
+      )
+    }
+    return updatedConfig
   }
 }
