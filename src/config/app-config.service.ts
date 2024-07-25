@@ -93,6 +93,8 @@ export class AppConfigService {
     )
   }
 
+  // TODO: Reset configuration
+
   async getConfig(): Promise<Config[]> {
     return this.prisma.config.findMany()
   }

@@ -91,7 +91,7 @@ export class UploadController {
       owner: user.username,
       owner_roles: user.roles,
       acl,
-      compress,
+      compress: compress === 'true',
     })
 
     return this.catchError<Upload>(upload)

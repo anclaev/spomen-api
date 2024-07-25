@@ -1,5 +1,6 @@
 import {
   IsBoolean,
+  IsBooleanString,
   IsEnum,
   IsNotEmpty,
   IsOptional,
@@ -39,9 +40,9 @@ export class PutFileDto {
   /**
    * Флаг сжатия файла (опционально)
    */
-  @IsBoolean()
+  @IsBooleanString()
   @IsOptional()
-  compress?: boolean
+  compress?: string
 
   /**
    * Права доступа к файлу (опционально)
