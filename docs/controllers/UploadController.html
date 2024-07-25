@@ -210,8 +210,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="105"
-                                    class="link-to-prism">src/upload/upload.controller.ts:105</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="102"
+                                    class="link-to-prism">src/upload/upload.controller.ts:102</a></div>
                         </td>
                     </tr>
 
@@ -574,15 +574,12 @@ export class UploadController {
     @UseUser() user: AuthenticatedUser,
     @Body() dto: PutFileDto,
   ): Promise&lt;Upload&gt; {
-    const { file, path, acl, compress, name } &#x3D; dto
+    const { file, path, acl, compress, name, originalName } &#x3D; dto
 
     const upload &#x3D; await this.upload.putFile({
       file: {
         name,
-        original_name: file.originalName.slice(
-          0,
-          file.originalName.lastIndexOf(&#x27;.&#x27;),
-        ),
+        original_name: originalName.slice(0, originalName.lastIndexOf(&#x27;.&#x27;)),
         ext: mime.extension(file.mimetype) || &#x27;&#x27;,
         mime: file.mimetype,
         buffer: file.buffer,

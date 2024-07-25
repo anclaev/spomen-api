@@ -30,6 +30,13 @@ export class PutFileDto {
   path: string
 
   /**
+   * Оригинальное название файла
+   */
+  @IsString()
+  @IsNotEmpty()
+  originalName: string
+
+  /**
    * Название файла (опционально)
    */
   @IsString()

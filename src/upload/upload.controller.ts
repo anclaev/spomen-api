@@ -74,15 +74,12 @@ export class UploadController {
     @UseUser() user: AuthenticatedUser,
     @Body() dto: PutFileDto,
   ): Promise<Upload> {
-    const { file, path, acl, compress, name } = dto
+    const { file, path, acl, compress, name, originalName } = dto
 
     const upload = await this.upload.putFile({
       file: {
         name,
-        original_name: file.originalName.slice(
-          0,
-          file.originalName.lastIndexOf('.'),
-        ),
+        original_name: originalName.slice(0, originalName.lastIndexOf('.')),
         ext: mime.extension(file.mimetype) || '',
         mime: file.mimetype,
         buffer: file.buffer,
