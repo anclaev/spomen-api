@@ -9,6 +9,7 @@ export type UploadFilters = {
   owner_id: any | null
   owner: any | null
   is_system: any | null
+  permissions: any | null
 }
 
 /**

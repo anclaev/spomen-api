@@ -284,8 +284,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="152"
-                                    class="link-to-prism">src/upload/upload.resolver.ts:152</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="154"
+                                    class="link-to-prism">src/upload/upload.resolver.ts:154</a></div>
                         </td>
                     </tr>
 
@@ -378,8 +378,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="119"
-                                    class="link-to-prism">src/upload/upload.resolver.ts:119</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="121"
+                                    class="link-to-prism">src/upload/upload.resolver.ts:121</a></div>
                         </td>
                     </tr>
 
@@ -480,8 +480,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="138"
-                                    class="link-to-prism">src/upload/upload.resolver.ts:138</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="140"
+                                    class="link-to-prism">src/upload/upload.resolver.ts:140</a></div>
                         </td>
                     </tr>
 
@@ -668,8 +668,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="98"
-                                    class="link-to-prism">src/upload/upload.resolver.ts:98</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="100"
+                                    class="link-to-prism">src/upload/upload.resolver.ts:100</a></div>
                         </td>
                     </tr>
 
@@ -970,6 +970,8 @@ export class UploadResolver {
     if (filters.name &amp;&amp; Object.keys(filters.name).length &#x3D;&#x3D;&#x3D; 0)
       delete filters.name
     if (filters.ext &amp;&amp; Object.keys(filters.ext).length &#x3D;&#x3D;&#x3D; 0) delete filters.ext
+    if (filters.permissions &amp;&amp; Object.keys(filters.permissions).length &#x3D;&#x3D;&#x3D; 0)
+      delete filters.permissions
     if (
       filters.owner &amp;&amp;
       filters.owner.username &amp;&amp;

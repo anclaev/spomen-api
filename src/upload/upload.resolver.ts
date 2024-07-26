@@ -69,6 +69,8 @@ export class UploadResolver {
     if (filters.name && Object.keys(filters.name).length === 0)
       delete filters.name
     if (filters.ext && Object.keys(filters.ext).length === 0) delete filters.ext
+    if (filters.permissions && Object.keys(filters.permissions).length === 0)
+      delete filters.permissions
     if (
       filters.owner &&
       filters.owner.username &&

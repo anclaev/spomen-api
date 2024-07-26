@@ -54,6 +54,7 @@ export class UploadRepository {
             owner: filters.owner ? filters.owner : undefined,
             owner_id: filters.owner_id ? filters.owner_id : undefined,
             is_system: filters.is_system ? filters.is_system : undefined,
+            permissions: filters.permissions ? filters.permissions : undefined,
           }
         : undefined,
       include: {
