@@ -133,7 +133,11 @@ export class UploadService implements OnModuleInit {
         where: where as Required<UploadWhereUniqueInput>,
         take: 1,
         include: {
-          owner: true,
+          owner: {
+            include: {
+              avatar: true,
+            },
+          },
         },
       })
 
