@@ -6,7 +6,7 @@ import { Request } from 'express'
 
 // Сервисы
 import { AccountService } from '@/account/account.service'
-import { ConfigService } from '@core/config'
+import { ConfigService } from '@/config/config.service'
 
 // Утилиты
 import { serializeUser } from '@utils/serialize'
@@ -52,9 +52,7 @@ export class RefreshStrategy extends PassportStrategy(Strategy, 'refresh') {
     req: Request,
     payload: TokenPayload,
   ): Promise<AuthenticatedUser> {
-    const account = await this.account.getOne({
-      where: { id: payload.userid },
-    })
+    const account = await this.account.getAccount({ id: payload.userid })
 
     if (account instanceof APIError) {
       throw new HttpException('', HttpStatus.UNAUTHORIZED)

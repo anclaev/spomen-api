@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>Spomen API</title>
+        <title>spomen-api</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -72,7 +72,7 @@
           </script>
 
         <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
-            <a href="../" class="navbar-brand">Spomen API</a>
+            <a href="../" class="navbar-brand">spomen-api</a>
             <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
         </div>
 
@@ -210,8 +210,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="100"
-                                    class="link-to-prism">src/upload/upload.controller.ts:100</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="102"
+                                    class="link-to-prism">src/upload/upload.controller.ts:102</a></div>
                         </td>
                     </tr>
 
@@ -298,7 +298,7 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Get(&#x27;file/:id&#x27;)<br />@UseAuth()<br /></code>
+                    <code>@Get(&#x27;:id&#x27;)<br />@UseAuth()<br /></code>
                 </td>
             </tr>
 
@@ -356,7 +356,7 @@
 
 
                                             <td>
-                                                    <p>Текущи йпользователь системы</p>
+                                                    <p>Текущий пользователь системы</p>
 
                                             </td>
                                         </tr>
@@ -384,7 +384,7 @@
 
                         </div>
                             <div class="io-description">
-                                <p>res Файл из хранилища</p>
+                                <p>Файл из хранилища</p>
 
                             </div>
                 </td>
@@ -417,7 +417,7 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@Post()<br />@UseAuth([&#x27;Administrator&#x27;])<br />@FormDataRequest()<br /></code>
+                    <code>@Post()<br />@UseAuth()<br />@FormDataRequest()<br /></code>
                 </td>
             </tr>
 
@@ -545,11 +545,11 @@ export class UploadController {
   /**
    * Обработка получения файла по идентификатору загрузки
    * @param {string} id Идентификатор загрузки
-   * @param {AuthenticatedUser} user Текущи йпользователь системы
+   * @param {AuthenticatedUser} user Текущий пользователь системы
    * @param {Response} res Объект ответа запроса
-   * @returns {StreamableFile} res Файл из хранилища
+   * @returns {StreamableFile} Файл из хранилища
    */
-  @Get(&#x27;file/:id&#x27;)
+  @Get(&#x27;:id&#x27;)
   @UseAuth()
   async getFile(
     @Param(&#x27;id&#x27;) id: string,
@@ -568,25 +568,27 @@ export class UploadController {
    * @returns {Upload} Загрузка в базе данных
    */
   @Post()
-  @UseAuth([&#x27;Administrator&#x27;])
+  @UseAuth()
   @FormDataRequest()
   async uploadFile(
     @UseUser() user: AuthenticatedUser,
     @Body() dto: PutFileDto,
   ): Promise&lt;Upload&gt; {
-    const { file, path, acl, compress } &#x3D; dto
+    const { file, path, acl, compress, name, originalName } &#x3D; dto
 
     const upload &#x3D; await this.upload.putFile({
       file: {
-        name: file.originalName.slice(0, file.originalName.lastIndexOf(&#x27;.&#x27;)),
+        name,
+        original_name: originalName.slice(0, originalName.lastIndexOf(&#x27;.&#x27;)),
         ext: mime.extension(file.mimetype) || &#x27;&#x27;,
         mime: file.mimetype,
         buffer: file.buffer,
       },
       path: toS3Path(path),
       owner: user.username,
+      owner_roles: user.roles,
       acl,
-      compress,
+      compress: compress &#x3D;&#x3D;&#x3D; &#x27;true&#x27;,
     })
 
     return this.catchError&lt;Upload&gt;(upload)

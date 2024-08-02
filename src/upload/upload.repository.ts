@@ -3,22 +3,17 @@ import { PrismaService } from 'nestjs-prisma'
 import { Injectable } from '@nestjs/common'
 
 import {
-  UploadOrderByWithRelationInput,
   CreateOneUploadArgs,
   DeleteManyUploadArgs,
   DeleteOneUploadArgs,
   FindUniqueUploadArgs,
   UpdateOneUploadArgs,
-  UploadWhereInput,
 } from '@graphql'
 
 // Интерфейсы
-import { PaginatedResult } from '@interfaces/pagination'
-import { DeleteManyResult } from '@interfaces/prisma'
+import { Pagination } from '@interfaces/pagination'
+import { UploadFilters } from '@interfaces/upload'
 import { ToPrisma } from '@interfaces/prisma'
-
-// Утилиты
-import { paginator } from '@utils/paginator'
 
 /**
  * Репозиторий загрузок
@@ -33,6 +28,51 @@ export class UploadRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   /**
+   * Доступ к модели Prisma
+   */
+  get model() {
+    return this.prisma.upload
+  }
+
+  /**
+   * Получение списка загрузок по фильтрам
+   * @param {Pagination} args Параметры пагинации
+   * @param {UploadFilters} filters Фильтры
+   * @returns {Upload[]} Список загрузок
+   */
+  async getPaginated(
+    args: Pagination,
+    filters: UploadFilters,
+  ): Promise<Upload[]> {
+    const { size, page } = args
+
+    return this.prisma.upload.findMany({
+      where: filters
+        ? {
+            ext: filters.ext ? filters.ext : undefined,
+            name: filters.name ? filters.name : undefined,
+            owner: filters.owner ? filters.owner : undefined,
+            owner_id: filters.owner_id ? filters.owner_id : undefined,
+            is_system: filters.is_system ? filters.is_system : undefined,
+            permissions: filters.permissions ? filters.permissions : undefined,
+          }
+        : undefined,
+      include: {
+        owner: {
+          include: {
+            avatar: true,
+          },
+        },
+      },
+      orderBy: {
+        created_at: 'desc',
+      },
+      take: size,
+      skip: size * (page - 1),
+    })
+  }
+
+  /**
    * Получение загрузки по уникальному полю
    * @param {FindUniqueUploadArgs} args Уникальные поля для отбора
    * @returns {Upload} Загрузка в базе данных
@@ -44,38 +84,7 @@ export class UploadRepository {
       Prisma.UploadInclude
     >,
   ): Promise<Upload | null> {
-    return await this.prisma.upload.findUnique(args)
-  }
-
-  /**
-   * Получение множества загрузок по полям отбора
-   * @param {FindManyUploadArgs} args Поля для отбора
-   * @returns {Account[]} Загрузки в базе данных
-   */
-  async findMany({
-    where,
-    orderBy,
-    page,
-    size = 10,
-  }: {
-    where?: UploadWhereInput
-    orderBy?: UploadOrderByWithRelationInput
-    page?: number
-    size?: number
-  }): Promise<PaginatedResult<Upload[]>> {
-    return paginator({
-      page,
-      perPage: size,
-    })(
-      this.prisma.upload,
-      {
-        where,
-        orderBy,
-      },
-      {
-        page,
-      },
-    )
+    return this.prisma.upload.findUnique(args)
   }
 
   /**
@@ -112,7 +121,29 @@ export class UploadRepository {
    */
   async deleteMany(
     args: Omit<DeleteManyUploadArgs, 'where'>,
-  ): Promise<DeleteManyResult> {
+  ): Promise<Prisma.BatchPayload> {
     return this.prisma.upload.deleteMany(args)
+  }
+
+  /**
+   * Получение списка уникальных расширений
+   * @param {Pagination} args Параметры пагинации
+   * @returns {{ext: string}[]} Массив объектов с расширениями
+   */
+  async getDistinctExt({
+    page,
+    size,
+  }: Pagination): Promise<Pick<Upload, 'ext'>[]> {
+    return this.prisma.upload.findMany({
+      select: {
+        ext: true,
+      },
+      distinct: ['ext'],
+      take: size,
+      skip: size * (page - 1),
+      orderBy: {
+        ext: 'asc',
+      },
+    })
   }
 }

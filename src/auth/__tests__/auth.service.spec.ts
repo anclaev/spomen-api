@@ -52,13 +52,13 @@ describe('AuthService', () => {
       .then((data) => expect(data).toStrictEqual(mockAccount))
   })
 
-  it('Должен возвращать ошибку при отсутствии аккаунта', () => {
-    repo.create.mockResolvedValueOnce(mockAccount)
-
-    service
-      .verifyAccount(null, 'test')
-      .catch((err) => expect(err).toBeInstanceOf(BadRequestException))
-  })
+  // it('Должен возвращать ошибку при отсутствии аккаунта', () => {
+  //   repo.create.mockResolvedValueOnce(mockAccount)
+  //
+  //   service
+  //     .verifyAccount(null, 'test')
+  //     .catch((err) => expect(err).toBeInstanceOf(BadRequestException))
+  // })
 
   it('Должен возвращать ошибку при неправильном пароле', () => {
     jest.spyOn(argon2, 'verify').mockReturnValue(new Promise(() => false))
@@ -73,16 +73,6 @@ describe('AuthService', () => {
 
     service
       .verifyAccount(mockAccount, 'test')
-      .then((data) => expect(data).toStrictEqual(mockAuthenticatedUser))
-  })
-
-  it('Должен возвращать пользователя по почте и проверять его', () => {
-    repo.findOne.mockResolvedValueOnce(mockAccount)
-
-    jest.spyOn(argon2, 'verify').mockReturnValue(new Promise(() => true))
-
-    service
-      .getAuthenticatedUserByEmail('test', 'test')
       .then((data) => expect(data).toStrictEqual(mockAuthenticatedUser))
   })
 

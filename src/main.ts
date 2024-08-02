@@ -11,7 +11,8 @@ import * as Sentry from '@sentry/node'
 import { AppModule } from './app.module'
 
 // Сервисы
-import { ConfigService } from '@core/config'
+import { AppConfigService } from '@/config/app-config.service'
+import { ConfigService } from '@/config/config.service'
 
 // Фильтры
 import { HandledExceptionFilter, SentryFilter } from '@common/filters'
@@ -33,6 +34,7 @@ const bootstrap = async () => {
 
   const prismaHealthIndicator = app.get(PrismaHealthIndicator)
   const { httpAdapter } = app.get(HttpAdapterHost)
+  const appConfig = app.get(AppConfigService)
   const prisma = app.get(PrismaService)
   const config = app.get(ConfigService)
   const logger = app.get(Logger)
@@ -55,12 +57,14 @@ const bootstrap = async () => {
   try {
     await prismaHealthIndicator.pingCheck('Prisma', prisma)
     logger.log(
-      `Connection to database ${colorize('successfull', CONSOLE_COLOR.PRIMARY)}!`,
+      `Connection to database ${colorize('successfully', CONSOLE_COLOR.PRIMARY)}!`,
       'PrismaClient',
     )
   } catch (e) {
     logger.error('No connection to database!', null, 'PrismaClient')
   }
+
+  await appConfig.init()
 
   Sentry.setupNestErrorHandler(app, new SentryFilter(httpAdapter))
 
@@ -69,7 +73,7 @@ const bootstrap = async () => {
     new HandledExceptionFilter(),
   )
 
-  await await app.listen(config.port).finally(() => {
+  await app.listen(config.port).finally(() => {
     logger.log(
       `Environment: ${colorize(config.environment.toUpperCase(), CONSOLE_COLOR.PRIMARY)} | ${colorize('Port:')} ${colorize(config.port.toString(), CONSOLE_COLOR.PRIMARY)}`,
       'NestApplication',

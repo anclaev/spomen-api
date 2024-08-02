@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>Spomen API</title>
+        <title>spomen-api</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -72,7 +72,7 @@
           </script>
 
         <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
-            <a href="../" class="navbar-brand">Spomen API</a>
+            <a href="../" class="navbar-brand">spomen-api</a>
             <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
         </div>
 
@@ -894,7 +894,7 @@ import { JwtService } from &#x27;@nestjs/jwt&#x27;
 
 // Сервисы
 import { AccountService } from &#x27;@/account/account.service&#x27;
-import { ConfigService } from &#x27;@core/config&#x27;
+import { ConfigService } from &#x27;@/config/config.service&#x27;
 
 // Интерфейсы
 import { TokenPayload, Tokens } from &#x27;@interfaces/tokens&#x27;
@@ -960,7 +960,7 @@ export class TokenService {
     payload: TokenPayload,
     refresh_token: string,
   ): Promise&lt;Tokens | APIError&gt; {
-    const account &#x3D; await this.account.getById(payload.userid)
+    const account &#x3D; await this.account.getAccount({ id: payload.userid })
 
     if (account instanceof APIError) {
       return account
@@ -990,7 +990,7 @@ export class TokenService {
     user_id: string,
     refresh_token: string,
   ): Promise&lt;Account | APIError&gt; {
-    const account &#x3D; await this.account.getById(user_id)
+    const account &#x3D; await this.account.getAccount({ id: user_id })
 
     if (account instanceof APIError) {
       return account
@@ -1002,14 +1002,14 @@ export class TokenService {
 
     if (removeTokenIndex &gt; -1) tokens.splice(removeTokenIndex, 1)
 
-    return (await this.account.update({
-      where: { id: user_id },
-      data: {
+    return (await this.account.updateAccount(
+      {
         refresh_tokens: {
           set: tokens,
         },
       },
-    }))!
+      { id: user_id },
+    ))!
   }
 
   /**
@@ -1018,16 +1018,16 @@ export class TokenService {
    * @returns {boolean} Результат очистки
    */
   async clear(user_id: string): Promise&lt;boolean&gt; {
-    const updated &#x3D; await this.account.update({
-      where: {
-        id: user_id,
-      },
-      data: {
+    const updated &#x3D; await this.account.updateAccount(
+      {
         refresh_tokens: {
           set: [],
         },
       },
-    })
+      {
+        id: user_id,
+      },
+    )
 
     return !(updated instanceof APIError)
   }
@@ -1098,14 +1098,14 @@ export class TokenService {
       slicedTokens.push(tokens.refresh_token)
     }
 
-    await this.account.update({
-      where: { id: payload.userid },
-      data: {
+    await this.account.updateAccount(
+      {
         refresh_tokens: isMaximumTokens
           ? { set: slicedTokens }
           : { push: [tokens.refresh_token] },
       },
-    })
+      { id: payload.userid },
+    )
 
     return tokens
   }

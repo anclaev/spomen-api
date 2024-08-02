@@ -1,23 +1,14 @@
-import { FindUniqueAccountArgs, UpdateOneAccountArgs } from '@graphql'
-import { Prisma } from '@prisma/client'
-import { ToPrisma } from './prisma'
+import { Role } from '@prisma/client'
 
 /**
- * Данные для получения аккаунта
+ * Фильтры для отбора аккаунтов
  */
-export interface AccountFindUniqueDto
-  extends ToPrisma<
-    FindUniqueAccountArgs,
-    Prisma.AccountSelect,
-    Prisma.AccountInclude
-  > {}
-
-/**
- * Данные для обновления аккаунта
- */
-export interface AccountUpdateDto
-  extends ToPrisma<
-    UpdateOneAccountArgs,
-    Prisma.AccountSelect,
-    Prisma.AccountInclude
-  > {}
+export type AccountFilters = {
+  username: any | null
+  email: any | null
+  first_name: any | null
+  last_name: any | null
+  birthday: any | null
+  sex: any | null
+  roles: any | null
+}

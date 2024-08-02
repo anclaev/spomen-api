@@ -1,16 +1,12 @@
-import { Pagination } from '@decorators/pagination'
+import { UploadWhereInput } from '@graphql'
 
+import { PaginationWithFilters } from '@interfaces/pagination'
 import { AuthenticatedUser } from '@interfaces/user'
 
 /**
  * Параметры получения списка загрузок
  */
-export class GetUploadsDto {
-  /**
-   * Опции пагинации
-   */
-  pagination: Pagination
-
+export class GetUploadsDto extends PaginationWithFilters<UploadWhereInput> {
   /**
    * Текущий пользователь системы
    */

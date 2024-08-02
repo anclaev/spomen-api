@@ -1,21 +1,24 @@
-export interface PaginatedResult<T> {
-  data: T[]
-  meta: {
-    total: number
-    lastPage: number
-    currentPage: number
-    perPage: number
-    prev: number | null
-    next: number | null
-  }
+/**
+ * Класс пагинации
+ */
+export class Pagination {
+  /**
+   * Текущая страница
+   */
+  page: number
+
+  /**
+   * Размер страницы
+   */
+  size: number
 }
 
-export type PaginateOptions = {
-  page?: number | string
-  perPage?: number | string
+/**
+ * Класс пагинации с фильтрами
+ */
+export class PaginationWithFilters<T> extends Pagination {
+  /**
+   * Поля отбора модели
+   */
+  filters?: T
 }
-export type PaginateFunction = <T, K>(
-  model: any,
-  args?: K,
-  options?: PaginateOptions,
-) => Promise<PaginatedResult<T>>

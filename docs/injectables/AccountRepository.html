@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>Spomen API</title>
+        <title>spomen-api</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -72,7 +72,7 @@
           </script>
 
         <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
-            <a href="../" class="navbar-brand">Spomen API</a>
+            <a href="../" class="navbar-brand">spomen-api</a>
             <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
         </div>
 
@@ -155,11 +155,19 @@
                             </li>
                             <li>
                                     <span class="modifier">Async</span>
-                                <a href="#findMany" >findMany</a>
+                                <a href="#delete" >delete</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#deleteMany" >deleteMany</a>
                             </li>
                             <li>
                                     <span class="modifier">Async</span>
                                 <a href="#findOne" >findOne</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getPaginated" >getPaginated</a>
                             </li>
                             <li>
                                     <span class="modifier">Async</span>
@@ -173,6 +181,20 @@
 
 
 
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Accessors</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                    <a href="#model" >model</a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
         </tbody>
     </table>
 </section>
@@ -188,7 +210,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="23" class="link-to-prism">src/account/account.repository.ts:23</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="22" class="link-to-prism">src/account/account.repository.ts:22</a></div>
                             </td>
                         </tr>
 
@@ -260,8 +282,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="74"
-                                    class="link-to-prism">src/account/account.repository.ts:74</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="91"
+                                    class="link-to-prism">src/account/account.repository.ts:91</a></div>
                         </td>
                     </tr>
 
@@ -319,33 +341,33 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="findMany"></a>
+                    <a name="delete"></a>
                     <span class="name">
                             <span class="modifier">Async</span>
-                        <span ><b>findMany</b></span>
-                        <a href="#findMany"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>delete</b></span>
+                        <a href="#delete"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>findMany(undefined: literal type)</code>
+                    <code>delete(args: DeleteOneAccountArgs)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="44"
-                                    class="link-to-prism">src/account/account.repository.ts:44</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="109"
+                                    class="link-to-prism">src/account/account.repository.ts:109</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                        <div class="io-description"><p>Получение множества аккаунтов по полям отбора</p>
+                        <div class="io-description"><p>Удаление аккаунта в базе данных</p>
 </div>
 
                             <div class="io-description">
@@ -357,12 +379,14 @@
                                             <td>Name</td>
                                                 <td>Type</td>
                                             <td>Optional</td>
+                                                <td>Description</td>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr>
+                                                <td>args</td>
                                             <td>
-                                                        <code>literal type</code>
+                                                        <code>DeleteOneAccountArgs</code>
                                             </td>
 
                                             <td>
@@ -370,16 +394,97 @@
                                             </td>
 
 
+                                            <td>
+                                                    <p>Поля отбора аккаунта</p>
+
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../interfaces/PaginatedResult.html" target="_self" >Promise&lt;PaginatedResult&lt;Account[]&gt;&gt;</a></code>
+                            <b>Returns : </b>    <code>Promise&lt;Account&gt;</code>
 
                         </div>
                             <div class="io-description">
-                                <p>Загрузки в базе данных</p>
+                                <p>Удалённный аккаунт</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="deleteMany"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>deleteMany</b></span>
+                        <a href="#deleteMany"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>deleteMany(args: Omit<DeleteOneAccountArgs | where>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="118"
+                                    class="link-to-prism">src/account/account.repository.ts:118</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Удаление аккаунта в базе данных</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>args</td>
+                                            <td>
+                                                        <code>Omit&lt;DeleteOneAccountArgs | where&gt;</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Поля отбора аккаунта</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;Prisma.BatchPayload&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>Количество удалённых аккаунтов</p>
 
                             </div>
                 </td>
@@ -401,15 +506,15 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>findOne(args: <a href="../interfaces/AccountFindUniqueDto.html" target="_self">AccountFindUniqueDto</a>)</code>
+                    <code>findOne(args: <a href="../undefineds/ToPrisma.html" target="_self">ToPrisma&lt;FindUniqueAccountArgs | Prisma.AccountSelect | Prisma.AccountInclude&gt;</a>)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="35"
-                                    class="link-to-prism">src/account/account.repository.ts:35</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="76"
+                                    class="link-to-prism">src/account/account.repository.ts:76</a></div>
                         </td>
                     </tr>
 
@@ -435,7 +540,7 @@
                                         <tr>
                                                 <td>args</td>
                                             <td>
-                                                            <code><a href="../interfaces/AccountFindUniqueDto.html" target="_self" >AccountFindUniqueDto</a></code>
+                                                            <code><a href="../miscellaneous/typealiases.html#ToPrisma" target="_self" >ToPrisma&lt;FindUniqueAccountArgs | Prisma.AccountSelect | Prisma.AccountInclude&gt;</a></code>
                                             </td>
 
                                             <td>
@@ -467,6 +572,99 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="getPaginated"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getPaginated</b></span>
+                        <a href="#getPaginated"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getPaginated(args: <a href="../classes/Pagination.html" target="_self">Pagination</a>, filters: <a href="../undefineds/AccountFilters.html" target="_self">AccountFilters</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="42"
+                                    class="link-to-prism">src/account/account.repository.ts:42</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Получение списка аккаунтов по фильтрам</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>args</td>
+                                            <td>
+                                                            <code><a href="../classes/Pagination.html" target="_self" >Pagination</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Параметры пагинации</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>filters</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#AccountFilters" target="_self" >AccountFilters</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Фильтры</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;Account[]&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>Список аккаунтов</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="update"></a>
                     <span class="name">
                             <span class="modifier">Async</span>
@@ -478,15 +676,15 @@
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>update(args: <a href="../interfaces/AccountUpdateDto.html" target="_self">AccountUpdateDto</a>)</code>
+                    <code>update(args: UpdateOneAccountArgs)</code>
                 </td>
             </tr>
 
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="83"
-                                    class="link-to-prism">src/account/account.repository.ts:83</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="100"
+                                    class="link-to-prism">src/account/account.repository.ts:100</a></div>
                         </td>
                     </tr>
 
@@ -512,7 +710,7 @@
                                         <tr>
                                                 <td>args</td>
                                             <td>
-                                                            <code><a href="../interfaces/AccountUpdateDto.html" target="_self" >AccountUpdateDto</a></code>
+                                                        <code>UpdateOneAccountArgs</code>
                                             </td>
 
                                             <td>
@@ -542,26 +740,59 @@
     </table>
 </section>
 
+            <section data-compodoc="block-accessors">
+    <h3 id="accessors">
+        Accessors
+    </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="model"></a>
+                        <span class="name"><b>model</b><a href="#model"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>model()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/account/account.repository.ts:32</a></div>
+                                </td>
+                            </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-description"><p>Доступ к модели Prisma</p>
+</div>
+
+                        </td>
+                    </tr>
+
+            </tbody>
+        </table>
+</section>
     </div>
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { PrismaService } from &#x27;nestjs-prisma&#x27;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Account, Prisma } from &#x27;@prisma/client&#x27;
+import { PrismaService } from &#x27;nestjs-prisma&#x27;
 import { Injectable } from &#x27;@nestjs/common&#x27;
-import { Account } from &#x27;@prisma/client&#x27;
 
 import {
-  AccountOrderByWithRelationInput,
   CreateOneAccountArgs,
-  AccountWhereInput,
+  DeleteOneAccountArgs,
+  FindUniqueAccountArgs,
+  UpdateOneAccountArgs,
 } from &#x27;@graphql&#x27;
 
 // Интерфейсы
-import { AccountFindUniqueDto, AccountUpdateDto } from &#x27;@interfaces/account&#x27;
-import { PaginatedResult } from &#x27;@interfaces/pagination&#x27;
-
-// Утилиты
-import { paginator } from &#x27;@utils/paginator&#x27;
+import { Pagination } from &#x27;@interfaces/pagination&#x27;
+import { AccountFilters } from &#x27;@interfaces/account&#x27;
+import { ToPrisma } from &#x27;@interfaces/prisma&#x27;
 
 /**
  * Репозиторий аккаунта
@@ -576,44 +807,62 @@ export class AccountRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   /**
-   * Получение аккаунта по уникальному полю
-   * @param {AccountFindUniqueDto} args Уникальные поля для отбора
-   * @returns {Account} Загрузка в системе
+   * Доступ к модели Prisma
    */
-  async findOne(args: AccountFindUniqueDto): Promise&lt;Account | null&gt; {
-    return this.prisma.account.findUnique(args)
+  get model() {
+    return this.prisma.account
   }
 
   /**
-   * Получение множества аккаунтов по полям отбора
-   * @param {FindManyAccountArgs} args Поля для отбора
-   * @returns {Account[]} Загрузки в базе данных
+   * Получение списка аккаунтов по фильтрам
+   * @param {Pagination} args Параметры пагинации
+   * @param {AccountFilters} filters Фильтры
+   * @returns {Account[]} Список аккаунтов
    */
-  async findMany({
-    where,
-    orderBy,
-    page,
-    size &#x3D; 10,
-  }: {
-    where?: AccountWhereInput
-    orderBy?: AccountOrderByWithRelationInput
-    page?: number
-    size?: number
-  }): Promise&lt;PaginatedResult&lt;Account[]&gt;&gt; {
-    return paginator({
-      page,
-      perPage: size,
-    })(
-      this.prisma.account,
-      {
-        where,
-        orderBy,
+  async getPaginated(
+    args: Pagination,
+    filters: AccountFilters,
+  ): Promise&lt;Account[]&gt; {
+    const { size, page } &#x3D; args
+
+    return this.prisma.account.findMany({
+      where: filters
+        ? {
+            username: filters.username ? filters.username : undefined,
+            email: filters.email ? filters.email : undefined,
+            first_name: filters.first_name ? filters.first_name : undefined,
+            last_name: filters.last_name ? filters.last_name : undefined,
+            birthday: filters.birthday ? filters.birthday : undefined,
+            roles: filters.roles ? filters.roles : undefined,
+            sex: filters.sex ? filters.sex : undefined,
+          }
+        : undefined,
+      include: {
+        avatar: true,
       },
-      {
-        page,
+      orderBy: {
+        created_at: &#x27;desc&#x27;,
       },
-    )
+      take: size,
+      skip: size * (page - 1),
+    })
   }
+
+  /**
+   * Получение аккаунта по уникальному полю
+   * @param {FindUniqueAccountArgs} args Уникальные поля для отбора
+   * @returns {Account} Загрузка в системе
+   */
+  async findOne(
+    args: ToPrisma&lt;
+      FindUniqueAccountArgs,
+      Prisma.AccountSelect,
+      Prisma.AccountInclude
+    &gt;,
+  ): Promise&lt;Account | null&gt; {
+    return this.prisma.account.findUnique(args)
+  }
+
   /**
    * Создание аккаунта в базе данных
    * @param {CreateOneAccountArgs} args Данные нового аккаунта
@@ -628,8 +877,28 @@ export class AccountRepository {
    * @param {UpdateOneAccountArgs} args Данные для обновления
    * @returns {Account} Обновлённый аккаунт
    */
-  async update(args: AccountUpdateDto): Promise&lt;Account&gt; {
+  async update(args: UpdateOneAccountArgs): Promise&lt;Account&gt; {
     return this.prisma.account.update(args)
+  }
+
+  /**
+   * Удаление аккаунта в базе данных
+   * @param {DeleteOneAccountArgs} args Поля отбора аккаунта
+   * @returns {Account} Удалённный аккаунт
+   */
+  async delete(args: DeleteOneAccountArgs): Promise&lt;Account&gt; {
+    return this.prisma.account.delete(args)
+  }
+
+  /**
+   * Удаление аккаунта в базе данных
+   * @param {DeleteOneAccountArgs} args Поля отбора аккаунта
+   * @returns {DeleteManyAccountArgs} Количество удалённых аккаунтов
+   */
+  async deleteMany(
+    args: Omit&lt;DeleteOneAccountArgs, &#x27;where&#x27;&gt;,
+  ): Promise&lt;Prisma.BatchPayload&gt; {
+    return this.prisma.account.deleteMany(args)
   }
 }
 </code></pre>

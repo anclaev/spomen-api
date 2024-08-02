@@ -1,6 +1,8 @@
 import { Permission } from '@graphql'
 import * as Joi from 'joi'
 
+import { DEFAULT_UPLOADS_LIMIT } from './app-config.service'
+
 /**
  * Схема конфигурации
  */
@@ -8,6 +10,9 @@ const configSchema = Joi.object({
   NODE_ENV: Joi.string()
     .valid('local', 'development', 'staging', 'production', 'test')
     .default('local'),
+  MAX_UPLOADS_LIMIT: Joi.string().default(
+    JSON.stringify(DEFAULT_UPLOADS_LIMIT),
+  ),
   COOKIE_SECRET: Joi.string().required(),
   PORT: Joi.number().default(3000),
   ORIGIN: Joi.string().default('localhost'),

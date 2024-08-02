@@ -18,22 +18,40 @@
     "strictBindCallApply": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
-
+    "resolveJsonModule": true,
     "paths": {
-      "@interceptors/*": ["src/common/interceptors/*"],
-      "@interfaces/*": ["src/common/interfaces/*"],
-      "@decorators/*": ["src/common/decorators/*"],
-      "@graphql": ["src/common/graphql/index"],
-      "@enums/*": ["src/common/enums/*"],
-      "@utils/*": ["src/common/utils/*"],
-      "@mocks/*": ["src/common/mocks/*"],
-      "@common/*": ["src/common/*"],
-      "@core/*": ["src/core/*"],
-      "@/*": ["src/*"]
+      "@interceptors/*": [
+        "src/common/interceptors/*"
+      ],
+      "@interfaces/*": [
+        "src/common/interfaces/*"
+      ],
+      "@decorators/*": [
+        "src/common/decorators/*"
+      ],
+      "@graphql": [
+        "src/common/graphql/index"
+      ],
+      "@enums/*": [
+        "src/common/enums/*"
+      ],
+      "@utils/*": [
+        "src/common/utils/*"
+      ],
+      "@mocks/*": [
+        "src/common/mocks/*"
+      ],
+      "@common/*": [
+        "src/common/*"
+      ],
+      "@core/*": [
+        "src/core/*"
+      ],
+      "@/*": [
+        "src/*"
+      ]
     },
-
     "inlineSources": true,
-
     // Set `sourceRoot` to  "/" to strip the build path prefix
     // from generated source code references.
     // This improves issue grouping in Sentry.

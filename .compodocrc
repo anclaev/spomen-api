@@ -1,6 +1,6 @@
 tsconfig: ./tsconfig.doc.json
 output: ./docs
-name: Spomen API
+name: spomen-api
 language: ru-RU
 assetsFolder: ./assets
 theme: gitbook

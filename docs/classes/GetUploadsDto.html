@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>Spomen API</title>
+        <title>spomen-api</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -72,7 +72,7 @@
           </script>
 
         <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
-            <a href="../" class="navbar-brand">Spomen API</a>
+            <a href="../" class="navbar-brand">spomen-api</a>
             <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
         </div>
 
@@ -138,6 +138,12 @@
 
             </p>
 
+            <p class="comment">
+                <h3>Extends</h3>
+            </p>
+            <p class="comment">
+                            <code><a href="../classes/PaginationWithFilters.html" target="_self" >PaginationWithFilters</a></code>
+            </p>
 
 
 
@@ -154,10 +160,17 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
-                                <a href="#pagination" >pagination</a>
+                                <a href="#user" >user</a>
                             </li>
                             <li>
-                                <a href="#user" >user</a>
+                                    <span class="modifier">Optional</span>
+                                <a href="#filters" >filters</a>
+                            </li>
+                            <li>
+                                <a href="#page" >page</a>
+                            </li>
+                            <li>
+                                <a href="#size" >size</a>
                             </li>
                         </ul>
                     </td>
@@ -182,38 +195,6 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="pagination"></a>
-                    <span class="name">
-                        <span ><b>pagination</b></span>
-                        <a href="#pagination"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Type : </i>        <code><a href="../interfaces/Pagination.html" target="_self" >Pagination</a></code>
-
-                    </td>
-                </tr>
-                    <tr>
-                        <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="12" class="link-to-prism">src/upload/dto/get-uploads.dto.ts:12</a></div>
-                        </td>
-                    </tr>
-
-            <tr>
-                <td class="col-md-4">
-                    <div class="io-description"><p>Опции пагинации</p>
-</div>
-                </td>
-            </tr>
-
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
                     <a name="user"></a>
                     <span class="name">
                         <span ><b>user</b></span>
@@ -229,13 +210,131 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="17" class="link-to-prism">src/upload/dto/get-uploads.dto.ts:17</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="13" class="link-to-prism">src/upload/dto/get-uploads.dto.ts:13</a></div>
                         </td>
                     </tr>
 
             <tr>
                 <td class="col-md-4">
                     <div class="io-description"><p>Текущий пользователь системы</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="filters"></a>
+                    <span class="name">
+                            <span class="modifier">Optional</span>
+                        <span ><b>filters</b></span>
+                        <a href="#filters"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>T</code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Inherited from         <code><a href="../classes/PaginationWithFilters.html" target="_self" >PaginationWithFilters</a></code>
+</div>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/PaginationWithFilters.html#source" target="_self" >PaginationWithFilters:23</a></code>
+</div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Поля отбора модели</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="page"></a>
+                    <span class="name">
+                        <span ><b>page</b></span>
+                        <a href="#page"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Inherited from         <code><a href="../classes/Pagination.html" target="_self" >Pagination</a></code>
+</div>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/Pagination.html#source" target="_self" >Pagination:8</a></code>
+</div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Текущая страница</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="size"></a>
+                    <span class="name">
+                        <span ><b>size</b></span>
+                        <a href="#size"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+
+                    </td>
+                </tr>
+                        <tr>
+                            <td class="col-md-4">
+                                <div class="io-line">Inherited from         <code><a href="../classes/Pagination.html" target="_self" >Pagination</a></code>
+</div>
+                            </td>
+                        </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-line">Defined in         <code><a href="../classes/Pagination.html#source" target="_self" >Pagination:13</a></code>
+</div>
+                        </td>
+                    </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Размер страницы</p>
 </div>
                 </td>
             </tr>
@@ -254,19 +353,15 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Pagination } from &#x27;@decorators/pagination&#x27;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { UploadWhereInput } from &#x27;@graphql&#x27;
 
+import { PaginationWithFilters } from &#x27;@interfaces/pagination&#x27;
 import { AuthenticatedUser } from &#x27;@interfaces/user&#x27;
 
 /**
  * Параметры получения списка загрузок
  */
-export class GetUploadsDto {
-  /**
-   * Опции пагинации
-   */
-  pagination: Pagination
-
+export class GetUploadsDto extends PaginationWithFilters&lt;UploadWhereInput&gt; {
   /**
    * Текущий пользователь системы
    */

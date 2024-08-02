@@ -63,7 +63,10 @@ export class AccountController {
 
     const uploadedAvatar = await this.account.uploadAvatar(
       {
-        name: file.originalName.slice(0, file.originalName.lastIndexOf('.')),
+        original_name: file.originalName.slice(
+          0,
+          file.originalName.lastIndexOf('.'),
+        ),
         ext: mime.extension(file.mimetype) || '',
         mime: file.mimetype,
         buffer: file.buffer,

@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>Spomen API</title>
+        <title>spomen-api</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -72,7 +72,7 @@
           </script>
 
         <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
-            <a href="../" class="navbar-brand">Spomen API</a>
+            <a href="../" class="navbar-brand">spomen-api</a>
             <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
         </div>
 
@@ -128,7 +128,10 @@
                             <a href="#config" title="src/common/utils/sharp.ts" ><b>config</b>&nbsp;&nbsp;&nbsp;(src/.../sharp.ts)</a>
                         </li>
                         <li>
-                            <a href="#configSchema" title="src/core/config/config.schema.ts" ><b>configSchema</b>&nbsp;&nbsp;&nbsp;(src/.../config.schema.ts)</a>
+                            <a href="#configSchema" title="src/config/config.schema.ts" ><b>configSchema</b>&nbsp;&nbsp;&nbsp;(src/.../config.schema.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#DEFAULT_UPLOADS_LIMIT" title="src/config/app-config.service.ts" ><b>DEFAULT_UPLOADS_LIMIT</b>&nbsp;&nbsp;&nbsp;(src/.../app-config.service.ts)</a>
                         </li>
                         <li>
                             <a href="#filters" title="src/common/utils/sentry.ts" ><b>filters</b>&nbsp;&nbsp;&nbsp;(src/.../sentry.ts)</a>
@@ -180,9 +183,6 @@
                         </li>
                         <li>
                             <a href="#mockVKIDUsers" title="src/common/mocks/vk-id.mock.ts" ><b>mockVKIDUsers</b>&nbsp;&nbsp;&nbsp;(src/.../vk-id.mock.ts)</a>
-                        </li>
-                        <li>
-                            <a href="#paginator" title="src/common/utils/paginator.ts" ><b>paginator</b>&nbsp;&nbsp;&nbsp;(src/.../paginator.ts)</a>
                         </li>
                         <li>
                             <a href="#publicBucketPolicy" title="src/common/utils/s3.ts" ><b>publicBucketPolicy</b>&nbsp;&nbsp;&nbsp;(src/.../s3.ts)</a>
@@ -255,6 +255,7 @@
 
   const prismaHealthIndicator &#x3D; app.get(PrismaHealthIndicator)
   const { httpAdapter } &#x3D; app.get(HttpAdapterHost)
+  const appConfig &#x3D; app.get(AppConfigService)
   const prisma &#x3D; app.get(PrismaService)
   const config &#x3D; app.get(ConfigService)
   const logger &#x3D; app.get(Logger)
@@ -277,12 +278,14 @@
   try {
     await prismaHealthIndicator.pingCheck(&#x27;Prisma&#x27;, prisma)
     logger.log(
-      &#x60;Connection to database ${colorize(&#x27;successfull&#x27;, CONSOLE_COLOR.PRIMARY)}!&#x60;,
+      &#x60;Connection to database ${colorize(&#x27;successfully&#x27;, CONSOLE_COLOR.PRIMARY)}!&#x60;,
       &#x27;PrismaClient&#x27;,
     )
   } catch (e) {
     logger.error(&#x27;No connection to database!&#x27;, null, &#x27;PrismaClient&#x27;)
   }
+
+  await appConfig.init()
 
   Sentry.setupNestErrorHandler(app, new SentryFilter(httpAdapter))
 
@@ -291,7 +294,7 @@
     new HandledExceptionFilter(),
   )
 
-  await await app.listen(config.port).finally(() &#x3D;&gt; {
+  await app.listen(config.port).finally(() &#x3D;&gt; {
     logger.log(
       &#x60;Environment: ${colorize(config.environment.toUpperCase(), CONSOLE_COLOR.PRIMARY)} | ${colorize(&#x27;Port:&#x27;)} ${colorize(config.port.toString(), CONSOLE_COLOR.PRIMARY)}&#x60;,
       &#x27;NestApplication&#x27;,
@@ -478,7 +481,7 @@
         </tbody>
     </table>
 </section>
-    <h3>src/core/config/config.schema.ts</h3>
+    <h3>src/config/config.schema.ts</h3>
     <section data-compodoc="block-properties">
     <h3></h3>    <table class="table table-sm table-bordered">
         <tbody>
@@ -497,6 +500,9 @@
   NODE_ENV: Joi.string()
     .valid(&#x27;local&#x27;, &#x27;development&#x27;, &#x27;staging&#x27;, &#x27;production&#x27;, &#x27;test&#x27;)
     .default(&#x27;local&#x27;),
+  MAX_UPLOADS_LIMIT: Joi.string().default(
+    JSON.stringify(DEFAULT_UPLOADS_LIMIT),
+  ),
   COOKIE_SECRET: Joi.string().required(),
   PORT: Joi.number().default(3000),
   ORIGIN: Joi.string().default(&#x27;localhost&#x27;),
@@ -536,6 +542,45 @@
             <tr>
                 <td class="col-md-4">
                     <div class="io-description"><p>Схема конфигурации</p>
+</div>
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+</section>
+    <h3>src/config/app-config.service.ts</h3>
+    <section data-compodoc="block-properties">
+    <h3></h3>    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="DEFAULT_UPLOADS_LIMIT"></a>
+                    <span class="name">
+                        <span ><b>DEFAULT_UPLOADS_LIMIT</b></span>
+                        <a href="#DEFAULT_UPLOADS_LIMIT"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Type : </i>    <code>literal type</code>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td class="col-md-4">
+                        <i>Default value : </i><code>{
+  Default: 30,
+  Public: 30,
+  Administrator: 100,
+}</code>
+                    </td>
+                </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Лимиты загрузок по-умолчанию</p>
 </div>
                 </td>
             </tr>
@@ -1138,59 +1183,6 @@
         </tbody>
     </table>
 </section>
-    <h3>src/common/utils/paginator.ts</h3>
-    <section data-compodoc="block-properties">
-    <h3></h3>    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="paginator"></a>
-                    <span class="name">
-                        <span ><b>paginator</b></span>
-                        <a href="#paginator"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-                <tr>
-                    <td class="col-md-4">
-                        <i>Default value : </i><code>(
-  defaultOptions: PaginateOptions,
-): PaginateFunction &#x3D;&gt; {
-  return async (model, args: any &#x3D; { where: undefined }, options) &#x3D;&gt; {
-    const page &#x3D; Number(options?.page || defaultOptions?.page) || 1
-    const perPage &#x3D; Number(options?.perPage || defaultOptions?.perPage) || 10
-
-    const skip &#x3D; page &gt; 0 ? perPage * (page - 1) : 0
-    const [total, data] &#x3D; await Promise.all([
-      model.count({ where: args.where }),
-      model.findMany({
-        ...args,
-        take: perPage,
-        skip,
-      }),
-    ])
-    const lastPage &#x3D; Math.ceil(total / perPage)
-
-    return {
-      data,
-      meta: {
-        total,
-        lastPage,
-        currentPage: page,
-        perPage,
-        prev: page &gt; 1 ? page - 1 : null,
-        next: page &lt; lastPage ? page + 1 : null,
-      },
-    }
-  }
-}</code>
-                    </td>
-                </tr>
-
-
-        </tbody>
-    </table>
-</section>
     <h3>src/common/utils/s3.ts</h3>
     <section data-compodoc="block-properties">
     <h3></h3>    <table class="table table-sm table-bordered">
@@ -1451,7 +1443,7 @@
                 <tr>
                     <td class="col-md-4">
                         <i>Default value : </i><code>createParamDecorator(
-  (data, ctx: ExecutionContext): Pagination &#x3D;&gt; {
+  (_: unknown, ctx: ExecutionContext): Pagination &#x3D;&gt; {
     const req: Request &#x3D; ctx.switchToHttp().getRequest()
     const page &#x3D; parseInt(req.query.page as string)
     const size &#x3D; parseInt(req.query.size as string)

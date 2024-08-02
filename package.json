@@ -1,6 +1,6 @@
 {
-  "name": "@anclaev/spomen-api",
-  "version": "0.0.2",
+  "name": "spomen-api",
+  "version": "0.0.3",
   "description": "API for platform of memories",
   "author": "anclaev <iahugo@yandex.ru>",
   "private": true,
@@ -11,9 +11,9 @@
     "build:production": "nest build && yarn sentry:sourcemaps:production",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
+    "start:local": " cross-env NODE_ENV=local nest start --watch",
     "start:production": "node dist/main",
     "start:migrate:production": "prisma migrate deploy && node main",
-    "dev": " cross-env NODE_ENV=local nest start --watch",
     "debug": "nest start --debug --watch",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
@@ -26,7 +26,10 @@
     "prepare": "husky",
     "sentry:sourcemaps": "sentry-cli sourcemaps inject --org anclaev-ti --project spomen-api ./dist/src && sentry-cli sourcemaps upload --org anclaev-ti --project spomen-api ./dist/src",
     "sentry:sourcemaps:production": "sentry-cli sourcemaps inject --org anclaev-ti --project spomen-api ./dist && sentry-cli sourcemaps upload --org anclaev-ti --project spomen-api ./dist",
-    "push": "git push origin && git push gitverse"
+    "commit": "npx git-cz",
+    "push": "git push --follow-tags origin && git push --follow-tags gitverse",
+    "changelog": "npx conventional-changelog -p angular -i CHANGELOG.md -s",
+    "bump": "npx standard-version -s"
   },
   "dependencies": {
     "@apollo/server": "^4.10.4",
@@ -95,6 +98,9 @@
     "@types/uuid": "^9.0.8",
     "@typescript-eslint/eslint-plugin": "^7.7.0",
     "@typescript-eslint/parser": "^7.7.0",
+    "commitizen": "^4.3.0",
+    "conventional-changelog-cli": "^5.0.0",
+    "cz-conventional-changelog": "^3.3.0",
     "dotenv": "^16.4.5",
     "eslint": "^9.1.0",
     "eslint-config-prettier": "^9.1.0",
@@ -108,6 +114,7 @@
     "prisma": "^5.12.1",
     "prisma-nestjs-graphql": "^20.0.2",
     "source-map-support": "^0.5.21",
+    "standard-version": "^9.5.0",
     "supertest": "^6.3.3",
     "ts-jest": "^29.1.0",
     "ts-loader": "^9.4.3",
@@ -129,7 +136,7 @@
       "@interceptors/(.*)$": "<rootDir>/common/interceptors/$1",
       "@interfaces/(.*)$": "<rootDir>/common/interfaces/$1",
       "@decorators/(.*)$": "<rootDir>/common/decorators/$1",
-      "@graphql/(.*)$": "<rootDir>/common/graphql/$1",
+      "@graphql": "<rootDir>/common/graphql/index",
       "@enums/(.*)$": "<rootDir>/common/enums/$1",
       "@utils/(.*)$": "<rootDir>/common/utils/$1",
       "@mocks/(.*)$": "<rootDir>/common/mocks/$1",
@@ -146,6 +153,12 @@
       "**/*.{!(module|guard),}.ts"
     ],
     "coverageDirectory": "../coverage",
+    "coverageThreshold": {
+      "global": {
+        "lines": 90,
+        "statements": 90
+      }
+    },
     "testEnvironment": "node",
     "maxWorkers": "25%"
   },
@@ -154,5 +167,12 @@
       "prettier --write"
     ],
     "*.md": "prettier --write"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog",
+      "disableScopeLowerCase": true,
+      "disableSubjectLowerCase": true
+    }
   }
 }

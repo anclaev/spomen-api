@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>Spomen API</title>
+        <title>spomen-api</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -72,7 +72,7 @@
           </script>
 
         <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
-            <a href="../" class="navbar-brand">Spomen API</a>
+            <a href="../" class="navbar-brand">spomen-api</a>
             <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
         </div>
 
@@ -155,6 +155,12 @@
                     <td class="col-md-4">
                         <ul class="index-list">
                             <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Async</span>
+                                <a href="#accounts" >accounts</a>
+                            </li>
+                            <li>
                                     <span class="modifier">Private</span>
                                 <a href="#catchError" >catchError</a>
                             </li>
@@ -162,13 +168,19 @@
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier">Async</span>
-                                <a href="#findOneById" >findOneById</a>
+                                <a href="#deleteAccount" >deleteAccount</a>
                             </li>
                             <li>
                                     <span class="modifier"></span>
                                     <span class="modifier"></span>
                                     <span class="modifier">Async</span>
-                                <a href="#getByUsername" >getByUsername</a>
+                                <a href="#getAccount" >getAccount</a>
+                            </li>
+                            <li>
+                                    <span class="modifier"></span>
+                                    <span class="modifier"></span>
+                                    <span class="modifier">Async</span>
+                                <a href="#updateAccount" >updateAccount</a>
                             </li>
                         </ul>
                     </td>
@@ -193,7 +205,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="16" class="link-to-prism">src/account/account.resolver.ts:16</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="26" class="link-to-prism">src/account/account.resolver.ts:26</a></div>
                             </td>
                         </tr>
 
@@ -248,6 +260,124 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="accounts"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Async</span>
+                        <span ><b>accounts</b></span>
+                        <a href="#accounts"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>accounts(size: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, page: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank">number</a>, filters: AccountWhereInput)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@UseGqlAuth()<br />@Query(undefined, {name: &#x27;accounts&#x27;})<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="58"
+                                    class="link-to-prism">src/account/account.resolver.ts:58</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Получение списка аккаунтов</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>size</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Размер страницы</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>page</td>
+                                            <td>
+                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/number" target="_blank" >number</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Текущая страница</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>filters</td>
+                                            <td>
+                                                        <code>AccountWhereInput</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Фильтры отбора</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;Account[]&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>Список аккаунтов</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="catchError"></a>
                     <span class="name">
                             <span class="modifier">Private</span>
@@ -266,8 +396,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="82"
-                                    class="link-to-prism">src/account/account.resolver.ts:82</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="116"
+                                    class="link-to-prism">src/account/account.resolver.ts:116</a></div>
                         </td>
                     </tr>
 
@@ -333,20 +463,20 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="findOneById"></a>
+                    <a name="deleteAccount"></a>
                     <span class="name">
                             <span class="modifier"></span>
                             <span class="modifier"></span>
                             <span class="modifier">Async</span>
-                        <span ><b>findOneById</b></span>
-                        <a href="#findOneById"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>deleteAccount</b></span>
+                        <a href="#deleteAccount"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>findOneById(id: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                    <code>deleteAccount(where: AccountWhereUniqueInput, user: <a href="../interfaces/AuthenticatedUser.html" target="_self">AuthenticatedUser</a>)</code>
                 </td>
             </tr>
 
@@ -354,21 +484,21 @@
                 <td class="col-md-4">
                     <b>Decorators : </b>
                     <br />
-                    <code>@UseGqlAuth()<br />@Query(undefined, {name: &#x27;accountById&#x27;})<br /></code>
+                    <code>@UseGqlAuth()<br />@Mutation(undefined, {name: &#x27;deleteAccount&#x27;})<br /></code>
                 </td>
             </tr>
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="30"
-                                    class="link-to-prism">src/account/account.resolver.ts:30</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="101"
+                                    class="link-to-prism">src/account/account.resolver.ts:101</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                        <div class="io-description"><p>Запрос на получение аккаунта по ID</p>
+                        <div class="io-description"><p>Удаление аккаунта</p>
 </div>
 
                             <div class="io-description">
@@ -385,9 +515,9 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                                <td>id</td>
+                                                <td>where</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                        <code>AccountWhereUniqueInput</code>
                                             </td>
 
                                             <td>
@@ -396,7 +526,23 @@
 
 
                                             <td>
-                                                    <p>ID аккаунта</p>
+                                                    <p>Поля отбора аккаунта</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>user</td>
+                                            <td>
+                                                            <code><a href="../interfaces/AuthenticatedUser.html" target="_self" >AuthenticatedUser</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Текущий пользователь системы</p>
 
                                             </td>
                                         </tr>
@@ -408,7 +554,7 @@
 
                         </div>
                             <div class="io-description">
-                                <p>Аккаунт в системе</p>
+                                <p>Удалённый аккаунт</p>
 
                             </div>
                 </td>
@@ -419,20 +565,20 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="getByUsername"></a>
+                    <a name="getAccount"></a>
                     <span class="name">
                             <span class="modifier"></span>
                             <span class="modifier"></span>
                             <span class="modifier">Async</span>
-                        <span ><b>getByUsername</b></span>
-                        <a href="#getByUsername"><span class="icon ion-ios-link"></span></a>
+                        <span ><b>getAccount</b></span>
+                        <a href="#getAccount"><span class="icon ion-ios-link"></span></a>
                     </span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
                         <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>getByUsername(username: <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank">string</a>)</code>
+                    <code>getAccount(where: AccountWhereUniqueInput)</code>
                 </td>
             </tr>
 
@@ -446,15 +592,15 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="45"
-                                    class="link-to-prism">src/account/account.resolver.ts:45</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="40"
+                                    class="link-to-prism">src/account/account.resolver.ts:40</a></div>
                         </td>
                     </tr>
 
 
             <tr>
                 <td class="col-md-4">
-                        <div class="io-description"><p>Запрос на получение аккаунта по имени пользователя</p>
+                        <div class="io-description"><p>Получение аккаунта по полям отбора</p>
 </div>
 
                             <div class="io-description">
@@ -471,9 +617,9 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                                <td>username</td>
+                                                <td>where</td>
                                             <td>
-                                                            <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/string" target="_blank" >string</a></code>
+                                                        <code>AccountWhereUniqueInput</code>
                                             </td>
 
                                             <td>
@@ -482,7 +628,7 @@
 
 
                                             <td>
-                                                    <p>Имя аккаунта</p>
+                                                    <p>Поля отбора</p>
 
                                             </td>
                                         </tr>
@@ -494,7 +640,125 @@
 
                         </div>
                             <div class="io-description">
-                                <p>Аккаунт в системе</p>
+                                <p>Аккаунт</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="updateAccount"></a>
+                    <span class="name">
+                            <span class="modifier"></span>
+                            <span class="modifier"></span>
+                            <span class="modifier">Async</span>
+                        <span ><b>updateAccount</b></span>
+                        <a href="#updateAccount"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>updateAccount(data: AccountUpdateInput, where: AccountWhereUniqueInput, user: <a href="../interfaces/AuthenticatedUser.html" target="_self">AuthenticatedUser</a>)</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td class="col-md-4">
+                    <b>Decorators : </b>
+                    <br />
+                    <code>@UseGqlAuth()<br />@Mutation(undefined, {name: &#x27;updateAccount&#x27;})<br /></code>
+                </td>
+            </tr>
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="81"
+                                    class="link-to-prism">src/account/account.resolver.ts:81</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Изменение аккаунта</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>data</td>
+                                            <td>
+                                                        <code>AccountUpdateInput</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Данные для изменения</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>where</td>
+                                            <td>
+                                                        <code>AccountWhereUniqueInput</code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Поля отбора</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>user</td>
+                                            <td>
+                                                            <code><a href="../interfaces/AuthenticatedUser.html" target="_self" >AuthenticatedUser</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Текущий пользователь системы</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;Account&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>Изменённый аккаунт</p>
 
                             </div>
                 </td>
@@ -511,16 +775,26 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Resolver, Args, Query } from &#x27;@nestjs/graphql&#x27;
-import { Account } from &#x27;@graphql&#x27;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Resolver, Args, Query, Mutation } from &#x27;@nestjs/graphql&#x27;
+import { HttpException } from &#x27;@nestjs/common&#x27;
+
+import {
+  Account,
+  AccountWhereInput,
+  AccountUpdateInput,
+  AccountWhereUniqueInput,
+} from &#x27;@graphql&#x27;
 
 // Декораторы
 import { UseGqlAuth } from &#x27;@decorators/gql-auth&#x27;
+import { UseGqlUser } from &#x27;@decorators/gql-user&#x27;
 
 // Сервисы
 import { AccountService } from &#x27;./account.service&#x27;
+
+// Интерфейсы
+import { AuthenticatedUser } from &#x27;@interfaces/user&#x27;
 import { APIError } from &#x27;@interfaces/api-error&#x27;
-import { HttpException } from &#x27;@nestjs/common&#x27;
 
 /**
  * Ресольвер аккаунта
@@ -534,58 +808,82 @@ export class AccountResolver {
   constructor(private readonly account: AccountService) {}
 
   /**
-   * Запрос на получение аккаунта по ID
-   * @param {String} id ID аккаунта
-   * @returns {Account} Аккаунт в системе
+   * Получение аккаунта по полям отбора
+   * @param {AccountWhereUniqueInput} where Поля отбора
+   * @returns {Account} Аккаунт
    */
   @UseGqlAuth()
-  @Query(() &#x3D;&gt; Account, { name: &#x27;accountById&#x27; })
-  async findOneById(
-    @Args(&#x27;id&#x27;, { type: () &#x3D;&gt; String }) id: string,
+  @Query(() &#x3D;&gt; Account, { name: &#x27;account&#x27; })
+  async getAccount(
+    @Args(&#x27;where&#x27;, { type: () &#x3D;&gt; AccountWhereUniqueInput })
+    where: AccountWhereUniqueInput,
   ): Promise&lt;Account&gt; {
-    const account &#x3D; await this.account.getById(id)
+    const account &#x3D; await this.account.getAccount(where)
 
     return this.catchError&lt;Account&gt;(account)
   }
 
   /**
-   * Запрос на получение аккаунта по имени пользователя
-   * @param {String} username Имя аккаунта
-   * @returns {Account} Аккаунт в системе
+   * Получение списка аккаунтов
+   * @param {number} page Текущая страница
+   * @param {number} size Размер страницы
+   * @param filters Фильтры отбора
+   * @returns {Account[]} Список аккаунтов
    */
   @UseGqlAuth()
-  @Query(() &#x3D;&gt; Account, { name: &#x27;account&#x27; })
-  async getByUsername(
-    @Args(&#x27;username&#x27;, { type: () &#x3D;&gt; String }) username: string,
-  ): Promise&lt;Account&gt; {
-    const account &#x3D; await this.account.getByUsername(username)
+  @Query(() &#x3D;&gt; [Account], { name: &#x27;accounts&#x27; })
+  async accounts(
+    @Args(&#x27;size&#x27;, { type: () &#x3D;&gt; Number, defaultValue: 10 }) size: number,
+    @Args(&#x27;page&#x27;, { type: () &#x3D;&gt; Number, defaultValue: 1 }) page: number,
+    @Args(&#x27;filters&#x27;, {
+      type: () &#x3D;&gt; AccountWhereInput,
+      nullable: true,
+    })
+    filters: AccountWhereInput,
+  ): Promise&lt;Account[]&gt; {
+    const accounts &#x3D; await this.account.getAccounts({ size, page, filters })
 
-    return this.catchError&lt;Account&gt;(account)
+    return this.catchError&lt;Account[]&gt;(accounts)
   }
 
-  // @Mutation(() &#x3D;&gt; Account)
-  // createAccount(
-  //   @Args(&#x27;accountCreateInput&#x27;) AccountCreateInput: AccountCreateInput,
-  // ) {
-  //   return this.account.create(AccountCreateInput)
-  // }
+  /**
+   * Изменение аккаунта
+   * @param {AccountUpdateInput} data Данные для изменения
+   * @param {AccountWhereUniqueInput} where Поля отбора
+   * @param {AuthenticatedUser} user Текущий пользователь системы
+   * @returns {Account} Изменённый аккаунт
+   */
+  @UseGqlAuth()
+  @Mutation(() &#x3D;&gt; Account, { name: &#x27;updateAccount&#x27; })
+  async updateAccount(
+    @Args(&#x27;data&#x27;, { type: () &#x3D;&gt; AccountUpdateInput })
+    data: AccountUpdateInput,
+    @Args(&#x27;where&#x27;, { type: () &#x3D;&gt; AccountWhereUniqueInput })
+    where: AccountWhereUniqueInput,
+    @UseGqlUser() user: AuthenticatedUser,
+  ): Promise&lt;Account&gt; {
+    const updatedAccount &#x3D; await this.account.updateAccount(data, where, user)
 
-  // @Query(() &#x3D;&gt; [Account], { name: &#x27;account&#x27; })
-  // findAll() {
-  //   return this.account.findAll()
-  // }
+    return this.catchError&lt;Account&gt;(updatedAccount)
+  }
 
-  // @Mutation(() &#x3D;&gt; Account)
-  // updateAccount(
-  //   @Args(&#x27;updateAccountInput&#x27;) updateAccountInput: UpdateAccountInput,
-  // ) {
-  //   return this.accountService.update(updateAccountInput.id, updateAccountInput)
-  // }
+  /**
+   * Удаление аккаунта
+   * @param {AccountWhereUniqueInput} where Поля отбора аккаунта
+   * @param {AuthenticatedUser} user Текущий пользователь системы
+   * @returns {Account} Удалённый аккаунт
+   */
+  @UseGqlAuth()
+  @Mutation(() &#x3D;&gt; Account, { name: &#x27;deleteAccount&#x27; })
+  async deleteAccount(
+    @Args(&#x27;where&#x27;, { type: () &#x3D;&gt; AccountWhereUniqueInput })
+    where: AccountWhereUniqueInput,
+    @UseGqlUser() user: AuthenticatedUser,
+  ): Promise&lt;Account&gt; {
+    const deletedAccount &#x3D; await this.account.deleteAccount(where, user)
 
-  // @Mutation(() &#x3D;&gt; Account)
-  // removeAccount(@Args(&#x27;id&#x27;, { type: () &#x3D;&gt; Int }) id: number) {
-  //   return this.accountService.remove(id)
-  // }
+    return this.catchError&lt;Account&gt;(deletedAccount)
+  }
 
   /**
    * Обработчик ошибок

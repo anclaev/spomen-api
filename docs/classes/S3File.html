@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>Spomen API</title>
+        <title>spomen-api</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -72,7 +72,7 @@
           </script>
 
         <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
-            <a href="../" class="navbar-brand">Spomen API</a>
+            <a href="../" class="navbar-brand">spomen-api</a>
             <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
         </div>
 
@@ -130,6 +130,13 @@
         </p>
 
 
+            <p class="comment">
+                <h3>Description</h3>
+            </p>
+            <p class="comment">
+                <p>Класс файла в хранилище</p>
+
+            </p>
 
 
 
@@ -199,10 +206,16 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="29" class="link-to-prism">src/common/interfaces/upload.ts:29</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="122" class="link-to-prism">src/common/interfaces/upload.ts:122</a></div>
                         </td>
                     </tr>
 
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Бакет файла</p>
+</div>
+                </td>
+            </tr>
 
         </tbody>
     </table>
@@ -230,10 +243,16 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="31" class="link-to-prism">src/common/interfaces/upload.ts:31</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="132" class="link-to-prism">src/common/interfaces/upload.ts:132</a></div>
                         </td>
                     </tr>
 
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>ETAG файла</p>
+</div>
+                </td>
+            </tr>
 
         </tbody>
     </table>
@@ -256,10 +275,16 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/common/interfaces/upload.ts:28</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="117" class="link-to-prism">src/common/interfaces/upload.ts:117</a></div>
                         </td>
                     </tr>
 
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Хэшированное название файла</p>
+</div>
+                </td>
+            </tr>
 
         </tbody>
     </table>
@@ -282,10 +307,16 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="30" class="link-to-prism">src/common/interfaces/upload.ts:30</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="127" class="link-to-prism">src/common/interfaces/upload.ts:127</a></div>
                         </td>
                     </tr>
 
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Путь к файлу</p>
+</div>
+                </td>
+            </tr>
 
         </tbody>
     </table>
@@ -313,10 +344,16 @@
                 </tr>
                     <tr>
                         <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="32" class="link-to-prism">src/common/interfaces/upload.ts:32</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="137" class="link-to-prism">src/common/interfaces/upload.ts:137</a></div>
                         </td>
                     </tr>
 
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Версия файла</p>
+</div>
+                </td>
+            </tr>
 
         </tbody>
     </table>
@@ -332,44 +369,167 @@
 
 
     <div class="tab-pane fade  tab-source-code" id="source">
-        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { StreamableFile } from &#x27;@nestjs/common&#x27;
-import { Permission } from &#x27;@prisma/client&#x27;
-import { Readable } from &#x27;stream&#x27;
+        <pre class="line-numbers compodoc-sourcecode"><code class="language-typescript">import { Permission, Role } from &#x27;@prisma/client&#x27;
+
+/**
+ * Фильтры для отбора загрузок
+ */
+export type UploadFilters &#x3D; {
+  name: any | null
+  ext: any | null
+  owner_id: any | null
+  owner: any | null
+  is_system: any | null
+  permissions: any | null
+}
+
+/**
+ * Интерфейс файла
+ */
 export interface File {
-  name: string
+  /**
+   * Название файла
+   */
+  original_name: string
+
+  /**
+   * Кастомное название файла
+   */
+  name?: string
+
+  /**
+   * Расширение файла
+   */
   ext: string
+
+  /**
+   * Данные файла
+   */
   buffer: Buffer
+
+  /**
+   * Тип файла
+   */
   mime?: string
 }
 
+/**
+ * Опции загрузки файла в хранилище
+ */
 export type PutFileOptions &#x3D; {
+  /**
+   * Объект файла
+   */
   file: File
+
+  /**
+   * Путь сохранения файла
+   */
   path: string
+
+  /**
+   * ID владельца файла
+   */
   owner: string
+
+  /**
+   * Роль владельца файла
+   */
+  owner_roles: Role[]
+
+  /**
+   * Права доступа к файлу
+   */
   acl?: Permission
+
+  /**
+   * Сжатие файла
+   */
   compress?: boolean
 }
 
+/**
+ * Метаданные файла
+ */
 export type Metadata &#x3D; {
+  /**
+   * ID владельца файла
+   */
   owner: string
+
+  /**
+   * Исходное название файла
+   */
   name: string
+
+  /**
+   * Расширение файла
+   */
   ext: string
+
+  /**
+   * Права доступа к файлу
+   */
   acl: Permission
+
+  /**
+   * Тип файла
+   */
   &#x27;Content-Type&#x27;: string
 }
 
+/**
+ * Класс файла в хранилище
+ */
 export class S3File {
+  /**
+   * Хэшированное название файла
+   */
   name: string
+
+  /**
+   * Бакет файла
+   */
   bucket: string
+
+  /**
+   * Путь к файлу
+   */
   path: string
+
+  /**
+   * ETAG файла
+   */
   etag: string | null &#x3D; null
+
+  /**
+   * Версия файла
+   */
   versionId: string | null &#x3D; null
 }
 
+/**
+ * Параметры сохранения загрузки
+ */
 export type SaveUploadOptions &#x3D; {
+  /**
+   * ID владельца файла
+   */
   owner: string
+
+  /**
+   * Права доступа к файлу
+   */
   permissions: Permission[]
+
+  /**
+   * Объект файла
+   */
   file: File
+
+  /**
+   * Объект файла в хранилище
+   */
   s3File: S3File
 }
 </code></pre>

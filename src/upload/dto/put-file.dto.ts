@@ -1,5 +1,6 @@
 import {
   IsBoolean,
+  IsBooleanString,
   IsEnum,
   IsNotEmpty,
   IsOptional,
@@ -29,11 +30,26 @@ export class PutFileDto {
   path: string
 
   /**
+   * Оригинальное название файла
+   */
+  @IsString()
+  @IsNotEmpty()
+  originalName: string
+
+  /**
+   * Название файла (опционально)
+   */
+  @IsString()
+  @IsNotEmpty()
+  @IsOptional()
+  name?: string
+
+  /**
    * Флаг сжатия файла (опционально)
    */
-  @IsBoolean()
+  @IsBooleanString()
   @IsOptional()
-  compress?: boolean
+  compress?: string
 
   /**
    * Права доступа к файлу (опционально)

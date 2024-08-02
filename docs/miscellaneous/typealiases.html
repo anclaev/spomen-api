@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>Spomen API</title>
+        <title>spomen-api</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -72,7 +72,7 @@
           </script>
 
         <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
-            <a href="../" class="navbar-brand">Spomen API</a>
+            <a href="../" class="navbar-brand">spomen-api</a>
             <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
         </div>
 
@@ -119,16 +119,13 @@
                 <td class="col-md-4">
                     <ul class="index-list">
                         <li>
+                            <a href="#AccountFilters" title="src/common/interfaces/account.ts" ><b>AccountFilters</b>&nbsp;&nbsp;&nbsp;(src/.../account.ts)</a>
+                        </li>
+                        <li>
                             <a href="#CookiesOptions" title="src/common/utils/cookies.ts" ><b>CookiesOptions</b>&nbsp;&nbsp;&nbsp;(src/.../cookies.ts)</a>
                         </li>
                         <li>
                             <a href="#Metadata" title="src/common/interfaces/upload.ts" ><b>Metadata</b>&nbsp;&nbsp;&nbsp;(src/.../upload.ts)</a>
-                        </li>
-                        <li>
-                            <a href="#PaginateFunction" title="src/common/interfaces/pagination.ts" ><b>PaginateFunction</b>&nbsp;&nbsp;&nbsp;(src/.../pagination.ts)</a>
-                        </li>
-                        <li>
-                            <a href="#PaginateOptions" title="src/common/interfaces/pagination.ts" ><b>PaginateOptions</b>&nbsp;&nbsp;&nbsp;(src/.../pagination.ts)</a>
                         </li>
                         <li>
                             <a href="#PutFileOptions" title="src/common/interfaces/upload.ts" ><b>PutFileOptions</b>&nbsp;&nbsp;&nbsp;(src/.../upload.ts)</a>
@@ -141,6 +138,9 @@
                         </li>
                         <li>
                             <a href="#ToPrisma" title="src/common/interfaces/prisma.ts" ><b>ToPrisma</b>&nbsp;&nbsp;&nbsp;(src/.../prisma.ts)</a>
+                        </li>
+                        <li>
+                            <a href="#UploadFilters" title="src/common/interfaces/upload.ts" ><b>UploadFilters</b>&nbsp;&nbsp;&nbsp;(src/.../upload.ts)</a>
                         </li>
                         <li>
                             <a href="#User" title="src/common/interfaces/user.ts" ><b>User</b>&nbsp;&nbsp;&nbsp;(src/.../user.ts)</a>
@@ -173,7 +173,31 @@
     </table>
 </section>
 
-    <h3>src/common/utils/cookies.ts</h3>
+    <h3>src/common/interfaces/account.ts</h3>
+    <section data-compodoc="block-typealias">
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="AccountFilters"></a>
+                    <span class="name "><b>AccountFilters</b><a href="#AccountFilters"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Фильтры для отбора аккаунтов</p>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <code>    <code>literal type</code>
+</code>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</section>    <h3>src/common/utils/cookies.ts</h3>
     <section data-compodoc="block-typealias">
     <table class="table table-sm table-bordered">
         <tbody>
@@ -209,6 +233,12 @@
             </tr>
             <tr>
                 <td class="col-md-4">
+                    <div class="io-description"><p>Метаданные файла</p>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
                     <code>    <code>literal type</code>
 </code>
                 </td>
@@ -221,6 +251,12 @@
                 <td class="col-md-4">
                     <a name="PutFileOptions"></a>
                     <span class="name "><b>PutFileOptions</b><a href="#PutFileOptions"><span class="icon ion-ios-link"></span></a></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                    <div class="io-description"><p>Опции загрузки файла в хранилище</p>
+</div>
                 </td>
             </tr>
             <tr>
@@ -241,36 +277,30 @@
             </tr>
             <tr>
                 <td class="col-md-4">
+                    <div class="io-description"><p>Параметры сохранения загрузки</p>
+</div>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
                     <code>    <code>literal type</code>
 </code>
                 </td>
             </tr>
         </tbody>
     </table>
-</section>    <h3>src/common/interfaces/pagination.ts</h3>
-    <section data-compodoc="block-typealias">
     <table class="table table-sm table-bordered">
         <tbody>
             <tr>
                 <td class="col-md-4">
-                    <a name="PaginateFunction"></a>
-                    <span class="name "><b>PaginateFunction</b><a href="#PaginateFunction"><span class="icon ion-ios-link"></span></a></span>
+                    <a name="UploadFilters"></a>
+                    <span class="name "><b>UploadFilters</b><a href="#UploadFilters"><span class="icon ion-ios-link"></span></a></span>
                 </td>
             </tr>
             <tr>
                 <td class="col-md-4">
-                    <code>        <code><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/function" target="_blank" >function</a></code>
-</code>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="PaginateOptions"></a>
-                    <span class="name "><b>PaginateOptions</b><a href="#PaginateOptions"><span class="icon ion-ios-link"></span></a></span>
+                    <div class="io-description"><p>Фильтры для отбора загрузок</p>
+</div>
                 </td>
             </tr>
             <tr>

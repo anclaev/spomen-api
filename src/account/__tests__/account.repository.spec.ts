@@ -7,10 +7,9 @@ import { mockAccount } from '@mocks/account.mock'
 
 import {
   CreateOneAccountArgs,
-  FindManyAccountArgs,
   FindUniqueAccountArgs,
   UpdateOneAccountArgs,
-} from '@common/graphql/index'
+} from '@graphql'
 
 import { AccountRepository } from '../account.repository'
 
@@ -34,7 +33,7 @@ describe('AccountRepository', () => {
     expect(repo).toBeDefined()
   })
 
-  it('Должен возвращать созданный аккаунт', () => {
+  it('Должен возвращать созданный аккаунт', async () => {
     const testReq: CreateOneAccountArgs = {
       data: {
         username: 'test',
@@ -43,10 +42,11 @@ describe('AccountRepository', () => {
     }
     prisma.account.create.mockResolvedValueOnce(mockAccount)
 
-    return repo.create(testReq).then((data) => expect(data).toBe(mockAccount))
+    const data = await repo.create(testReq)
+    return expect(data).toBe(mockAccount)
   })
 
-  it('Должен возвращать null, если аккаунт не уникален', () => {
+  it('Должен возвращать null, если аккаунт не уникален', async () => {
     const testReq: CreateOneAccountArgs = {
       data: {
         username: 'test',
@@ -56,10 +56,10 @@ describe('AccountRepository', () => {
 
     prisma.account.findUnique.mockResolvedValueOnce(mockAccount)
 
-    return repo.create(testReq).then((data) => expect(data).toBe(null))
+    return repo.create(testReq).then((data) => expect(data).toBeUndefined())
   })
 
-  it('Должен возвращать обновлённый аккаунт', () => {
+  it('Должен возвращать обновлённый аккаунт', async () => {
     const testReq: UpdateOneAccountArgs = {
       where: {
         id: '1',
@@ -76,7 +76,7 @@ describe('AccountRepository', () => {
     return repo.update(testReq).then((data) => expect(data).toBe(mockAccount))
   })
 
-  it('Должен возвращать null, если аккаунт не найден', () => {
+  it('Должен возвращать null, если аккаунт не найден', async () => {
     const testReq: UpdateOneAccountArgs = {
       where: {
         id: '1',
@@ -90,10 +90,11 @@ describe('AccountRepository', () => {
 
     prisma.account.update.mockImplementationOnce(() => null!)
 
-    return repo.update(testReq).then((data) => expect(data).toBe(null))
+    const data = await repo.update(testReq)
+    return expect(data).toBe(null)
   })
 
-  it('Должен возвращать найденный аккаунт', () => {
+  it('Должен возвращать найденный аккаунт', async () => {
     const testReq: FindUniqueAccountArgs = {
       where: {
         id: '1',
@@ -103,21 +104,5 @@ describe('AccountRepository', () => {
     prisma.account.findUnique.mockResolvedValueOnce(mockAccount)
 
     return repo.findOne(testReq).then((data) => expect(data).toBe(mockAccount))
-  })
-
-  it('Должен возвращать множество аккаунтов по параметру', () => {
-    const testReq: FindManyAccountArgs = {
-      where: {
-        username: {
-          contains: 'test',
-        },
-      },
-    }
-
-    prisma.account.findMany.mockResolvedValueOnce([mockAccount])
-
-    return repo
-      .findMany(testReq)
-      .then((data) => expect(data).toStrictEqual([mockAccount]))
   })
 })

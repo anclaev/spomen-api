@@ -8,6 +8,7 @@ import { UploadService } from './upload.service'
 
 // Контроллеры
 import { UploadController } from './upload.controller'
+import { UploadResolver } from './upload.resolver'
 
 /**
  * Модуль загрузки
@@ -15,7 +16,7 @@ import { UploadController } from './upload.controller'
  * * Сервис загрузок
  */
 @Module({
-  providers: [UploadService, UploadRepository],
+  providers: [UploadService, UploadRepository, UploadResolver],
   controllers: [UploadController],
   exports: [UploadService],
 })

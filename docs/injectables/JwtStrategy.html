@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>Spomen API</title>
+        <title>spomen-api</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -72,7 +72,7 @@
           </script>
 
         <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
-            <a href="../" class="navbar-brand">Spomen API</a>
+            <a href="../" class="navbar-brand">spomen-api</a>
             <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
         </div>
 
@@ -339,7 +339,7 @@ import { Request } from &#x27;express&#x27;
 
 // Сервисы
 import { AccountService } from &#x27;@/account/account.service&#x27;
-import { ConfigService } from &#x27;@core/config&#x27;
+import { ConfigService } from &#x27;@/config/config.service&#x27;
 
 // Утилиты
 import { serializeUser } from &#x27;@utils/serialize&#x27;
@@ -381,7 +381,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, &#x27;jwt&#x27;) {
    * @returns {User} Авторизованный пользователь
    */
   async validate(payload: TokenPayload): Promise&lt;User&gt; {
-    const account &#x3D; await this.account.getById(payload.userid)
+    const account &#x3D; await this.account.getAccount({ id: payload.userid })
 
     if (account instanceof APIError) {
       throw new HttpException(&#x27;&#x27;, HttpStatus.UNAUTHORIZED)

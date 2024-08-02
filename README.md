@@ -1,5 +1,3 @@
-![Logo](/assets/logo-og.png)
+# spomen-api
 
-# Spomen API
-
-API приложения Spomen.
+API для платформы воспоминаний

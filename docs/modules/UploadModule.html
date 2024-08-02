@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>Spomen API</title>
+        <title>spomen-api</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -72,7 +72,7 @@
           </script>
 
         <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
-            <a href="../" class="navbar-brand">Spomen API</a>
+            <a href="../" class="navbar-brand">spomen-api</a>
             <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
         </div>
 
@@ -124,13 +124,13 @@
 <title>cluster_UploadModule</title>
 <polygon fill="none" stroke="black" stroke-dasharray="1,5" points="73,-70 73,-268 423,-268 423,-70 73,-70"/>
 </g>
-<g id="clust4" class="cluster">
-<title>cluster_UploadModule_exports</title>
-<polygon fill="none" stroke="black" points="182,-208 182,-260 300,-260 300,-208 182,-208"/>
-</g>
 <g id="clust6" class="cluster">
 <title>cluster_UploadModule_providers</title>
 <polygon fill="none" stroke="black" points="81,-78 81,-130 415,-130 415,-78 81,-78"/>
+</g>
+<g id="clust4" class="cluster">
+<title>cluster_UploadModule_exports</title>
+<polygon fill="none" stroke="black" points="182,-208 182,-260 300,-260 300,-208 182,-208"/>
 </g>
 <!-- UploadService  -->
 <g id="node1" class="node">
@@ -279,6 +279,7 @@ import { UploadService } from &#x27;./upload.service&#x27;
 
 // Контроллеры
 import { UploadController } from &#x27;./upload.controller&#x27;
+import { UploadResolver } from &#x27;./upload.resolver&#x27;
 
 /**
  * Модуль загрузки
@@ -286,7 +287,7 @@ import { UploadController } from &#x27;./upload.controller&#x27;
  * * Сервис загрузок
  */
 @Module({
-  providers: [UploadService, UploadRepository],
+  providers: [UploadService, UploadRepository, UploadResolver],
   controllers: [UploadController],
   exports: [UploadService],
 })

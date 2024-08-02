@@ -1,19 +1,18 @@
+import { Account, Prisma } from '@prisma/client'
 import { PrismaService } from 'nestjs-prisma'
 import { Injectable } from '@nestjs/common'
-import { Account } from '@prisma/client'
 
 import {
-  AccountOrderByWithRelationInput,
   CreateOneAccountArgs,
-  AccountWhereInput,
+  DeleteOneAccountArgs,
+  FindUniqueAccountArgs,
+  UpdateOneAccountArgs,
 } from '@graphql'
 
 // Интерфейсы
-import { AccountFindUniqueDto, AccountUpdateDto } from '@interfaces/account'
-import { PaginatedResult } from '@interfaces/pagination'
-
-// Утилиты
-import { paginator } from '@utils/paginator'
+import { Pagination } from '@interfaces/pagination'
+import { AccountFilters } from '@interfaces/account'
+import { ToPrisma } from '@interfaces/prisma'
 
 /**
  * Репозиторий аккаунта
@@ -28,44 +27,62 @@ export class AccountRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   /**
-   * Получение аккаунта по уникальному полю
-   * @param {AccountFindUniqueDto} args Уникальные поля для отбора
-   * @returns {Account} Загрузка в системе
+   * Доступ к модели Prisma
    */
-  async findOne(args: AccountFindUniqueDto): Promise<Account | null> {
-    return this.prisma.account.findUnique(args)
+  get model() {
+    return this.prisma.account
   }
 
   /**
-   * Получение множества аккаунтов по полям отбора
-   * @param {FindManyAccountArgs} args Поля для отбора
-   * @returns {Account[]} Загрузки в базе данных
+   * Получение списка аккаунтов по фильтрам
+   * @param {Pagination} args Параметры пагинации
+   * @param {AccountFilters} filters Фильтры
+   * @returns {Account[]} Список аккаунтов
    */
-  async findMany({
-    where,
-    orderBy,
-    page,
-    size = 10,
-  }: {
-    where?: AccountWhereInput
-    orderBy?: AccountOrderByWithRelationInput
-    page?: number
-    size?: number
-  }): Promise<PaginatedResult<Account[]>> {
-    return paginator({
-      page,
-      perPage: size,
-    })(
-      this.prisma.account,
-      {
-        where,
-        orderBy,
+  async getPaginated(
+    args: Pagination,
+    filters: AccountFilters,
+  ): Promise<Account[]> {
+    const { size, page } = args
+
+    return this.prisma.account.findMany({
+      where: filters
+        ? {
+            username: filters.username ? filters.username : undefined,
+            email: filters.email ? filters.email : undefined,
+            first_name: filters.first_name ? filters.first_name : undefined,
+            last_name: filters.last_name ? filters.last_name : undefined,
+            birthday: filters.birthday ? filters.birthday : undefined,
+            roles: filters.roles ? filters.roles : undefined,
+            sex: filters.sex ? filters.sex : undefined,
+          }
+        : undefined,
+      include: {
+        avatar: true,
       },
-      {
-        page,
+      orderBy: {
+        created_at: 'desc',
       },
-    )
+      take: size,
+      skip: size * (page - 1),
+    })
   }
+
+  /**
+   * Получение аккаунта по уникальному полю
+   * @param {FindUniqueAccountArgs} args Уникальные поля для отбора
+   * @returns {Account} Загрузка в системе
+   */
+  async findOne(
+    args: ToPrisma<
+      FindUniqueAccountArgs,
+      Prisma.AccountSelect,
+      Prisma.AccountInclude
+    >,
+  ): Promise<Account | null> {
+    return this.prisma.account.findUnique(args)
+  }
+
   /**
    * Создание аккаунта в базе данных
    * @param {CreateOneAccountArgs} args Данные нового аккаунта
@@ -80,7 +97,27 @@ export class AccountRepository {
    * @param {UpdateOneAccountArgs} args Данные для обновления
    * @returns {Account} Обновлённый аккаунт
    */
-  async update(args: AccountUpdateDto): Promise<Account> {
+  async update(args: UpdateOneAccountArgs): Promise<Account> {
     return this.prisma.account.update(args)
+  }
+
+  /**
+   * Удаление аккаунта в базе данных
+   * @param {DeleteOneAccountArgs} args Поля отбора аккаунта
+   * @returns {Account} Удалённный аккаунт
+   */
+  async delete(args: DeleteOneAccountArgs): Promise<Account> {
+    return this.prisma.account.delete(args)
+  }
+
+  /**
+   * Удаление аккаунта в базе данных
+   * @param {DeleteOneAccountArgs} args Поля отбора аккаунта
+   * @returns {DeleteManyAccountArgs} Количество удалённых аккаунтов
+   */
+  async deleteMany(
+    args: Omit<DeleteOneAccountArgs, 'where'>,
+  ): Promise<Prisma.BatchPayload> {
+    return this.prisma.account.deleteMany(args)
   }
 }

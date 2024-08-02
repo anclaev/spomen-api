@@ -25,12 +25,4 @@ describe('AccountResolver', () => {
   it('Должен быть определён', () => {
     expect(resolver).toBeDefined()
   })
-
-  it('Должен возвращать найденный аккаунт', () => {
-    service.findByUsername.mockResolvedValueOnce(mockAccount)
-
-    return resolver
-      .findOne('test')
-      .then((data) => expect(data).toBe(mockAccount))
-  })
 })

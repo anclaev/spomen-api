@@ -5,8 +5,10 @@ import {
   OnModuleInit,
   Logger,
 } from '@nestjs/common'
+
+import { UploadUpdateInput, UploadWhereUniqueInput } from '@graphql'
 import { BucketItemStat, Client, S3Error } from 'minio'
-import { Permission, Upload } from '@prisma/client'
+import { Permission, Role, Upload } from '@prisma/client'
 import { InjectMinio } from 'nestjs-minio'
 import { Response } from 'express'
 import { v4 as uuid } from 'uuid'
@@ -14,7 +16,7 @@ import { v4 as uuid } from 'uuid'
 const translit = require('cyrillic-to-translit-js')
 
 // Сервисы
-import { ConfigService } from '@core/config'
+import { ConfigService } from '@/config/config.service'
 
 // Репозитории
 import { UploadRepository } from './upload.repository'
@@ -30,10 +32,11 @@ import {
   PutFileOptions,
   SaveUploadOptions,
   S3File,
+  UploadFilters,
 } from '@interfaces/upload'
 
-import { PaginatedResult } from '@interfaces/pagination'
 import { AuthenticatedUser } from '@interfaces/user'
+import { Pagination } from '@interfaces/pagination'
 import { APIError } from '@interfaces/api-error'
 
 // Enums
@@ -50,17 +53,17 @@ export class UploadService implements OnModuleInit {
   /**
    * Эндпойнт S3-хранилища
    */
-  private endpoint: string
+  private readonly endpoint: string
 
   /**
    * Бакет приложения
    */
-  private bucket: string
+  private readonly bucket: string
 
   /**
    * Публичный бакет приложения
    */
-  private publicBucket: string
+  private readonly publicBucket: string
 
   /**
    * Сервис работы с транслитом
@@ -70,7 +73,7 @@ export class UploadService implements OnModuleInit {
   /**
    * Базовые права доступа к файлу
    */
-  private defaultACL: Permission
+  private readonly defaultACL: Permission
 
   /**
    * Конструктор сервиса
@@ -79,13 +82,13 @@ export class UploadService implements OnModuleInit {
    * * Инициализирует сервис транслита
    * @param {Client} s3 Клиент MinIO
    * @param {ConfigService} config Сервис конфигурации
-   * @param {UploadRepository} upload Репозиторий загрузок
+   * @param {UploadRepository} repo Репозиторий загрузок
    * @param {Logger} logger Логгер приложения
    */
   constructor(
     @InjectMinio() private readonly s3: Client,
     private readonly config: ConfigService,
-    private readonly upload: UploadRepository,
+    private readonly repo: UploadRepository,
     private readonly logger: Logger,
   ) {
     this.publicBucket = config.gett<string>('MINIO_BUCKET_PUBLIC')
@@ -96,7 +99,7 @@ export class UploadService implements OnModuleInit {
   }
 
   /**
-   * Проверка на существование бакетов при инициализации модуля
+   * Проверка существования бакетов при инициализации модуля
    */
   async onModuleInit() {
     const privateIsExist = await this.s3.bucketExists(this.bucket)
@@ -120,25 +123,138 @@ export class UploadService implements OnModuleInit {
   }
 
   /**
+   * Получение уникальной загрузки
+   * @param {UploadWhereUniqueInput} where Данные для поиска
+   * @returns {Upload | APIError} Загрузка
+   */
+  async getUpload(where: UploadWhereUniqueInput): Promise<Upload | APIError> {
+    try {
+      const upload = await this.repo.model.findMany({
+        where: where as Required<UploadWhereUniqueInput>,
+        take: 1,
+        include: {
+          owner: {
+            include: {
+              avatar: true,
+            },
+          },
+        },
+      })
+
+      if (upload.length === 0)
+        return new APIError(HttpStatus.NOT_FOUND, 'Загрузка не найдена')
+
+      return upload[0]
+    } catch (e) {
+      return new APIError(HttpStatus.INTERNAL_SERVER_ERROR, e.message)
+    }
+  }
+
+  /**
    * Получение списка загрузок
    * @param {GetUploadsDto} Параметры поиска
-   * @returns {PaginatedResult<Upload[]>} Список загрузок
+   * @returns {Upload[]} Список загрузок
    */
   async getUploads({
-    pagination,
+    size,
+    page,
     user,
-  }: GetUploadsDto): Promise<PaginatedResult<Upload[]>> {
-    const { page, size } = pagination
+    filters,
+  }: GetUploadsDto): Promise<Upload[] | APIError> {
+    if (filters) {
+      if (
+        filters.owner ||
+        filters.owner_id ||
+        !user.roles.includes('Administrator')
+      ) {
+        filters.owner_id = {
+          equals: user.id,
+        }
 
-    return await this.upload.findMany({
-      page,
-      size,
-      where: {
+        filters.is_system = {
+          equals: false,
+        }
+      }
+    } else {
+      filters = {
         owner_id: {
           equals: user.id,
         },
-      },
-    })
+      }
+      if (!user.roles.includes('Administrator')) {
+        filters.is_system = {
+          equals: false,
+        }
+      }
+    }
+
+    try {
+      return this.repo.getPaginated(
+        { size, page },
+        filters as unknown as UploadFilters,
+      )
+    } catch (e) {
+      return new APIError(HttpStatus.INTERNAL_SERVER_ERROR, e.message)
+    }
+  }
+
+  /**
+   * Изменение загрузки
+   * @param {UploadUpdateInput} data Данные для изменения
+   * @param {UploadWhereUniqueInput} where Условие поиска
+   * @param {AuthenticatedUser} user Текущий пользователь системы
+   * @returns {Upload | APIError} Изменённая загрузка
+   */
+  async updateUpload(
+    data: UploadUpdateInput,
+    where: UploadWhereUniqueInput,
+    user: AuthenticatedUser,
+  ): Promise<Upload | APIError> {
+    if (!user.roles.includes('Administrator')) {
+      if (where.owner_id && where.owner_id.equals !== user.id) {
+        return new APIError(HttpStatus.FORBIDDEN)
+      }
+    }
+
+    try {
+      return await this.repo.update({
+        data,
+        where: where as Required<UploadWhereUniqueInput>,
+      })
+    } catch (e) {
+      return new APIError(HttpStatus.INTERNAL_SERVER_ERROR, e.message)
+    }
+  }
+
+  /**
+   * Удаление загрузки
+   * @param {UploadWhereUniqueInput} where Поля отбора загрузки
+   * @param {AuthenticatedUser} user Текущий пользователь системы
+   * @returns {Upload | APIError} Удалённая загрузка
+   */
+  async deleteUpload(
+    where: UploadWhereUniqueInput,
+    user: AuthenticatedUser,
+  ): Promise<Upload | APIError> {
+    if (!where.id) {
+      return new APIError(HttpStatus.BAD_REQUEST)
+    }
+
+    const upload = await this.uploadIsExists(where!.id!)
+
+    if (upload instanceof APIError) return upload
+
+    if (!user.roles.includes('Administrator') && upload.owner_id !== user.id) {
+      return new APIError(HttpStatus.FORBIDDEN)
+    }
+
+    try {
+      return await this.repo.delete({
+        where: where as Required<UploadWhereUniqueInput>,
+      })
+    } catch (e) {
+      return new APIError(HttpStatus.INTERNAL_SERVER_ERROR, e.message)
+    }
   }
 
   /**
@@ -175,7 +291,7 @@ export class UploadService implements OnModuleInit {
     if (result instanceof APIError) {
       // Удаление данных о загрузке при отсутствии в хранилище
       try {
-        await this.upload.delete({
+        await this.repo.delete({
           where: {
             id: upload.id,
           },
@@ -212,9 +328,41 @@ export class UploadService implements OnModuleInit {
     file,
     path,
     owner,
+    owner_roles,
     acl,
     compress = false,
   }: PutFileOptions): Promise<Upload | APIError> {
+    // Проверка на количество загрузок у пользователя
+    try {
+      const currentUploads = await this.repo.model.count({
+        where: {
+          owner: {
+            username: {
+              equals: owner,
+            },
+          },
+        },
+      })
+
+      const maxUploadsLimit = JSON.parse(
+        this.config.gett('MAX_UPLOADS_LIMIT'),
+      ) as { [key: string]: number }
+
+      if (
+        (owner_roles.includes('Administrator') &&
+          currentUploads >= maxUploadsLimit['Administrator']) ||
+        (!owner_roles.includes('Administrator') &&
+          currentUploads >= maxUploadsLimit['Public'])
+      ) {
+        return new APIError(HttpStatus.CONFLICT, 'Превышен лимит загрузок')
+      }
+    } catch (e) {
+      return new APIError(
+        HttpStatus.INTERNAL_SERVER_ERROR,
+        'Ошибка при загрузке файла',
+      )
+    }
+
     // Преобразование изображения в webp
     if (file.mime && file.mime.match(/^image\/(.*)/)) {
       try {
@@ -231,7 +379,7 @@ export class UploadService implements OnModuleInit {
     const s3File = new S3File()
 
     // Преобразование имени файла в транслит (для кириллицы)
-    s3File.name = this.translit.transform(file.name.replace(' ', '_'))
+    s3File.name = this.translit.transform(file.original_name.replace(' ', '_'))
 
     // Путь к файлу в хранилище
     s3File.path = `${path}/${s3File.name}-${uuid()}.${file.ext}`
@@ -294,7 +442,7 @@ export class UploadService implements OnModuleInit {
     }
 
     // Удаление данных о загрузке из базы
-    await this.upload.delete({
+    await this.repo.delete({
       where: {
         id: upload.id,
       },
@@ -304,7 +452,7 @@ export class UploadService implements OnModuleInit {
       await this.s3.removeObject(upload.bucket, upload.path)
     } catch (e: unknown) {
       // Компенсирующая транзакция, если файл не был удалён из хранилища
-      await this.upload.create({
+      await this.repo.create({
         data: {
           ...upload,
           permissions: {
@@ -325,6 +473,20 @@ export class UploadService implements OnModuleInit {
   }
 
   /**
+   * Получение списка расширений загрузок
+   * @param {Pagination} args Параметры пагинации
+   * @returns {string[]} Список расширений
+   */
+  async getExtensionsList(args: Pagination): Promise<string[] | APIError> {
+    try {
+      const extensions = await this.repo.getDistinctExt(args)
+      return extensions.map((item: Pick<Upload, 'ext'>) => item.ext)
+    } catch (e) {
+      return new APIError(HttpStatus.INTERNAL_SERVER_ERROR, e.message)
+    }
+  }
+
+  /**
    * Сохранение загруженного файла в базе данных
    * @param {SaveUploadOptions} options Данные файла
    * @returns {Upload | APIError} Запись в базе данных
@@ -338,13 +500,13 @@ export class UploadService implements OnModuleInit {
     const id = uuid()
     const url = permissions.find((item) => item === 'Public')
       ? `${this.endpoint}/${s3File.bucket}/${s3File.path}`
-      : `${this.config.apiEndpoint}/upload/file/${id}`
+      : `${this.config.apiEndpoint}/upload/${id}`
 
     try {
-      return await this.upload.create({
+      return await this.repo.create({
         data: {
           id,
-          name: file.name,
+          name: file.name || file.original_name,
           ext: file.ext,
           url,
           file_name: s3File.name,
@@ -416,7 +578,7 @@ export class UploadService implements OnModuleInit {
 
   /**
    * Обработка ошибки S3 (MinIO)
-   * @param {S3APIError} e Объект ошибки S3
+   * @param {S3Error} e Объект ошибки S3
    * @return {APIError} Преобразованная ошибка
    */
   private handleS3Error(e: S3Error): APIError {
@@ -424,12 +586,12 @@ export class UploadService implements OnModuleInit {
   }
 
   /**
-   * Проверка на существование загрузки в базед анных
+   * Проверка на существование загрузки в базе данных
    * @param {string} id Идентификатор загрузки
    * @returns {Upload | APIError} Загрузка в базе данных
    */
   private async uploadIsExists(id: string): Promise<Upload | APIError> {
-    const upload = await this.upload.findOne({
+    const upload = await this.repo.findOne({
       where: {
         id,
       },

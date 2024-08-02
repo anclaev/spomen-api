@@ -3,7 +3,7 @@ import { HttpService } from '@nestjs/axios'
 import { firstValueFrom } from 'rxjs'
 
 // Сервисы
-import { ConfigService } from '@core/config'
+import { ConfigService } from '@/config/config.service'
 
 // Интерфейсы
 import {

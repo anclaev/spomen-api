@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
-        <title>Spomen API</title>
+        <title>spomen-api</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -72,7 +72,7 @@
           </script>
 
         <div class="navbar navbar-default navbar-fixed-top d-block d-sm-none">
-            <a href="../" class="navbar-brand">Spomen API</a>
+            <a href="../" class="navbar-brand">spomen-api</a>
             <button type="button" class="btn btn-default btn-menu ion-ios-menu" id="btn-menu"></button>
         </div>
 
@@ -163,11 +163,15 @@
                             </li>
                             <li>
                                     <span class="modifier">Async</span>
-                                <a href="#findMany" >findMany</a>
+                                <a href="#findOne" >findOne</a>
                             </li>
                             <li>
                                     <span class="modifier">Async</span>
-                                <a href="#findOne" >findOne</a>
+                                <a href="#getDistinctExt" >getDistinctExt</a>
+                            </li>
+                            <li>
+                                    <span class="modifier">Async</span>
+                                <a href="#getPaginated" >getPaginated</a>
                             </li>
                             <li>
                                     <span class="modifier">Async</span>
@@ -181,6 +185,20 @@
 
 
 
+                    <tr>
+                        <td class="col-md-4">
+                            <h6><b>Accessors</b></h6>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="col-md-4">
+                            <ul class="index-list">
+                                <li>
+                                    <a href="#model" >model</a>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
         </tbody>
     </table>
 </section>
@@ -196,7 +214,7 @@
                 </tr>
                         <tr>
                             <td class="col-md-4">
-                                <div class="io-line">Defined in <a href="" data-line="28" class="link-to-prism">src/upload/upload.repository.ts:28</a></div>
+                                <div class="io-line">Defined in <a href="" data-line="23" class="link-to-prism">src/upload/upload.repository.ts:23</a></div>
                             </td>
                         </tr>
 
@@ -268,8 +286,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="86"
-                                    class="link-to-prism">src/upload/upload.repository.ts:86</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="95"
+                                    class="link-to-prism">src/upload/upload.repository.ts:95</a></div>
                         </td>
                     </tr>
 
@@ -345,8 +363,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="104"
-                                    class="link-to-prism">src/upload/upload.repository.ts:104</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="113"
+                                    class="link-to-prism">src/upload/upload.repository.ts:113</a></div>
                         </td>
                     </tr>
 
@@ -422,8 +440,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="113"
-                                    class="link-to-prism">src/upload/upload.repository.ts:113</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="122"
+                                    class="link-to-prism">src/upload/upload.repository.ts:122</a></div>
                         </td>
                     </tr>
 
@@ -466,82 +484,11 @@
                                 </table>
                             </div>
                         <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../interfaces/DeleteManyResult.html" target="_self" >Promise&lt;DeleteManyResult&gt;</a></code>
+                            <b>Returns : </b>    <code>Promise&lt;Prisma.BatchPayload&gt;</code>
 
                         </div>
                             <div class="io-description">
                                 <p>Количество удалённых загрузок</p>
-
-                            </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-    <table class="table table-sm table-bordered">
-        <tbody>
-            <tr>
-                <td class="col-md-4">
-                    <a name="findMany"></a>
-                    <span class="name">
-                            <span class="modifier">Async</span>
-                        <span ><b>findMany</b></span>
-                        <a href="#findMany"><span class="icon ion-ios-link"></span></a>
-                    </span>
-                </td>
-            </tr>
-            <tr>
-                <td class="col-md-4">
-                        <span class="modifier-icon icon ion-ios-reset"></span>
-                    <code>findMany(undefined: literal type)</code>
-                </td>
-            </tr>
-
-
-                    <tr>
-                        <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="55"
-                                    class="link-to-prism">src/upload/upload.repository.ts:55</a></div>
-                        </td>
-                    </tr>
-
-
-            <tr>
-                <td class="col-md-4">
-                        <div class="io-description"><p>Получение множества загрузок по полям отбора</p>
-</div>
-
-                            <div class="io-description">
-                                <b>Parameters :</b>
-                                
-                                <table class="params">
-                                    <thead>
-                                        <tr>
-                                            <td>Name</td>
-                                                <td>Type</td>
-                                            <td>Optional</td>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                        <code>literal type</code>
-                                            </td>
-
-                                            <td>
-                                                    No
-                                            </td>
-
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <div class="io-description">
-                            <b>Returns : </b>        <code><a href="../interfaces/PaginatedResult.html" target="_self" >Promise&lt;PaginatedResult&lt;Upload[]&gt;&gt;</a></code>
-
-                        </div>
-                            <div class="io-description">
-                                <p>Загрузки в базе данных</p>
 
                             </div>
                 </td>
@@ -570,8 +517,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="40"
-                                    class="link-to-prism">src/upload/upload.repository.ts:40</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="80"
+                                    class="link-to-prism">src/upload/upload.repository.ts:80</a></div>
                         </td>
                     </tr>
 
@@ -629,6 +576,170 @@
         <tbody>
             <tr>
                 <td class="col-md-4">
+                    <a name="getDistinctExt"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getDistinctExt</b></span>
+                        <a href="#getDistinctExt"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getDistinctExt(undefined: <a href="../classes/Pagination.html" target="_self">Pagination</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="133"
+                                    class="link-to-prism">src/upload/upload.repository.ts:133</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Получение списка уникальных расширений</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                            <code><a href="../classes/Pagination.html" target="_self" >Pagination</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;Pick[]&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>Массив объектов с расширениями</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
+                    <a name="getPaginated"></a>
+                    <span class="name">
+                            <span class="modifier">Async</span>
+                        <span ><b>getPaginated</b></span>
+                        <a href="#getPaginated"><span class="icon ion-ios-link"></span></a>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td class="col-md-4">
+                        <span class="modifier-icon icon ion-ios-reset"></span>
+                    <code>getPaginated(args: <a href="../classes/Pagination.html" target="_self">Pagination</a>, filters: <a href="../undefineds/UploadFilters.html" target="_self">UploadFilters</a>)</code>
+                </td>
+            </tr>
+
+
+                    <tr>
+                        <td class="col-md-4">
+                            <div class="io-line">Defined in <a href="" data-line="43"
+                                    class="link-to-prism">src/upload/upload.repository.ts:43</a></div>
+                        </td>
+                    </tr>
+
+
+            <tr>
+                <td class="col-md-4">
+                        <div class="io-description"><p>Получение списка загрузок по фильтрам</p>
+</div>
+
+                            <div class="io-description">
+                                <b>Parameters :</b>
+                                
+                                <table class="params">
+                                    <thead>
+                                        <tr>
+                                            <td>Name</td>
+                                                <td>Type</td>
+                                            <td>Optional</td>
+                                                <td>Description</td>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                                <td>args</td>
+                                            <td>
+                                                            <code><a href="../classes/Pagination.html" target="_self" >Pagination</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Параметры пагинации</p>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                                <td>filters</td>
+                                            <td>
+                                                            <code><a href="../miscellaneous/typealiases.html#UploadFilters" target="_self" >UploadFilters</a></code>
+                                            </td>
+
+                                            <td>
+                                                    No
+                                            </td>
+
+
+                                            <td>
+                                                    <p>Фильтры</p>
+
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <div class="io-description">
+                            <b>Returns : </b>    <code>Promise&lt;Upload[]&gt;</code>
+
+                        </div>
+                            <div class="io-description">
+                                <p>Список загрузок</p>
+
+                            </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <table class="table table-sm table-bordered">
+        <tbody>
+            <tr>
+                <td class="col-md-4">
                     <a name="update"></a>
                     <span class="name">
                             <span class="modifier">Async</span>
@@ -647,8 +758,8 @@
 
                     <tr>
                         <td class="col-md-4">
-                            <div class="io-line">Defined in <a href="" data-line="95"
-                                    class="link-to-prism">src/upload/upload.repository.ts:95</a></div>
+                            <div class="io-line">Defined in <a href="" data-line="104"
+                                    class="link-to-prism">src/upload/upload.repository.ts:104</a></div>
                         </td>
                     </tr>
 
@@ -704,6 +815,40 @@
     </table>
 </section>
 
+            <section data-compodoc="block-accessors">
+    <h3 id="accessors">
+        Accessors
+    </h3>
+        <table class="table table-sm table-bordered">
+            <tbody>
+                <tr>
+                    <td class="col-md-4">
+                        <a name="model"></a>
+                        <span class="name"><b>model</b><a href="#model"><span class="icon ion-ios-link"></span></a></span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td class="col-md-4">
+                        <span class="accessor"><b>get</b><code>model()</code></span>
+                    </td>
+                </tr>
+                            <tr>
+                                <td class="col-md-4">
+                                    <div class="io-line">Defined in <a href="" data-line="33" class="link-to-prism">src/upload/upload.repository.ts:33</a></div>
+                                </td>
+                            </tr>
+                    <tr>
+                        <td class="col-md-4">
+                                <div class="io-description"><p>Доступ к модели Prisma</p>
+</div>
+
+                        </td>
+                    </tr>
+
+            </tbody>
+        </table>
+</section>
     </div>
 
 
@@ -713,22 +858,17 @@ import { PrismaService } from &#x27;nestjs-prisma&#x27;
 import { Injectable } from &#x27;@nestjs/common&#x27;
 
 import {
-  UploadOrderByWithRelationInput,
   CreateOneUploadArgs,
   DeleteManyUploadArgs,
   DeleteOneUploadArgs,
   FindUniqueUploadArgs,
   UpdateOneUploadArgs,
-  UploadWhereInput,
 } from &#x27;@graphql&#x27;
 
 // Интерфейсы
-import { PaginatedResult } from &#x27;@interfaces/pagination&#x27;
-import { DeleteManyResult } from &#x27;@interfaces/prisma&#x27;
+import { Pagination } from &#x27;@interfaces/pagination&#x27;
+import { UploadFilters } from &#x27;@interfaces/upload&#x27;
 import { ToPrisma } from &#x27;@interfaces/prisma&#x27;
-
-// Утилиты
-import { paginator } from &#x27;@utils/paginator&#x27;
 
 /**
  * Репозиторий загрузок
@@ -743,6 +883,51 @@ export class UploadRepository {
   constructor(private readonly prisma: PrismaService) {}
 
   /**
+   * Доступ к модели Prisma
+   */
+  get model() {
+    return this.prisma.upload
+  }
+
+  /**
+   * Получение списка загрузок по фильтрам
+   * @param {Pagination} args Параметры пагинации
+   * @param {UploadFilters} filters Фильтры
+   * @returns {Upload[]} Список загрузок
+   */
+  async getPaginated(
+    args: Pagination,
+    filters: UploadFilters,
+  ): Promise&lt;Upload[]&gt; {
+    const { size, page } &#x3D; args
+
+    return this.prisma.upload.findMany({
+      where: filters
+        ? {
+            ext: filters.ext ? filters.ext : undefined,
+            name: filters.name ? filters.name : undefined,
+            owner: filters.owner ? filters.owner : undefined,
+            owner_id: filters.owner_id ? filters.owner_id : undefined,
+            is_system: filters.is_system ? filters.is_system : undefined,
+            permissions: filters.permissions ? filters.permissions : undefined,
+          }
+        : undefined,
+      include: {
+        owner: {
+          include: {
+            avatar: true,
+          },
+        },
+      },
+      orderBy: {
+        created_at: &#x27;desc&#x27;,
+      },
+      take: size,
+      skip: size * (page - 1),
+    })
+  }
+
+  /**
    * Получение загрузки по уникальному полю
    * @param {FindUniqueUploadArgs} args Уникальные поля для отбора
    * @returns {Upload} Загрузка в базе данных
@@ -754,38 +939,7 @@ export class UploadRepository {
       Prisma.UploadInclude
     &gt;,
   ): Promise&lt;Upload | null&gt; {
-    return await this.prisma.upload.findUnique(args)
-  }
-
-  /**
-   * Получение множества загрузок по полям отбора
-   * @param {FindManyUploadArgs} args Поля для отбора
-   * @returns {Account[]} Загрузки в базе данных
-   */
-  async findMany({
-    where,
-    orderBy,
-    page,
-    size &#x3D; 10,
-  }: {
-    where?: UploadWhereInput
-    orderBy?: UploadOrderByWithRelationInput
-    page?: number
-    size?: number
-  }): Promise&lt;PaginatedResult&lt;Upload[]&gt;&gt; {
-    return paginator({
-      page,
-      perPage: size,
-    })(
-      this.prisma.upload,
-      {
-        where,
-        orderBy,
-      },
-      {
-        page,
-      },
-    )
+    return this.prisma.upload.findUnique(args)
   }
 
   /**
@@ -822,8 +976,30 @@ export class UploadRepository {
    */
   async deleteMany(
     args: Omit&lt;DeleteManyUploadArgs, &#x27;where&#x27;&gt;,
-  ): Promise&lt;DeleteManyResult&gt; {
+  ): Promise&lt;Prisma.BatchPayload&gt; {
     return this.prisma.upload.deleteMany(args)
+  }
+
+  /**
+   * Получение списка уникальных расширений
+   * @param {Pagination} args Параметры пагинации
+   * @returns {{ext: string}[]} Массив объектов с расширениями
+   */
+  async getDistinctExt({
+    page,
+    size,
+  }: Pagination): Promise&lt;Pick&lt;Upload, &#x27;ext&#x27;&gt;[]&gt; {
+    return this.prisma.upload.findMany({
+      select: {
+        ext: true,
+      },
+      distinct: [&#x27;ext&#x27;],
+      take: size,
+      skip: size * (page - 1),
+      orderBy: {
+        ext: &#x27;asc&#x27;,
+      },
+    })
   }
 }
 </code></pre>
