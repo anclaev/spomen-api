@@ -171,7 +171,7 @@
   },
   "standard-version": {
     "scripts": {
-      "posttag": "yarn docs:gen"
+      "posttag": "docs:gen"
     }
   },
   "config": {
