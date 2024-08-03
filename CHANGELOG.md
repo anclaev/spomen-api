@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.4](https://github.com/anclaev/spomen-api/compare/v0.0.3...v0.0.4) (2024-08-03)
+
+### Bug Fixes
+
+- **uploads:** Исправить изменение загрузки ([43b2678](https://github.com/anclaev/spomen-api/commit/43b267860450689ca81a4e9610a7c7457f9f803f))
+- **workflow:** Изменить генерацию документации ([0f1ff32](https://github.com/anclaev/spomen-api/commit/0f1ff32ce993f05bb91ce2cc4180b770e8ee7f07))
+- **workflow:** Изменить генерацию документации ([38f8e21](https://github.com/anclaev/spomen-api/commit/38f8e21380444471d15c7f12827d4f207408d696))
+- **workflow:** Изменить генерацию документации ([a2a962e](https://github.com/anclaev/spomen-api/commit/a2a962e764eafc755310cb31bbea7de5ecbf2ff8))
+- **workflow:** Изменить сценарии релиза и документации ([a38cafe](https://github.com/anclaev/spomen-api/commit/a38cafe9a55d716fd931ad02b15c78f885074733))
+- **workflow:** Изменить сценарий релиза ([4b130ea](https://github.com/anclaev/spomen-api/commit/4b130ea31bdcc43a62efdc63e7ce393fb5f2b0e4))
+- **workflow:** Пофиксить синтаксис CI ([fc4533f](https://github.com/anclaev/spomen-api/commit/fc4533f320f2ba5c60f57e560efe439bb2d90740))
+
 ### 0.0.3 (2024-08-02)
 
 ### Features
