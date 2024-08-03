@@ -170,7 +170,7 @@
   },
   "standard-version": {
     "scripts": {
-      "posttag": "./scripts/docs.sh"
+      "posttag": "./scripts/docs"
     }
   },
   "config": {
