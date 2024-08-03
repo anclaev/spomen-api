@@ -216,6 +216,27 @@ export class UploadService implements OnModuleInit {
       }
     }
 
+    let targetUpload: Upload | APIError | null = await this.getUpload(where)
+
+    if (targetUpload instanceof APIError) return targetUpload
+
+    if (data.permissions) {
+      if (
+        (data.permissions.set &&
+          data.permissions.set.includes(Permission.OwnerOnly)) ||
+        (data.permissions.push &&
+          data.permissions.push.includes(Permission.OwnerOnly))
+      ) {
+        data.url = {
+          set: `${this.config.apiEndpoint}/upload/${targetUpload.id}`,
+        }
+      } else {
+        data.url = {
+          set: `${this.endpoint}/${targetUpload.bucket}/${targetUpload.path}`,
+        }
+      }
+    }
+
     try {
       return await this.repo.update({
         data,
