@@ -170,7 +170,7 @@
   },
   "standard-version": {
     "scripts": {
-      "postchangelog": "yarn docs && git add docs"
+      "posttag": "./scripts/docs.sh"
     }
   },
   "config": {
