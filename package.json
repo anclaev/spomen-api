@@ -23,6 +23,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "docs": "compodoc -c .compodocrc",
     "docs:serve": "compodoc -c .compodocrc -s",
+    "docs:gen": "./scripts/docs.sh",
     "prepare": "husky",
     "sentry:sourcemaps": "sentry-cli sourcemaps inject --org anclaev-ti --project spomen-api ./dist/src && sentry-cli sourcemaps upload --org anclaev-ti --project spomen-api ./dist/src",
     "sentry:sourcemaps:production": "sentry-cli sourcemaps inject --org anclaev-ti --project spomen-api ./dist && sentry-cli sourcemaps upload --org anclaev-ti --project spomen-api ./dist",
@@ -170,7 +171,7 @@
   },
   "standard-version": {
     "scripts": {
-      "posttag": "yarn docs && git add docs && yarn commit && yarn push"
+      "posttag": "yarn docs:gen"
     }
   },
   "config": {
