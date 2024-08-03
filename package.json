@@ -23,14 +23,14 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "docs": "compodoc -c .compodocrc",
     "docs:serve": "compodoc -c .compodocrc -s",
-    "docs:gen": "./scripts/docs.sh",
+    "docs:gen": "yarn docs && git add docs && yarn commit && yarn push",
     "prepare": "husky",
     "sentry:sourcemaps": "sentry-cli sourcemaps inject --org anclaev-ti --project spomen-api ./dist/src && sentry-cli sourcemaps upload --org anclaev-ti --project spomen-api ./dist/src",
     "sentry:sourcemaps:production": "sentry-cli sourcemaps inject --org anclaev-ti --project spomen-api ./dist && sentry-cli sourcemaps upload --org anclaev-ti --project spomen-api ./dist",
     "commit": "npx git-cz",
     "push": "git push --follow-tags origin && git push --follow-tags gitverse",
     "changelog": "npx conventional-changelog -p angular -i CHANGELOG.md -s",
-    "release": "npx standard-version -s"
+    "release": "npx standard-version -s --release-as"
   },
   "dependencies": {
     "@apollo/server": "^4.10.4",
