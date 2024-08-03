@@ -29,7 +29,7 @@
     "commit": "npx git-cz",
     "push": "git push --follow-tags origin && git push --follow-tags gitverse",
     "changelog": "npx conventional-changelog -p angular -i CHANGELOG.md -s",
-    "bump": "npx standard-version -s"
+    "bump": "yarn docs && git add docs && npx standard-version -s"
   },
   "dependencies": {
     "@apollo/server": "^4.10.4",
