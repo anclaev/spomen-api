@@ -2,12 +2,6 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-### [0.0.5](https://github.com/anclaev/spomen-api/compare/v0.0.4...v0.0.5) (2024-08-03)
-
-### Bug Fixes
-
-- **workflow:** Изменить скрипт генерации документации ([2736bf9](https://github.com/anclaev/spomen-api/commit/2736bf9698e56248a6faee789192e832517a81de))
-
 ### [0.0.4](https://github.com/anclaev/spomen-api/compare/v0.0.3...v0.0.4) (2024-08-03)
 
 ### Bug Fixes
