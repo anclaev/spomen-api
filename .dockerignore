@@ -1,0 +1,17 @@
+node_modules
+Dockerfile*
+docker-compose*
+.dockerignore
+.git*
+.prettier*
+/*.json
+README.md
+.env
+.editorconfig
+coverage*
+deployment
+.yarn
+.husky
+.nx
+config
+e2e

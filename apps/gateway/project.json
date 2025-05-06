@@ -21,7 +21,7 @@
       "continuous": true,
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
-      "dependsOn": ["build"],
+      "dependsOn": ["build:development"],
       "options": {
         "buildTarget": "gateway:build",
         "runBuildTargetDependencies": false
@@ -38,6 +38,34 @@
     "test": {
       "options": {
         "passWithNoTests": true
+      }
+    },
+    "container": {
+      "executor": "@nx-tools/nx-container:build",
+      "defaultConfiguration": "local",
+      "options": {
+        "file": "apps/gateway/Dockerfile",
+        "cache-from": ["type=gha"],
+        "cache-to": ["type=gha,mode=max"],
+        "push": true
+      },
+      "configurations": {
+        "local": {
+          "push": false,
+          "tags": ["anclaev/spomen-gateway:local"]
+        },
+        "staging": {
+          "metadata": {
+            "images": ["anclaev/spomen-gateway"],
+            "tags": ["type=sha"]
+          }
+        },
+        "production": {
+          "metadata": {
+            "images": ["anclaev/spomen-gateway"],
+            "tags": ["type=ref,event=tag", "latest"]
+          }
+        }
       }
     }
   }

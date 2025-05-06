@@ -12,7 +12,7 @@
       "!{projectRoot}/src/test-setup.[jt]s",
       "!{projectRoot}/test-setup.[jt]s"
     ],
-    "sharedGlobals": []
+    "sharedGlobals": ["{workspaceRoot}/.github/workflows/ci.yml"]
   },
   "plugins": [
     {
@@ -36,7 +36,14 @@
       "options": {
         "targetName": "test"
       },
-      "exclude": ["apps/gateway-e2e/**/*"]
+      "exclude": ["e2e/gateway-e2e/**/*"]
+    },
+    {
+      "plugin": "@nx-tools/nx-container",
+      "options": {
+        "defaultEngine": "docker",
+        "defaultRegistry": "docker.io"
+      }
     }
   ]
 }
