@@ -1,0 +1,14 @@
+{
+  "types": [
+    { "type": "feat", "section": "Добавлено" },
+    { "type": "fix", "section": "Исправлено" },
+    { "type": "chore", "hidden": true },
+    { "type": "docs", "hidden": true },
+    { "type": "style", "hidden": true },
+    { "type": "refactor", "hidden": true },
+    { "type": "perf", "hidden": true },
+    { "type": "test", "hidden": true }
+  ],
+  "commitUrlFormat": "https://github.com/anclaev/spomen-api/commit/{{hash}}",
+  "compareUrlFormat": "https://github.com/anclaev/spomen-api/compare/{{previousTag}}...{{currentTag}}"
+}
