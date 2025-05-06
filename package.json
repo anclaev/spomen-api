@@ -4,8 +4,8 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "build-images:staging": "nx affected -t container --parallel=2 --skip-nx-cache --build-args=VERSION=$CI_TAG --tags=$NX_TASK_TARGET_PROJECT:$CI_TAG",
-    "build-images:production": "nx run-many -t container --parallel=2 --skip-nx-cache --build-args=VERSION=$CI_TAG --tags=$NX_TASK_TARGET_PROJECT:$CI_TAG,$NX_TASK_TARGET_PROJECT:latest",
+    "build-images:staging": "nx affected -t container --parallel=2 --skip-nx-cache --build-args=VERSION=$CI_TAG",
+    "build-images:production": "nx run-many -t container --parallel=2 --skip-nx-cache --build-args=VERSION=$CI_TAG",
     "prepare": "husky",
     "release": "standard-version",
     "release:minor": "standard-version --release-as minor -s",

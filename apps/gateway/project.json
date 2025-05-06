@@ -57,13 +57,13 @@
         "staging": {
           "metadata": {
             "images": ["anclaev/spomen-gateway"],
-            "tags": ["type=sha"]
+            "tags": ["$CI_TAG"]
           }
         },
         "production": {
           "metadata": {
             "images": ["anclaev/spomen-gateway"],
-            "tags": ["type=ref,event=tag", "latest"]
+            "tags": ["$CI_TAG", "latest"]
           }
         }
       }
