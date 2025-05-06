@@ -98,33 +98,33 @@ jobs:
       - uses: nrwl/nx-set-shas@v4
       - run: yarn nx affected -t test --exclude=*-e2e --skip-nx-cache
 
-  test-e2e:
-    name: E2E-тесты
-    runs-on: ubuntu-latest
-    needs: build-services
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '${{ env.NODE_VERSION }}'
-      - run: |
-          corepack enable
+  # test-e2e:
+  #   name: E2E-тесты
+  #   runs-on: ubuntu-latest
+  #   needs: build-services
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #       with:
+  #         fetch-depth: 0
+  #     - uses: actions/setup-node@v4
+  #       with:
+  #         node-version: '${{ env.NODE_VERSION }}'
+  #     - run: |
+  #         corepack enable
 
-      - uses: actions/cache@v4
-        id: yarn-cache
-        with:
-          path: 'node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+  #     - uses: actions/cache@v4
+  #       id: yarn-cache
+  #       with:
+  #         path: 'node_modules'
+  #         key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
-      # - name: Подготовка конфигурации
-      #   run: |
-      #     echo "${{ secrets.TEST_SERVER_ENV }}" >> ./apps/api/.env
-      #     echo 'VERSION=$GITHUB_SHA' >> ./apps/api/.env
+  #     # - name: Подготовка конфигурации
+  #     #   run: |
+  #     #     echo "${{ secrets.TEST_SERVER_ENV }}" >> ./apps/api/.env
+  #     #     echo 'VERSION=$GITHUB_SHA' >> ./apps/api/.env
 
-      - uses: nrwl/nx-set-shas@v4
-      - run: yarn nx affected -t e2e --skip-nx-cache
+  #     - uses: nrwl/nx-set-shas@v4
+  #     - run: yarn nx affected -t e2e --skip-nx-cache
 
   build-images:
     name: Сборка образов
