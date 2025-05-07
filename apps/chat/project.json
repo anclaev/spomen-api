@@ -1,0 +1,71 @@
+{
+  "name": "chat",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/chat/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "webpack-cli build",
+        "args": ["node-env=production"]
+      },
+      "configurations": {
+        "development": {
+          "args": ["node-env=development"]
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "dependsOn": ["build:development"],
+      "options": {
+        "buildTarget": "chat:build",
+        "runBuildTargetDependencies": false
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "chat:build:development"
+        },
+        "production": {
+          "buildTarget": "chat:build:production"
+        }
+      }
+    },
+    "test": {
+      "options": {
+        "passWithNoTests": true
+      }
+    },
+    "container": {
+      "executor": "@nx-tools/nx-container:build",
+      "defaultConfiguration": "local",
+      "options": {
+        "file": "apps/chat/Dockerfile",
+        "cache-from": ["type=gha"],
+        "cache-to": ["type=gha,mode=max"],
+        "push": true
+      },
+      "configurations": {
+        "local": {
+          "push": false,
+          "tags": ["anclaev/spomen-chat:local"]
+        },
+        "staging": {
+          "metadata": {
+            "images": ["anclaev/spomen-chat"],
+            "tags": ["$CI_TAG"]
+          }
+        },
+        "production": {
+          "metadata": {
+            "images": ["anclaev/spomen-chat"],
+            "tags": ["$CI_TAG", "latest"]
+          }
+        }
+      }
+    }
+  }
+}

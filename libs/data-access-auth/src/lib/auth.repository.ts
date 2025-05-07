@@ -1,16 +1,14 @@
-import { Prisma, PrismaAuthClientService } from '@api/prisma-auth-client'
+// import { Prisma, PrismaAuthClientService } from '@api/prisma-auth-client'
 import { Injectable } from '@nestjs/common'
 
 @Injectable()
 export class AuthRepository {
-  constructor(private readonly prisma: PrismaAuthClientService) {}
-
-  async user(userWhereUniqueInput: Prisma.UserWhereUniqueInput) {
-    return this.prisma.user.findUnique({
-      where: userWhereUniqueInput,
-    })
-  }
-
+  // constructor(private readonly prisma: PrismaAuthClientService) {}
+  // async user(userWhereUniqueInput: Prisma.UserWhereUniqueInput) {
+  // return this.prisma.user.findUnique({
+  // where: userWhereUniqueInput,
+  // })
+  // }
   //   async users(options: {
   //     skip?: number;
   //     take?: number;
@@ -19,7 +17,6 @@ export class AuthRepository {
   //     orderBy?: Prisma.UserOrderByWithRelationInput;
   //   }) {
   //     const { skip, take, cursor, where, orderBy } = options;
-
   //     return this.prisma.user.findMany({
   //       skip,
   //       take,
@@ -28,13 +25,11 @@ export class AuthRepository {
   //       orderBy,
   //     });
   //   }
-
   //   async createUser(data: Prisma.UserCreateInput) {
   //     return this.prisma.user.create({
   //       data,
   //     });
   //   }
-
   //   async updateUser(options: {
   //     where: Prisma.UserWhereUniqueInput;
   //     data: Prisma.UserUpdateInput;
@@ -45,7 +40,6 @@ export class AuthRepository {
   //       where,
   //     });
   //   }
-
   //   async deleteUser(where: Prisma.UserWhereUniqueInput) {
   //     return this.prisma.user.delete({
   //       where,

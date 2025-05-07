@@ -9,7 +9,7 @@ module.exports = {
     '!main.ts',
   ],
   coveragePathIgnorePatterns: ['/__test__/'],
-  coverageReporters: ['text', 'lcov', 'json', 'jest-junit'],
+  coverageReporters: ['text', 'lcov', 'json'],
   moduleNameMapper: {
     '^#/(.*)$': '<rootDir>/$1',
   },

@@ -1,0 +1,13 @@
+generator client {
+    provider = "prisma-client-js"
+    output   = "../../../node_modules/@prisma/client/story"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("STORY_DATABASE_URL")
+}
+
+model Achievement {
+    id String @id @default(uuid()) @db.Uuid()
+}

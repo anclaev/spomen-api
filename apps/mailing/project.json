@@ -1,0 +1,71 @@
+{
+  "name": "mailing",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/mailing/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "webpack-cli build",
+        "args": ["node-env=production"]
+      },
+      "configurations": {
+        "development": {
+          "args": ["node-env=development"]
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "dependsOn": ["build:development"],
+      "options": {
+        "buildTarget": "mailing:build",
+        "runBuildTargetDependencies": false
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "mailing:build:development"
+        },
+        "production": {
+          "buildTarget": "mailing:build:production"
+        }
+      }
+    },
+    "test": {
+      "options": {
+        "passWithNoTests": true
+      }
+    },
+    "container": {
+      "executor": "@nx-tools/nx-container:build",
+      "defaultConfiguration": "local",
+      "options": {
+        "file": "apps/mailing/Dockerfile",
+        "cache-from": ["type=gha"],
+        "cache-to": ["type=gha,mode=max"],
+        "push": true
+      },
+      "configurations": {
+        "local": {
+          "push": false,
+          "tags": ["anclaev/spomen-mailing:local"]
+        },
+        "staging": {
+          "metadata": {
+            "images": ["anclaev/spomen-mailing"],
+            "tags": ["$CI_TAG"]
+          }
+        },
+        "production": {
+          "metadata": {
+            "images": ["anclaev/spomen-mailing"],
+            "tags": ["$CI_TAG", "latest"]
+          }
+        }
+      }
+    }
+  }
+}

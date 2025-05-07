@@ -16,9 +16,14 @@
     "baseUrl": ".",
     "paths": {
       "@api/auth/*": ["apps/auth/src/*"],
-      "@api/data-access-auth": ["libs/data-access-auth/src/index.ts"],
-      "@api/prisma-auth": ["libs/prisma-auth/src/index.ts"],
-      "@api/prisma-auth-client": ["libs/prisma-auth-client/src/index.ts"]
+      "@api/billing/*": ["apps/billing/src/*"],
+      "@api/chat/*": ["apps/chat/src/*"],
+      "@api/gateway/*": ["apps/gateway/src/*"],
+      "@api/mailing/*": ["apps/mailing/src/*"],
+      "@api/memory/*": ["apps/memory/src/*"],
+      "@api/notification/*": ["apps/notification/src/*"],
+      "@api/shop/*": ["apps/shop/src/*"],
+      "@api/story/*": ["apps/story/src/*"]
     }
   },
   "exclude": ["node_modules", "tmp"]

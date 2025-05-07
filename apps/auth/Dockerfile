@@ -16,7 +16,7 @@ ARG VERSION="latest"
 
 ENV NODE_ENV=production
 ENV APP_VERSION=${VERSION}
-ENV PORT=3002
+ENV PORT=3001
 
 COPY --from=deps /temp/prod/node_modules ./node_modules
 COPY --from=deps /temp/prod/package.json ./package.json

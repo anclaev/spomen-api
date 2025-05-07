@@ -1,0 +1,13 @@
+generator client {
+    provider = "prisma-client-js"
+    output   = "../../../node_modules/@prisma/client/mailing"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("MAILING_DATABASE_URL")
+}
+
+model Mail {
+    id String @id @default(uuid()) @db.Uuid()
+}
