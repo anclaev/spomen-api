@@ -13,7 +13,13 @@
     "lib": ["es2020", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
-    "baseUrl": "."
+    "baseUrl": ".",
+    "paths": {
+      "@api/auth/*": ["apps/auth/src/*"],
+      "@api/data-access-auth": ["libs/data-access-auth/src/index.ts"],
+      "@api/prisma-auth": ["libs/prisma-auth/src/index.ts"],
+      "@api/prisma-auth-client": ["libs/prisma-auth-client/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

@@ -2,10 +2,8 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
-    "module": "commonjs",
+    "declaration": true,
     "types": ["node"],
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
     "target": "es2021",
     "strictNullChecks": true,
     "noImplicitAny": true,
@@ -13,6 +11,5 @@
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["jest.config.ts", "src/**/*.spec.ts", "src/**/*.test.ts"]
+  "include": ["src/**/*.ts"]
 }

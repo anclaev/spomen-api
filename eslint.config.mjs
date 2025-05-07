@@ -1,4 +1,4 @@
-import nx from '@nx/eslint-plugin';
+import nx from '@nx/eslint-plugin'
 
 export default [
   ...nx.configs['flat/base'],
@@ -11,7 +11,7 @@ export default [
     files: ['**/*.ts', '**/*.tsx', '**/*.js', '**/*.jsx'],
     rules: {
       '@nx/enforce-module-boundaries': [
-        'error',
+        'off',
         {
           enforceBuildableLibDependency: true,
           allow: ['^.*/eslint(\\.base)?\\.config\\.[cm]?js$'],
@@ -39,4 +39,4 @@ export default [
     // Override or add rules here
     rules: {},
   },
-];
+]

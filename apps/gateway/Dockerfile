@@ -23,5 +23,5 @@ COPY --from=deps /temp/prod/package.json ./package.json
 COPY dist/apps/gateway .
 
 USER bun
-EXPOSE 3000/tcp
+EXPOSE ${PORT}/tcp
 ENTRYPOINT [ "bun", "run", "main.js" ]
